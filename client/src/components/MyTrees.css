@@ -1,0 +1,494 @@
+.mytrees-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Header */
+.mytrees-header {
+  background-color: #1b4d4d;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-left .back-button {
+  background: none;
+  border: none;
+  color: #4caf50;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+}
+
+.credits-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.credits-icon {
+  font-size: 14px;
+}
+
+.credits-amount {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.points-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(255, 193, 7, 0.3);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.points-icon {
+  font-size: 14px;
+}
+
+.points-amount {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.ranking-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.crown-icon {
+  font-size: 16px;
+}
+
+/* Search Bar */
+.search-container {
+  padding: 20px;
+}
+
+.search-bar {
+  background-color: #e0e0e0;
+  border-radius: 25px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-icon {
+  font-size: 18px;
+  color: #666;
+}
+
+.search-bar input {
+  border: none;
+  background: none;
+  outline: none;
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+}
+
+.search-bar input::placeholder {
+  color: #999;
+}
+
+/* Trees Grid */
+.trees-grid {
+  padding: 0 20px 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Cambiado a 2 columnas fijas */
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+.tree-card {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra los elementos horizontalmente */
+}
+
+
+.tree-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.tree-image {
+  width: 100%;
+  height: 250px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+.tree-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+}
+
+.tree-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.tree-name {
+  margin-bottom: 20px;
+}
+
+.irrigation-pricing {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(46, 138, 138, 0.08), rgba(46, 138, 138, 0.15));
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(27, 77, 77, 0.08);
+}
+
+.irrigation-pricing__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #1b4d4d;
+  font-size: 0.95rem;
+}
+
+.irrigation-pricing__label {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.irrigation-pricing__chip {
+  background: rgba(76, 175, 80, 0.15);
+  color: #2e7d32;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.irrigation-pricing__values {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.irrigation-pricing__original {
+  text-decoration: line-through;
+  color: #c62828;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.irrigation-pricing__discounted {
+  font-weight: 700;
+  color: #2e7d32;
+  font-size: 1.2rem;
+}
+
+.irrigation-pricing__caption {
+  font-size: 0.8rem;
+  color: #1b4d4d;
+  opacity: 0.85;
+}
+
+.price-original-inline {
+  display: inline-block;
+  text-decoration: line-through;
+  color: #c62828;
+  font-weight: 600;
+}
+
+.value.value--discount {
+  background: #e8f5e9;
+  border-left-color: #2e7d32;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.value--discount .price-discounted {
+  font-weight: 700;
+  color: #2e7d32;
+  font-size: 1.05rem;
+}
+
+.value--discount .price-saving {
+  font-size: 0.85rem;
+  color: #2e7d32;
+  opacity: 0.85;
+}
+
+.name-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.name-container h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  flex: 1;
+}
+
+.name-and-status {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.name-and-status h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.status-indicator {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.status-indicator.approved {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.status-indicator.pending {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.edit-name-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.edit-name-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.rename-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rename-input {
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 16px;
+  outline: none;
+}
+
+.rename-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.save-btn, .cancel-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.save-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.save-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+/* === Botones de acción dentro del card === */
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Centra los botones horizontalmente */
+  gap: 10px;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 300px; /* Limita el ancho de los botones */
+}
+
+.action-buttons button {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Botón: Regar */
+.btn-water {
+  background: linear-gradient(135deg, #4caf50, #3c8d40);
+  color: white;
+}
+.btn-water:hover {
+  background: linear-gradient(135deg, #45a049, #2f7032);
+  transform: translateY(-2px);
+}
+
+/* Botón: Detalles */
+.btn-details {
+  background: linear-gradient(135deg, #1b4d4d, #236d6d);
+  color: white;
+}
+.btn-details:hover {
+  background: linear-gradient(135deg, #0f3a3a, #1f5a5a);
+  transform: translateY(-2px);
+}
+
+/* Botón: Eliminar / Cancelar */
+.btn-delete {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+}
+.btn-delete:hover {
+  background: linear-gradient(135deg, #e53935, #b71c1c);
+  transform: translateY(-2px);
+}
+
+/* Botón: Pendiente */
+.btn-pending {
+  background: linear-gradient(135deg, #ff9800, #ef6c00);
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+
+/* No Trees State */
+.no-trees {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.no-trees p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #45a049;
+}
+
+/* Footer */
+.mytrees-footer {
+  background-color: white;
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  margin-top: auto;
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 18px;
+  color: #666;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .trees-grid {
+    grid-template-columns: 1fr;
+    padding: 0 15px 20px;
+  }
+}

@@ -1,0 +1,326 @@
+.irrigate-tree-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a5c5c 0%, #2e8a8a 100%);
+  padding: 20px;
+  color: #333;
+}
+
+.irrigate-header {
+  background: #f0fff0;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
+.irrigate-header h1 {
+  margin: 0;
+  color: #1b4d4d;
+  font-size: 2rem;
+}
+
+.irrigation-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tree-info-section {
+  background: #f0fff0;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.tree-info-section h2 {
+  margin-bottom: 20px;
+  color: #1b4d4d;
+  font-size: 1.5rem;
+}
+
+.tree-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.tree-image {
+  flex-shrink: 0;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tree-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+}
+
+.tree-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.tree-details {
+  flex: 1;
+}
+
+.tree-details h3 {
+  margin: 0 0 15px 0;
+  color: #1b4d4d;
+  font-size: 1.3rem;
+}
+
+.tree-details p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.irrigation-form-section {
+  background: #f0fff0;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.irrigation-form-section h2 {
+  margin-bottom: 20px;
+  color: #1b4d4d;
+  font-size: 1.5rem;
+}
+
+.irrigation-info-card {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 2px solid #2196f3;
+}
+
+.irrigation-icon {
+  font-size: 3rem;
+  color: #1976d2;
+}
+
+.irrigation-text h3 {
+  margin: 0 0 10px 0;
+  color: #1976d2;
+  font-size: 1.3rem;
+}
+
+.irrigation-text p {
+  margin: 0;
+  color: #1565c0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+
+.reward-info {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  border: 2px solid #f39c12;
+}
+
+.reward-info h3 {
+  margin: 0 0 15px 0;
+  color: #8b4513;
+  font-size: 1.3rem;
+}
+
+.reward-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.reward-icon {
+  font-size: 1.5rem;
+}
+
+.reward-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8b4513;
+}
+
+.reward-text {
+  color: #8b4513;
+  font-weight: 500;
+}
+
+.reward-note {
+  margin: 0;
+  color: #8b4513;
+  font-size: 0.9rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.btn-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.irrigation-info {
+  background: #f0fff0;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.irrigation-info h3 {
+  margin-bottom: 15px;
+  color: #1b4d4d;
+  font-size: 1.3rem;
+}
+
+.irrigation-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.irrigation-info li {
+  margin-bottom: 8px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: white;
+  background: #f0fff0;
+  border-radius: 15px;
+  margin: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .irrigate-tree-container {
+    padding: 10px;
+  }
+
+  .irrigate-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .tree-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .tree-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+  }
+
+  .irrigation-info-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .irrigation-icon {
+    font-size: 2.5rem;
+  }
+}

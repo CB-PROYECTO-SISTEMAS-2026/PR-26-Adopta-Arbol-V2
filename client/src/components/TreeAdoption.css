@@ -1,0 +1,112 @@
+.tree-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #f5fdfc;
+}
+
+.header {
+  background: #006d6d;
+  padding: 10px;
+  color: white;
+  text-align: right;
+}
+
+.user-info {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.ranking {
+  background: gold;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.content {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  background: #eafafa;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.tree {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.tree.adopted {
+  background: #d9534f;
+}
+
+.tree.available {
+  background: #5cb85c;
+}
+
+.details {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.history {
+  background: #dff5df;
+}
+
+.btn.visit {
+  background: #00b894;
+  color: white;
+}
+
+.btn.adopt {
+  background: #006d6d;
+  color: white;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  background: #f0f0f0;
+  font-size: 12px;
+}

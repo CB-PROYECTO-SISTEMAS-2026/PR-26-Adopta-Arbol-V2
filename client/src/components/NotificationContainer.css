@@ -1,0 +1,130 @@
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.notification {
+  min-width: 300px;
+  max-width: 450px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: all;
+  animation: slideIn 0.3s ease-out;
+  background: white;
+  border-left: 4px solid;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.notification-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.notification-message {
+  font-size: 15px;
+  line-height: 1.4;
+  color: #333;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.notification-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+/* Success */
+.notification-success {
+  border-left-color: #28a745;
+  background: linear-gradient(to right, #d4edda 0%, white 5%);
+}
+
+.notification-success .notification-icon {
+  color: #28a745;
+}
+
+/* Error */
+.notification-error {
+  border-left-color: #dc3545;
+  background: linear-gradient(to right, #f8d7da 0%, white 5%);
+}
+
+.notification-error .notification-icon {
+  color: #dc3545;
+}
+
+/* Warning */
+.notification-warning {
+  border-left-color: #ffc107;
+  background: linear-gradient(to right, #fff3cd 0%, white 5%);
+}
+
+.notification-warning .notification-icon {
+  color: #ffc107;
+}
+
+/* Info */
+.notification-info {
+  border-left-color: #2c5aa0;
+  background: linear-gradient(to right, #d1ecf1 0%, white 5%);
+}
+
+.notification-info .notification-icon {
+  color: #2c5aa0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notification-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .notification {
+    min-width: auto;
+    max-width: none;
+    width: 100%;
+  }
+}
+

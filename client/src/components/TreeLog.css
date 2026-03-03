@@ -1,0 +1,402 @@
+/* Contenedor general con gradiente dinámico y animación sutil */
+.tree-log-container-modern {
+  min-height: 100vh;
+  background: #0d5858; /* color solicitado */
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 10px; /* para dar respiración al contenido ahora que el form-card fue eliminado */
+  color: #ffffff;
+}
+
+/* La animación de fondo se removió porque ahora el contenedor usa un color sólido */
+
+/* Top bar con sombra suave y animación de leve flotación */
+.top-bar {
+  width: 100%;
+  max-width: 900px;
+  background: #0a5c5c;
+  border-radius: 20px;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  margin-bottom: 25px;
+  animation: floatTopBar 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatTopBar {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-5px);
+  }
+}
+
+.greeting {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.btn-logout {
+  background: #ff4d4d;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+}
+
+.btn-logout:hover {
+  background: #ff1a1a;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 26, 26, 0.5);
+}
+
+.form-card {
+  /* Mantengo la clase por compatibilidad aunque el wrapper fue eliminado en JSX */
+  background: transparent;
+  padding: 0;
+  width: 100%;
+  max-width: 900px;
+  display: block;
+}
+
+.tree-log-container-modern > h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #ffffff; /* asegurar legibilidad sobre fondo oscuro */
+  width: 100%;
+  max-width: 900px;
+}
+
+.tree-log-container-modern .tree-form-modern {
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* Formulario moderno */
+.tree-form-modern {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Etiquetas y textos del formulario en blanco dentro del contenedor principal */
+.tree-log-container-modern label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+  color: #ffffff;
+}
+
+/* Inputs dentro del contenedor principal: diseño uniforme (fondo translúcido, borde limpio, texto blanco) */
+.tree-log-container-modern input,
+.tree-log-container-modern textarea,
+.tree-log-container-modern select {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  outline: none;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+  color: #ffffff;
+  height: 48px;
+}
+
+.tree-log-container-modern textarea {
+  min-height: 120px;
+  height: auto;
+  padding: 12px 15px;
+}
+
+.tree-log-container-modern input:focus,
+.tree-log-container-modern textarea:focus,
+.tree-log-container-modern select:focus {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 24px rgba(13, 88, 88, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+textarea {
+  resize: none;
+  min-height: 100px;
+}
+
+.image-section-modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.image-preview-modern {
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 1 / 1; /* mantiene cuadrado */
+  background: #ffffff; /* caja blanca como en la imagen */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  margin: 0 auto 18px auto;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: #0d5858;
+  position: relative;
+}
+
+.image-preview-modern.has-images {
+  padding: 0;
+}
+
+.image-preview-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.image-preview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+  max-width: 90%;
+}
+
+.image-preview-content .bi {
+  font-size: 48px;
+}
+
+.image-preview-main {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-preview-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.upload-instructions {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.upload-hint {
+  font-size: 14px;
+  color: rgba(13, 88, 88, 0.7);
+}
+
+.upload-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0a5c5c;
+  display: block;
+  text-align: center;
+}
+
+.image-gallery {
+  width: 100%;
+  max-width: 720px;
+  margin: 10px auto 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.image-thumbnail {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.image-thumbnail img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.image-remove-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.image-remove-button:hover {
+  transform: scale(1.05);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.image-name {
+  display: block;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* Estado visual al arrastrar sobre el área */
+.image-preview-modern.dragging {
+  outline: 3px dashed rgba(255, 255, 255, 0.24);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* Indicar que el área es interactiva */
+.image-preview-modern[role="button"] {
+  cursor: pointer;
+}
+
+.btn-upload-modern {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  background: #e2e2e2; /* gris claro */
+  color: #ffffff; /* texto blanco como en la imagen */
+  border: none;
+  padding: 16px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
+  transition: all 0.18s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.btn-upload-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+}
+
+.map-section-modern {
+  background: #167070;
+  border-radius: 20px;
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.map-section-modern:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.coords {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* Forzar color blanco para la mayoría de textos dentro del contenedor principal */
+.tree-log-container-modern,
+.tree-log-container-modern * {
+  color: #ffffff;
+}
+
+.image-preview-modern,
+.image-preview-modern * {
+  color: #0d5858;
+}
+
+/* Asegurar que los inputs/textarea/select muestren texto en blanco y los placeholders también */
+.tree-log-container-modern input,
+.tree-log-container-modern textarea,
+.tree-log-container-modern select {
+  color: #ffffff;
+}
+
+.tree-log-container-modern select {
+  color: #ffdd57;
+}
+
+.tree-log-container-modern select option {
+  color: #0a5c5c;
+  background: #ffffff;
+}
+
+.tree-log-container-modern input::placeholder,
+.tree-log-container-modern textarea::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-register-modern {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease, box-shadow 0.3s;
+  box-shadow: 0 6px 20px rgba(27, 77, 77, 0.3);
+}
+
+.btn-register-modern:hover {
+  background: linear-gradient(135deg, #2e8a8a, #0a5c5c);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(27, 77, 77, 0.4);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .tree-form-modern {
+    grid-template-columns: 1fr;
+  }
+  .image-preview-modern {
+    height: 180px;
+  }
+}

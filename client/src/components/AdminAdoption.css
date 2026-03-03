@@ -1,0 +1,200 @@
+.adoption-container,
+.dashboard-container {
+  width: 100%;
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header principal */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 15px 25px;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0;
+}
+
+.search-section {
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  background: white;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.admin-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.admin-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c5aa0;
+}
+
+.admin-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2c5aa0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-icon {
+  color: white;
+  font-size: 18px;
+}
+
+/* Tabla de adopciones */
+.table-section {
+  background: white;
+  margin: 0;
+  padding: 0;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.users-table thead {
+  background: #6c7b7f;
+}
+
+.users-table thead th {
+  padding: 15px 25px;
+  text-align: left;
+  font-weight: 600;
+  color: white;
+  font-size: 16px;
+  border: none;
+}
+
+.users-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background 0.2s;
+}
+
+.users-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.users-table tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.users-table tbody tr:nth-child(even):hover {
+  background: #e9ecef;
+}
+
+.users-table tbody td {
+  padding: 15px 25px;
+  color: #333;
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+/* Columna de nombres con avatar */
+.adoption-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-placeholder {
+  color: #6c757d;
+  font-size: 24px;
+}
+
+/* Botones de acciones */
+.actions-cell {
+  text-align: center;
+}
+
+.action-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 50%;
+  margin: 0 3px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Botones específicos */
+.details-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.approve-btn {
+ background: #28a745;
+  color: #2d5016;
+}
+
+.approve-btn:hover {
+  background: #28a745;
+}
+
+.reject-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.reject-btn:hover {
+  background: #c82333;
+}
+
+/* Los estilos del modal ahora están en ViewDetailsModal.css */

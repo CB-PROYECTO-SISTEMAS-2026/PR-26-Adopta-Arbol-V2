@@ -1,0 +1,166 @@
+.register-container {
+  background: #0a5c5c;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fondo con hojas sutiles */
+.register-container::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 200%;
+  height: 200%;
+  background-image: url('https://i.ibb.co/3yfz9h5/leaf-icon.png'); /* icono de hoja transparente */
+  background-repeat: repeat;
+  background-size: 80px;
+  opacity: 0.05;
+  z-index: 0;
+  animation: floatLeaves 60s linear infinite;
+}
+
+@keyframes floatLeaves {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-200px) rotate(360deg); }
+}
+
+.register-box {
+  position: relative;
+  background-color: #f0fff0;
+  padding: 40px 50px;
+  border-radius: 20px;
+  width: 360px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.register-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.logo img {
+  height: 60px;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+h2 {
+  text-align: center;
+  color: #0a5c5c;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.input-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #1b4d4d;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #1b4d4d;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #e6f2f2;
+}
+
+.input-group input:focus {
+  border-color: #2e8a8a;
+  box-shadow: 0 0 10px rgba(46, 138, 138, 0.4);
+  background: #ffffff;
+}
+
+.btn-register {
+  width: 100%;
+  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-register:hover {
+  background: linear-gradient(135deg, #2e8a8a, #1b4d4d);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.login-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #1b4d4d;
+}
+
+.login-text a {
+  color: #2e8a8a;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.login-text a:hover {
+  color: #0a5c5c;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .register-box {
+    padding: 30px 25px;
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .btn-register {
+    font-size: 15px;
+    padding: 10px;
+  }
+}

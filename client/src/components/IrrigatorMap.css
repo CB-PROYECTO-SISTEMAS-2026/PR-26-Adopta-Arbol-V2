@@ -1,0 +1,778 @@
+/* Contenedor principal */
+.irrigator-map-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a7373, #0d5858);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Navbar */
+.map-navbar {
+  width: 100%;
+  background: #1a4a4a;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  gap: 15px;
+}
+
+.btn-back-map {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.btn-back-map:hover {
+  transform: translateX(-3px);
+  opacity: 0.8;
+}
+
+.navbar-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.navbar-greeting {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.navbar-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.navbar-points,
+.navbar-credits {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-hamburger {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-hamburger:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.navbar-menu {
+  background: #134040;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 0;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar-menu-item {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.navbar-menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-menu-item i {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.navbar-menu-item span {
+  flex: 1;
+  text-align: left;
+}
+
+.menu-badge {
+  background: #ff4757;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+}
+
+.points-icon {
+  font-size: 16px;
+}
+
+.points-amount {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.user-icon-container {
+  position: relative;
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a4a4a;
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+}
+
+.logout-card {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 160px;
+}
+
+.logout-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* Contraste: botones y badges dentro del logout-card deben destacar respecto al fondo blanco */
+.logout-card .navbar-points,
+.logout-card .navbar-credits {
+  background: linear-gradient(135deg, #134040, #0f3030); /* oscuro/teal */
+  color: #ffffff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 3px 8px rgba(15, 48, 48, 0.12);
+}
+
+.logout-card .navbar-credits i {
+  color: #ffffff;
+}
+
+/* Botón de logout con alto contraste (oscuro sobre blanco) */
+.logout-card-button,
+.logout-card button {
+  width: 100%;
+  background: linear-gradient(135deg, #134040, #0f3030);
+  border: none;
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  box-shadow: 0 3px 8px rgba(15, 48, 48, 0.18);
+}
+
+.logout-card-button:hover,
+.logout-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(15, 48, 48, 0.22);
+  background: linear-gradient(
+    135deg,
+    #134040,
+    #0f3030
+  ); /* mantener mismo fondo al hacer hover */
+  /* No cambiar opacidad para que el color no parezca distinto */
+}
+
+.logout-card-button i {
+  font-size: 18px;
+}
+
+/* Sección de título */
+.title-section {
+  text-align: center;
+  color: #fff;
+  margin: 20px 0 15px;
+}
+
+.title-section h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.title-section p {
+  font-size: 14px;
+  font-weight: 300;
+  opacity: 0.9;
+}
+
+/* Card del mapa */
+.map-card {
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+/* Card contenedor para paneles que deben dejar espacio lateral (igual que map-card) */
+.info-card {
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center; /* centra el contenido interno */
+  box-sizing: border-box;
+}
+
+/* Contenedor del mapa */
+.map-container-wrapper {
+  width: 100%;
+  height: calc(100vh - 300px);
+  min-height: 500px;
+  max-height: 800px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Estilos para Leaflet */
+.map-container-wrapper .leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.loading-message,
+.no-irrigations-message {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+  padding: 20px;
+}
+
+.no-irrigations-message p {
+  font-size: 18px;
+  color: #0a5c5c;
+  font-weight: 600;
+}
+
+/* Popup del mapa */
+.popup-content {
+  text-align: center;
+}
+
+.popup-content h3 {
+  font-size: 16px;
+  color: #0a5c5c;
+  margin-bottom: 8px;
+}
+
+.popup-content p {
+  font-size: 13px;
+  margin: 4px 0;
+  color: #333;
+}
+
+/* Panel de información del árbol */
+.tree-info-panel {
+  /* Ahora toma todo el ancho disponible dentro de .info-card */
+  width: 100%;
+  max-width: none;
+  background: #fff;
+  border-radius: 25px;
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.tree-info-content h2 {
+  text-align: center;
+  font-size: 22px;
+  color: #0a5c5c;
+  margin-bottom: 20px;
+}
+
+.tree-details {
+  background: #f0f9f9;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #d0e8e8;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row .label {
+  font-weight: 600;
+  color: #0a5c5c;
+  font-size: 16px;
+}
+
+.detail-row .value {
+  font-weight: 500;
+  color: #333;
+  background: #e0f2f1;
+  padding: 6px 15px;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+/* Botones */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-canjear {
+  background: linear-gradient(135deg, #66d9a1, #4db88d);
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-canjear:hover {
+  background: linear-gradient(135deg, #4db88d, #3a9b75);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, #66d9a1, #4db88d);
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-cancel:hover {
+  background: linear-gradient(135deg, #4db88d, #3a9b75);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Copyright */
+.copyright {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  text-align: center;
+  padding: 20px;
+  margin-top: auto;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  /* Navbar responsivo */
+  .navbar-container {
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .btn-back-map {
+    font-size: 22px;
+  }
+
+  .navbar-center {
+    gap: 3px;
+  }
+
+  .navbar-greeting {
+    font-size: 14px;
+  }
+
+  .navbar-info {
+    gap: 10px;
+  }
+
+  .navbar-points,
+  .navbar-credits {
+    padding: 3px 10px;
+    font-size: 12px;
+    border-radius: 12px;
+  }
+
+  .points-icon {
+    font-size: 14px;
+  }
+
+  .points-amount {
+    font-size: 12px;
+  }
+
+  .btn-hamburger {
+    font-size: 26px;
+  }
+
+  .user-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+
+  .logout-card {
+    top: 45px;
+    right: 10px;
+    min-width: 150px;
+  }
+
+  .logout-card-button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .logout-card-button i {
+    font-size: 16px;
+  }
+
+  .navbar-menu-item {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+
+  .navbar-menu-item i {
+    font-size: 18px;
+  }
+
+  /* Título responsivo */
+  .title-section {
+    margin: 15px 0 12px;
+    padding: 0 15px;
+  }
+
+  .title-section h1 {
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+
+  .title-section p {
+    font-size: 13px;
+  }
+
+  /* Mapa responsivo */
+  .map-card {
+    padding: 0 10px;
+  }
+
+  .map-container-wrapper {
+    width: 100%;
+    height: calc(100vh - 400px);
+    min-height: 300px;
+    max-height: 500px;
+    border-radius: 15px;
+  }
+
+  .loading-message,
+  .no-irrigations-message {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .no-irrigations-message p {
+    font-size: 16px;
+  }
+
+  /* Popup responsivo */
+  .popup-content h3 {
+    font-size: 14px;
+  }
+
+  .popup-content p {
+    font-size: 12px;
+  }
+
+  /* Panel de información responsivo */
+  .tree-info-panel {
+    width: 95%;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .tree-info-content h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .tree-details {
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .detail-row {
+    padding: 10px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .detail-row .label {
+    font-size: 14px;
+  }
+
+  .detail-row .value {
+    font-size: 14px;
+    padding: 5px 12px;
+  }
+
+  /* Botones responsivos */
+  .button-group {
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* Asegurar ancho completo de botones SOLO dentro del panel de info (mayor especificidad)
+     para evitar que reglas globales de otros componentes los limiten. */
+  .tree-info-panel .button-group .btn-canjear,
+  .tree-info-panel .button-group .btn-cancel {
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 12px;
+    width: 100% !important;
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  /* Copyright responsivo */
+  .copyright {
+    font-size: 11px;
+    padding: 15px 10px;
+  }
+}
+
+/* Responsivo para móviles pequeños */
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .btn-back-map {
+    font-size: 20px;
+  }
+
+  .navbar-greeting {
+    font-size: 13px;
+  }
+
+  .navbar-info {
+    gap: 8px;
+  }
+
+  .navbar-points,
+  .navbar-credits {
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+
+  .points-icon {
+    font-size: 12px;
+  }
+
+  .points-amount {
+    font-size: 11px;
+  }
+
+  .btn-hamburger {
+    font-size: 24px;
+  }
+
+  .navbar-actions {
+    gap: 10px;
+  }
+
+  .user-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .navbar-menu-item {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .navbar-menu-item i {
+    font-size: 16px;
+  }
+
+  .title-section {
+    margin: 12px 0 10px;
+    padding: 0 12px;
+  }
+
+  .title-section h1 {
+    font-size: 20px;
+  }
+
+  .title-section p {
+    font-size: 12px;
+  }
+
+  .map-card {
+    padding: 0 8px;
+  }
+
+  .map-container-wrapper {
+    min-height: 250px;
+    max-height: 400px;
+    border-radius: 12px;
+  }
+
+  .tree-info-panel {
+    width: 96%;
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .tree-info-content h2 {
+    font-size: 18px;
+  }
+
+  .tree-details {
+    padding: 12px;
+  }
+
+  .detail-row .label,
+  .detail-row .value {
+    font-size: 13px;
+  }
+
+  .button-group {
+    width: 100%;
+  }
+
+  /* Móvil pequeño: asegurar ancho completo en el panel de info */
+  .tree-info-panel .button-group .btn-canjear,
+  .tree-info-panel .button-group .btn-cancel {
+    padding: 11px;
+    font-size: 14px;
+    width: 100% !important;
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  .copyright {
+    font-size: 10px;
+    padding: 12px 8px;
+  }
+}
+
+/* Landscape mode para móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+  .map-container-wrapper {
+    height: 60vh;
+    min-height: 250px;
+    max-height: 400px;
+  }
+
+  .tree-info-panel {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}

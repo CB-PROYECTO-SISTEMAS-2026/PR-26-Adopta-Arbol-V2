@@ -1,0 +1,223 @@
+/* Fondo con degradado dinámico + hojas flotantes múltiples */
+.login-container {
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Hojas flotantes múltiples usando pseudo-elementos y animaciones distintas */
+.login-container::before,
+.login-container::after,
+.login-container .leaf1,
+.login-container .leaf2 {
+  content: '';
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  background-image: url('https://img.icons8.com/ios-filled/100/ffffff/leaf.png'); /* hoja blanca */
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.05;
+  z-index: 0;
+}
+
+.login-container::before {
+  top: -50px;
+  left: -50px;
+  animation: floatLeaf1 25s linear infinite;
+}
+
+.login-container::after {
+  bottom: -50px;
+  right: -50px;
+  animation: floatLeaf2 30s linear infinite;
+  animation-delay: 10s;
+}
+
+/* Hojas adicionales flotando */
+.login-container .leaf1 {
+  top: 20%;
+  left: 70%;
+  animation: floatLeaf3 28s linear infinite;
+  opacity: 0.03;
+}
+
+.login-container .leaf2 {
+  bottom: 10%;
+  left: 30%;
+  animation: floatLeaf4 35s linear infinite;
+  opacity: 0.04;
+}
+
+/* Animaciones para hojas */
+@keyframes floatLeaf1 {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-40px) rotate(20deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes floatLeaf2 {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-50px) rotate(-15deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes floatLeaf3 {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-35px) rotate(10deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes floatLeaf4 {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-45px) rotate(-10deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Caja de login moderna */
+.login-box {
+  background-color: #f0fff0;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  padding: 50px 40px;
+  width: 360px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.8s ease-in-out;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.login-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+
+.logo img {
+  height: 90px;
+  width: 100px; 
+  margin-bottom: 25px;
+  animation: floatLogo 3s ease-in-out infinite alternate;
+}
+
+/* Título */
+h2 {
+  color: #1b4d4d;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs */
+.input-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #1b4d4d;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1.5px solid #1b4d4d;
+  border-radius: 12px; 
+  outline: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #f7fdf7;
+  box-sizing: border-box; 
+}
+
+
+.input-group input:focus {
+  border-color: #2e8a8a;
+  box-shadow: 0 0 10px rgba(46, 138, 138, 0.4);
+  background: #e6f7f7;
+}
+
+/* Botón login moderno */
+.btn-login {
+  width: 100%;
+  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(27, 77, 77, 0.3);
+}
+
+.btn-login:hover {
+  background: linear-gradient(135deg, #2e8a8a, #1b4d4d);
+  box-shadow: 0 10px 25px rgba(27, 77, 77, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Registro */
+.register-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #1b4d4d;
+  transition: color 0.3s;
+}
+
+.register-text a {
+  color: #2e8a8a;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.register-text a:hover {
+  text-decoration: underline;
+  color: #1b4d4d;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatLogo {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
+}
+
+/* Responsivo */
+@media (max-width: 400px) {
+  .login-box {
+    padding: 40px 25px;
+    width: 90%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .logo img {
+    height: 90px;
+    width: 90px; /* ajustar para móviles */
+  }
+}

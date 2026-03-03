@@ -1,0 +1,18 @@
+<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="150" height="150" fill="#f8f9fa" rx="10"/>
+  
+  <!-- Tronco del árbol -->
+  <rect x="65" y="100" width="20" height="30" fill="#8B4513"/>
+  
+  <!-- Copa del árbol -->
+  <circle cx="75" cy="85" r="25" fill="#228B22"/>
+  <circle cx="65" cy="75" r="20" fill="#32CD32"/>
+  <circle cx="85" cy="75" r="20" fill="#32CD32"/>
+  <circle cx="75" cy="65" r="18" fill="#228B22"/>
+  
+  <!-- Texto -->
+  <text x="75" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+    Sin imagen
+  </text>
+</svg>

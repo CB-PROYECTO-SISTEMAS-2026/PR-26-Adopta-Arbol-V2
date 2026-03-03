@@ -1,0 +1,384 @@
+import React, { useState } from "react";
+import "./CreateAccount.css";
+import { useNavigate, Link } from "react-router-dom";
+import { useUsers } from "../context/UserContext";
+
+export default function CreateAccount() {
+  const navigate = useNavigate();
+  const { registerUser } = useUsers();
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const validateName = (value) => {
+    if (!value) return "";
+    
+    // Verificar espacios al final
+    if (value !== value.trimEnd()) {
+      return "No se permiten espacios al final";
+    }
+    
+    // Verificar caracteres no permitidos (números y caracteres especiales)
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
+      return "Solo se permiten letras y espacios (no números ni caracteres especiales)";
+    }
+    
+    return "";
+  };
+
+  const validatePassword = (value) => {
+    const errors = [];
+    if (value.length > 0) {
+      if (!/[A-Z]/.test(value)) {
+        errors.push("Debe contener al menos una mayúscula");
+      }
+      if (!/[a-z]/.test(value)) {
+        errors.push("Debe contener al menos una minúscula");
+      }
+      if (!/[0-9]/.test(value)) {
+        errors.push("Debe contener al menos un número");
+      }
+      if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value)) {
+        errors.push("Debe contener al menos un carácter especial");
+      }
+    }
+    return errors;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let processedValue = value;
+    let fieldError = "";
+
+    // Validación y procesamiento según el campo
+    if (name === "name" || name === "lastName") {
+      // Aplicar trim automático de espacios al inicio, pero permitir escribir todo
+      processedValue = value.trimStart();
+      // Validar y mostrar error si hay caracteres no permitidos, pero permitir escribir
+      fieldError = validateName(processedValue);
+    } else if (name === "password") {
+      processedValue = value;
+      const passwordErrors = validatePassword(processedValue);
+      fieldError = passwordErrors.join(". ");
+      // Validar también confirmPassword si ya tiene valor
+      if (formData.confirmPassword) {
+        const confirmError = processedValue !== formData.confirmPassword 
+          ? "Las contraseñas no coinciden" 
+          : "";
+        setFieldErrors(prev => ({
+          ...prev,
+          confirmPassword: confirmError
+        }));
+      }
+    } else if (name === "confirmPassword") {
+      processedValue = value;
+      if (value && value !== formData.password) {
+        fieldError = "Las contraseñas no coinciden";
+      }
+    } else if (name === "email") {
+      processedValue = value;
+      if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        fieldError = "Por favor ingresa un correo electrónico válido";
+      }
+    }
+
+    setFormData({
+      ...formData,
+      [name]: processedValue
+    });
+
+    setFieldErrors(prev => ({
+      ...prev,
+      [name]: fieldError
+    }));
+
+    // Limpiar error general
+    setError("");
+  };
+
+  const validateForm = () => {
+    const errors = { ...fieldErrors };
+    let hasErrors = false;
+
+    // Validar nombre
+    if (!formData.name.trim()) {
+      errors.name = "El nombre es obligatorio";
+      hasErrors = true;
+    } else {
+      const nameError = validateName(formData.name.trim());
+      if (nameError) {
+        errors.name = nameError;
+        hasErrors = true;
+      }
+    }
+    
+    // Validar apellido
+    if (!formData.lastName.trim()) {
+      errors.lastName = "El apellido es obligatorio";
+      hasErrors = true;
+    } else {
+      const lastNameError = validateName(formData.lastName.trim());
+      if (lastNameError) {
+        errors.lastName = lastNameError;
+        hasErrors = true;
+      }
+    }
+    if (!formData.email) {
+      errors.email = "El correo electrónico es obligatorio";
+      hasErrors = true;
+    }
+    if (!formData.password) {
+      errors.password = "La contraseña es obligatoria";
+      hasErrors = true;
+    }
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = "Confirma tu contraseña";
+      hasErrors = true;
+    }
+
+    // Validar coincidencia de contraseñas
+    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Las contraseñas no coinciden";
+      hasErrors = true;
+    }
+
+    // Validar requisitos de contraseña
+    const passwordErrors = validatePassword(formData.password);
+    if (formData.password && passwordErrors.length > 0) {
+      errors.password = passwordErrors.join(". ");
+      hasErrors = true;
+    }
+
+    setFieldErrors(errors);
+
+    if (hasErrors || Object.values(errors).some(err => err !== "")) {
+      setError("Por favor corrige los errores en el formulario");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    // Aplicar trim completo antes de validar
+    const trimmedData = {
+      ...formData,
+      name: formData.name.trim(),
+      lastName: formData.lastName.trim(),
+      email: formData.email.trim()
+    };
+    
+    setFormData(trimmedData);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const registrationData = {
+        name: trimmedData.name,
+        lastName: trimmedData.lastName,
+        email: trimmedData.email,
+        password: trimmedData.password
+      };
+
+      const result = await registerUser(registrationData);
+      
+      setSuccess(`¡Cuenta creada exitosamente! Tu nombre de usuario es: ${result.username}. Tu solicitud está pendiente de aprobación.`);
+      setFormData({
+        name: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+      });
+      
+    } catch (error) {
+      setError(error.response?.data?.message || "Error al crear la cuenta. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="register-container">
+      <div className="register-box">
+        <div className="logo">
+          <img src="/logo.png" alt="Logo" />
+        </div>
+
+        <h2>Crear Cuenta</h2>
+
+        <form onSubmit={handleRegister}>
+          <div className="input-group">
+            <label>Nombre</label>
+            <input 
+              type="text" 
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Ingresa tu nombre"
+              required
+            />
+            {fieldErrors.name && (
+              <div className="error-message" style={{
+                color: '#e74c3c',
+                fontSize: '12px',
+                marginTop: '5px'
+              }}>
+                {fieldErrors.name}
+              </div>
+            )}
+          </div>
+
+          <div className="input-group">
+            <label>Apellido</label>
+            <input 
+              type="text" 
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Ingresa tu apellido"
+              required
+            />
+            {fieldErrors.lastName && (
+              <div className="error-message" style={{
+                color: '#e74c3c',
+                fontSize: '12px',
+                marginTop: '5px'
+              }}>
+                {fieldErrors.lastName}
+              </div>
+            )}
+          </div>
+
+          <div className="input-group">
+            <label>Correo Electrónico</label>
+            <input 
+              type="email" 
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="ejemplo@correo.com"
+              required
+            />
+            {fieldErrors.email && (
+              <div className="error-message" style={{
+                color: '#e74c3c',
+                fontSize: '12px',
+                marginTop: '5px'
+              }}>
+                {fieldErrors.email}
+              </div>
+            )}
+          </div>
+
+          <div className="input-group">
+            <label>Contraseña</label>
+            <input 
+              type="password" 
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Crea una contraseña"
+              required
+            />
+            {fieldErrors.password && (
+              <div className="error-message" style={{
+                color: '#e74c3c',
+                fontSize: '12px',
+                marginTop: '5px'
+              }}>
+                {fieldErrors.password}
+              </div>
+            )}
+          </div>
+
+          <div className="input-group">
+            <label>Confirmar Contraseña</label>
+            <input 
+              type="password" 
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Repite tu contraseña"
+              required
+            />
+            {fieldErrors.confirmPassword && (
+              <div className="error-message" style={{
+                color: '#e74c3c',
+                fontSize: '12px',
+                marginTop: '5px'
+              }}>
+                {fieldErrors.confirmPassword}
+              </div>
+            )}
+          </div>
+
+          {error && (
+            <div className="error-message" style={{
+              color: '#e74c3c',
+              textAlign: 'center',
+              marginBottom: '15px',
+              fontSize: '14px',
+              backgroundColor: '#fee',
+              border: '1px solid #fcc',
+              borderRadius: '8px',
+              padding: '10px'
+            }}>
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="success-message" style={{
+              color: '#27ae60',
+              textAlign: 'center',
+              marginBottom: '15px',
+              fontSize: '14px',
+              backgroundColor: '#efe',
+              border: '1px solid #cfc',
+              borderRadius: '8px',
+              padding: '10px'
+            }}>
+              {success}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="btn-register"
+            disabled={loading}
+          >
+            {loading ? "Creando cuenta..." : "Crear Cuenta"}
+          </button>
+        </form>
+
+        <p className="login-text">
+          ¿Ya tienes cuenta? <Link to="/login">Iniciar sesión</Link>
+        </p>
+      </div>
+    </div>
+  );
+}

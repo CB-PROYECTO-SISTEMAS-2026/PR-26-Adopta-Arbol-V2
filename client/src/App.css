@@ -1,0 +1,30 @@
+/* App.css - layout principal usando bootstrap pero controlando el espacio para la sidebar */
+:root {
+  --sidebar-width: 220px; /* cambia aquí para ajustar ancho globalmente */
+  --sidebar-gap: 16px; /* separación izquierda desde el borde del viewport */
+}
+
+/* Envoltorio principal: sidebar + contenido */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f5f5;
+  box-sizing: border-box;
+}
+
+/* Si usas sidebar fija (position:fixed) mantén esto:
+   app-content debe dejar margen izquierdo equivalente al ancho de la sidebar + gap */
+.app-content {
+  flex: 1;
+  padding: 24px;
+  box-sizing: border-box;
+  margin-left: calc(var(--sidebar-width) + var(--sidebar-gap));
+}
+
+/* Para pantallas pequeñas: sidebar colapsa y contenido usa todo el ancho */
+@media (max-width: 992px) {
+  .app-content {
+    margin-left: 0;
+    padding: 16px;
+  }
+}

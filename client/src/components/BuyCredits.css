@@ -1,0 +1,485 @@
+/* Reuse styles from AdminAdoption.css for consistency */
+.dashboard-container {
+  width: 100%;
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header principal */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 15px 25px;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0;
+}
+
+.search-section {
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  background: white;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.admin-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.admin-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c5aa0;
+}
+
+.admin-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2c5aa0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-icon {
+  color: white;
+  font-size: 18px;
+}
+
+/* Filtros de fecha */
+.filters-section {
+  background: white;
+  padding: 20px 25px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.date-filters {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+}
+
+.date-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.date-input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.date-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Tabla */
+.table-section {
+  background: white;
+  margin: 0;
+  padding: 0;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.users-table thead {
+  background: #6c7b7f;
+}
+
+.users-table thead th {
+  padding: 15px 25px;
+  text-align: left;
+  font-weight: 600;
+  color: white;
+  font-size: 16px;
+  border: none;
+}
+
+.users-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background 0.2s;
+}
+
+.users-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.users-table tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.users-table tbody tr:nth-child(even):hover {
+  background: #e9ecef;
+}
+
+.users-table tbody td {
+  padding: 15px 25px;
+  color: #333;
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+/* Columna de nombres con avatar */
+.purchase-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-placeholder {
+  color: #6c757d;
+  font-size: 24px;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-unknown {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+/* Botones de acciones */
+.actions-cell {
+  text-align: center;
+}
+
+.action-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 50%;
+  margin: 0 3px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.details-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.approve-btn {
+  background: #28a745;
+  color: white;
+}
+
+.approve-btn:hover {
+  background: #218838;
+}
+
+.reject-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.reject-btn:hover {
+  background: #c82333;
+}
+
+/* Loading container */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 18px;
+  color: #6c757d;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* QR Modal específico */
+.qr-modal {
+  background: white;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 16px;
+  color: #333;
+}
+
+.modal-close-btn:hover {
+  background: white;
+}
+
+.qr-header {
+  background: linear-gradient(135deg, #2c5aa0, #1e3a6b);
+  padding: 30px 20px;
+  text-align: center;
+  border-radius: 15px 15px 0 0;
+}
+
+.qr-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.qr-icon i {
+  font-size: 40px;
+  color: white;
+}
+
+.qr-body {
+  padding: 30px;
+}
+
+.qr-title {
+  text-align: center;
+  color: #2c5aa0;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+.qr-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.qr-info {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #2c5aa0;
+}
+
+.qr-info p {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.qr-info strong {
+  color: #2c5aa0;
+  font-weight: 600;
+}
+
+.qr-image-container {
+  text-align: center;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px dashed #e9ecef;
+}
+
+.qr-image {
+  max-width: 250px;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-qr {
+  color: #6c757d;
+  font-size: 16px;
+}
+
+.no-qr i {
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #ffc107;
+}
+
+.close-btn {
+  background: #2c5aa0;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: #1e3a6b;
+}
+
+/* Loading receipt styles */
+.loading-receipt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-size: 16px;
+}
+
+.loading-receipt i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .search-section {
+    max-width: 100%;
+  }
+  
+  .date-filters {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .users-table {
+    font-size: 14px;
+  }
+  
+  .users-table thead th,
+  .users-table tbody td {
+    padding: 10px 15px;
+  }
+  
+  .qr-modal {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .qr-body {
+    padding: 20px;
+  }
+  
+  .qr-image {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
