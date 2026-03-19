@@ -59,14 +59,17 @@ CREATE TABLE IF NOT EXISTS tree (
   latitude DECIMAL(10,8) NULL,
   longitude DECIMAL(11,8) NULL,
   userId SMALLINT(5) UNSIGNED NOT NULL COMMENT 'Técnico que registró el árbol',
+  categoryId SMALLINT(5) NULL COMMENT 'Categoría del árbol',
   status TINYINT(1) DEFAULT 0 COMMENT '0: Inactivo, 1: Activo, 2: Pendiente aprobación',
   registerDate DATETIME DEFAULT CURRENT_TIMESTAMP,
   lastUpdate DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_tree_user FOREIGN KEY (userId) REFERENCES user(id) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT fk_tree_user FOREIGN KEY (userId) REFERENCES user(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_tree_category FOREIGN KEY (categoryId) REFERENCES category(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE INDEX idx_tree_status ON tree(status);
 CREATE INDEX idx_tree_code ON tree(code);
+CREATE INDEX idx_tree_category ON tree(categoryId);
 
 -- ============================================
 -- TABLA: multimedia

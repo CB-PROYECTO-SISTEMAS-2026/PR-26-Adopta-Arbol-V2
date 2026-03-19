@@ -6,10 +6,10 @@ import { useUsers } from "../context/UserContext";
 export default function Login() {
   const navigate = useNavigate();
   const { login, isAuthenticated, loggedUser } = useUsers();
-  
+
   const [formData, setFormData] = useState({
     username: "",
-    password: ""
+    password: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,7 @@ export default function Login() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -45,7 +45,7 @@ export default function Login() {
 
     try {
       const result = await login(formData);
-      
+
       if (result.success) {
         // Redirección basada en el rol del usuario
         if (result.user.role === "admin") {
@@ -73,60 +73,83 @@ export default function Login() {
   return (
     <div className="login-container">
       <div className="login-box">
+        {/* Logo */}
         <div className="logo">
-          <img src="/logo.png" alt="Logo" />
+          <img src="/logo.png" alt="Logo AdoptaÁrbol" />
         </div>
 
-        <h2>Iniciar Sesión</h2>
+        {/* Encabezado */}
+        <h2>🌳 Bienvenido</h2>
+        <p className="login-subtitle">Inicia sesión para continuar</p>
 
-        <form onSubmit={handleLogin}>
+        {/* Formulario */}
+        <form onSubmit={handleLogin} className="login-form">
+          {/* Input Usuario */}
           <div className="input-group">
-            <label>Usuario</label>
-            <input 
-              type="text" 
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Ingresa tu usuario"
-              required
-            />
+            <label htmlFor="username">Usuario</label>
+            <div className="input-wrapper">
+              <i className="bi bi-person-fill input-icon"></i>
+              <input
+                id="username"
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Tu usuario"
+                required
+                autoComplete="username"
+              />
+            </div>
           </div>
 
+          {/* Input Contraseña */}
           <div className="input-group">
-            <label>Contraseña</label>
-            <input 
-              type="password" 
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Ingresa tu contraseña"
-              required
-            />
+            <label htmlFor="password">Contraseña</label>
+            <div className="input-wrapper">
+              <i className="bi bi-lock-fill input-icon"></i>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Tu contraseña"
+                required
+                autoComplete="current-password"
+              />
+            </div>
           </div>
 
+          {/* Mensaje de Error */}
           {error && (
-            <div className="error-message" style={{
-              color: '#e74c3c',
-              textAlign: 'center',
-              marginBottom: '15px',
-              fontSize: '14px'
-            }}>
-              {error}
+            <div className="error-message">
+              <span>⚠️ {error}</span>
             </div>
           )}
 
-          <button 
-            type="submit" 
-            className="btn-login" 
-            disabled={loading}
-          >
-            {loading ? "Iniciando..." : "Iniciar Sesión"}
+          {/* Botón Login */}
+          <button type="submit" className="btn-login" disabled={loading}>
+            {loading ? (
+              <>
+                <span>Iniciando sesión...</span>
+              </>
+            ) : (
+              <>Iniciar Sesión</>
+            )}
           </button>
         </form>
 
-        <p className="register-text">
-          ¿No tienes cuenta? <Link to="/register">Regístrate ahora</Link>
-        </p>
+        {/* Divisor */}
+        <div className="divider">O</div>
+
+        {/* Sección de Registro */}
+        <div className="register-section">
+          <p className="register-text">
+            ¿No tienes cuenta?
+            <br />
+            <Link to="/register">Regístrate ahora</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

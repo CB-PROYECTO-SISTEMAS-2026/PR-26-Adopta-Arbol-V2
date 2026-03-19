@@ -7,28 +7,28 @@ export const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      return res.status(400).json({ 
-        message: "Username y password son requeridos" 
+      return res.status(400).json({
+        message: "Username y password son requeridos",
       });
     }
 
     const [result] = await pool.query(
       "SELECT id, name, lastName, role, username, email, photo, credits, point, status FROM user WHERE username = ? AND password = ? AND status = 1",
-      [username, password]
+      [username, password],
     );
 
     if (result.length === 0) {
-      return res.status(401).json({ 
-        message: "Credenciales inválidas" 
+      return res.status(401).json({
+        message: "Credenciales inválidas",
       });
     }
 
     const user = result[0];
-    
+
     console.log("=== LOGIN USER DATA ===");
     console.log("User from DB:", user);
     console.log("User credits:", user.credits, "Type:", typeof user.credits);
-    
+
     res.json({
       message: "Login exitoso",
       user: {
@@ -40,8 +40,8 @@ export const loginUser = async (req, res) => {
         email: user.email,
         photo: user.photo,
         credits: user.credits,
-        point: user.point
-      }
+        point: user.point,
+      },
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -51,7 +51,7 @@ export const loginUser = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const [result] = await pool.query(
-      "SELECT id, name, lastName, role, username, email, photo, credits, point, status, registerDate, lastUpdate, userId FROM user WHERE status IN (1, 2) ORDER BY registerDate DESC;"
+      "SELECT id, name, lastName, role, username, email, photo, credits, point, status, registerDate, lastUpdate, userId FROM user WHERE status IN (1, 2) ORDER BY registerDate DESC;",
     );
 
     console.log(result);
@@ -66,10 +66,10 @@ export const getUser = async (req, res) => {
   try {
     console.log("=== GET USER BY ID ===");
     console.log("Requested user ID:", req.params.id);
-    
+
     const [result] = await pool.query(
       "SELECT id, name, lastName, role, username, email, photo, credits, point, status, registerDate, lastUpdate, userId FROM user WHERE id = ? AND status = 1",
-      [req.params.id]
+      [req.params.id],
     );
 
     console.log("Query result:", result);
@@ -117,13 +117,13 @@ export const createUser = async (req, res) => {
 
     // Verificar si ya existe algún usuario
     const [existingUsers] = await pool.query(
-      "SELECT COUNT(*) as count FROM user"
+      "SELECT COUNT(*) as count FROM user",
     );
     const userCount = existingUsers[0].count;
 
     // Si no hay usuarios, este será el primero (sin supervisor)
     // Si ya hay usuarios, usar el userId enviado desde el frontend (usuario logueado)
-    let userId = userCount === 0 ? null : (requestedUserId || 1);
+    let userId = userCount === 0 ? null : requestedUserId || 1;
 
     console.log("Número de usuarios existentes:", userCount);
     console.log("userId establecido como:", userId);
@@ -143,7 +143,7 @@ export const createUser = async (req, res) => {
         point,
         status,
         userId,
-      ]
+      ],
     );
 
     console.log("Usuario creado:", result);
@@ -154,9 +154,9 @@ export const createUser = async (req, res) => {
         email,
         `${name} ${lastName}`,
         username,
-        password
+        password,
       );
-      
+
       if (emailResult.success) {
         console.log("✅ Correo de credenciales enviado exitosamente");
       } else {
@@ -209,13 +209,13 @@ export const deleteUser = async (req, res) => {
   try {
     const { deletedBy } = req.body; // Recibir ID del usuario que hace la baja
     const finalDeletedBy = deletedBy || 1; // Fallback a 1 si no se proporciona
-    
+
     console.log("Dando de baja usuario con deletedBy:", finalDeletedBy);
-    
+
     // Actualizar el usuario: cambiar status a 0 y registrar quién hizo la baja
     const [result] = await pool.query(
       "UPDATE user SET status = 0, lastUpdate = CURRENT_TIMESTAMP, userId = ? WHERE id = ?;",
-      [finalDeletedBy, req.params.id]
+      [finalDeletedBy, req.params.id],
     );
 
     console.log(result);
@@ -223,9 +223,9 @@ export const deleteUser = async (req, res) => {
     if (result.affectedRows === 0)
       return res.status(404).json({ message: "User not found" });
 
-    res.json({ 
+    res.json({
       message: "Usuario dado de baja exitosamente",
-      deletedBy: finalDeletedBy 
+      deletedBy: finalDeletedBy,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -249,7 +249,7 @@ export const registerUser = async (req, res) => {
     // Verificar si el email ya existe
     const [existingEmail] = await pool.query(
       "SELECT id FROM user WHERE email = ?",
-      [email]
+      [email],
     );
 
     if (existingEmail.length > 0) {
@@ -267,7 +267,7 @@ export const registerUser = async (req, res) => {
     while (true) {
       const [existingUsername] = await pool.query(
         "SELECT id FROM user WHERE username = ?",
-        [username]
+        [username],
       );
 
       if (existingUsername.length === 0) {
@@ -295,10 +295,36 @@ export const registerUser = async (req, res) => {
         0, // point
         1, // status = 1 (activo)
         null, // userId = NULL
-      ]
+      ],
     );
 
     console.log("Usuario registrado:", result);
+
+    // Enviar credenciales por correo electrónico (no bloquea el registro si falla)
+    try {
+      const emailResult = await sendUserCredentials(
+        email,
+        `${name} ${lastName}`,
+        username,
+        password,
+      );
+
+      if (emailResult.success) {
+        console.log(
+          "✅ Correo de credenciales enviado exitosamente en registro",
+        );
+      } else {
+        console.warn(
+          "⚠️ Error al enviar correo en registro:",
+          emailResult.error,
+        );
+      }
+    } catch (emailError) {
+      console.error(
+        "❌ Error crítico al enviar correo en registro:",
+        emailError,
+      );
+    }
 
     res.status(201).json({
       id: result.insertId,
@@ -308,7 +334,8 @@ export const registerUser = async (req, res) => {
       username,
       email,
       status: 2,
-      message: "Usuario registrado exitosamente. Cuenta pendiente de aprobación.",
+      message:
+        "Usuario registrado exitosamente. Cuenta pendiente de aprobación.",
     });
   } catch (error) {
     console.error("Error al registrar usuario:", error);
@@ -327,18 +354,18 @@ export const acceptUser = async (req, res) => {
 
     const [result] = await pool.query(
       "UPDATE user SET status = 1, lastUpdate = CURRENT_TIMESTAMP, userId = ? WHERE id = ? AND status = 2",
-      [finalAcceptedBy, id]
+      [finalAcceptedBy, id],
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ 
-        message: "Usuario no encontrado o no está pendiente de aprobación" 
+      return res.status(404).json({
+        message: "Usuario no encontrado o no está pendiente de aprobación",
       });
     }
 
-    res.json({ 
+    res.json({
       message: "Usuario aceptado exitosamente",
-      acceptedBy: finalAcceptedBy 
+      acceptedBy: finalAcceptedBy,
     });
   } catch (error) {
     console.error("Error al aceptar usuario:", error);
@@ -350,7 +377,7 @@ export const acceptUser = async (req, res) => {
 export const searchUsers = async (req, res) => {
   try {
     const [result] = await pool.query(
-      "SELECT name, lastName, role, username, email, photo, credits, point, status, registerDate, lastUpdate, userId FROM user WHERE status = 2 AND (CONCAT(name, ' ', lastName) LIKE CONCAT('%', @valueName, '%') OR username LIKE CONCAT('%', @valueUser, '%') OR DATE(registerDate) BETWEEN @startDate AND @endDate) ORDER BY registerDate DESC;"
+      "SELECT name, lastName, role, username, email, photo, credits, point, status, registerDate, lastUpdate, userId FROM user WHERE status = 2 AND (CONCAT(name, ' ', lastName) LIKE CONCAT('%', @valueName, '%') OR username LIKE CONCAT('%', @valueUser, '%') OR DATE(registerDate) BETWEEN @startDate AND @endDate) ORDER BY registerDate DESC;",
     );
   } catch (error) {
     return res.status(500).json({ message: error.message });

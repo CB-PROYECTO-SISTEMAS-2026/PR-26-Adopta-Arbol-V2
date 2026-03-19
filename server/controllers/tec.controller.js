@@ -25,8 +25,15 @@ async function generarCodigoUnico() {
   let exists = true;
 
   while (exists) {
-    code = "TR" + Array.from({ length: 3 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-    const [rows] = await pool.query("SELECT id FROM tree WHERE code = ?", [code]);
+    code =
+      "TR" +
+      Array.from(
+        { length: 3 },
+        () => chars[Math.floor(Math.random() * chars.length)],
+      ).join("");
+    const [rows] = await pool.query("SELECT id FROM tree WHERE code = ?", [
+      code,
+    ]);
     if (rows.length === 0) exists = false;
   }
 
@@ -35,11 +42,22 @@ async function generarCodigoUnico() {
 
 // Registrar árbol + multimedia
 export const registerTree = async (req, res) => {
-  const { name, description, latitude, longitude, price, address, userId, categoryId } = req.body;
+  const {
+    name,
+    description,
+    latitude,
+    longitude,
+    price,
+    address,
+    userId,
+    categoryId,
+  } = req.body;
   const imageFiles = req.files;
 
   if (!Array.isArray(imageFiles) || imageFiles.length === 0) {
-    return res.status(400).json({ message: "Debes subir al menos una imagen del árbol" });
+    return res
+      .status(400)
+      .json({ message: "Debes subir al menos una imagen del árbol" });
   }
 
   const imagePaths = imageFiles.map((file) => `/Tree/${file.filename}`);
@@ -53,7 +71,17 @@ export const registerTree = async (req, res) => {
       `INSERT INTO tree 
         (name, description, code, latitude, longitude, price, address, status, userId, categoryId)
        VALUES (?, ?, ?, ?, ?, ?, ?, 2, ?, ?)`,
-      [name, description, code, latitude, longitude, price, address || null, userId, categoryId]
+      [
+        name,
+        description,
+        code,
+        latitude,
+        longitude,
+        price,
+        address || null,
+        userId,
+        categoryId,
+      ],
     );
 
     const treeId = treeResult.insertId;
@@ -61,8 +89,8 @@ export const registerTree = async (req, res) => {
     // Insertar multimedia
     for (const imagePath of imagePaths) {
       await pool.query(
-        `INSERT INTO multimedia (treeId, path, status, userId) VALUES (?, ?, 2, ?)`,
-        [treeId, imagePath, userId]
+        `INSERT INTO multimedia (treeId, path, status) VALUES (?, ?, 2)`,
+        [treeId, imagePath],
       );
     }
 
@@ -70,7 +98,7 @@ export const registerTree = async (req, res) => {
       message: "Árbol registrado con imágenes correctamente",
       treeId,
       code,
-      imagePaths
+      imagePaths,
     });
   } catch (error) {
     console.error("Error al registrar árbol:", error);
@@ -81,7 +109,9 @@ export const registerTree = async (req, res) => {
 // Obtener categorías activas
 export const getCategories = async (req, res) => {
   try {
-    const [rows] = await pool.query(`SELECT id, name FROM category WHERE status = 1 ORDER BY name ASC`);
+    const [rows] = await pool.query(
+      `SELECT id, name FROM category WHERE status = 1 ORDER BY name ASC`,
+    );
     res.json(rows);
   } catch (error) {
     console.error(error);

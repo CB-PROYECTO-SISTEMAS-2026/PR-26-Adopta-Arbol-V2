@@ -1,32 +1,32 @@
 /* Contenedor general con gradiente dinámico y animación sutil */
 .tree-log-container-modern {
   min-height: 100vh;
-  background: #0d5858; /* color solicitado */
+  background: linear-gradient(135deg, #0d5858 0%, #0a4d4d 100%);
   font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow: hidden;
-  padding: 10px; /* para dar respiración al contenido ahora que el form-card fue eliminado */
+  overflow-x: hidden;
+  padding: 20px;
   color: #ffffff;
 }
 
-/* La animación de fondo se removió porque ahora el contenedor usa un color sólido */
-
-/* Top bar con sombra suave y animación de leve flotación */
+/* Top bar mejorada */
 .top-bar {
   width: 100%;
   max-width: 900px;
-  background: #0a5c5c;
-  border-radius: 20px;
-  padding: 15px 25px;
+  background: rgba(10, 92, 92, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 16px 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   color: #fff;
-  margin-bottom: 25px;
+  margin-bottom: 32px;
+  border: 1px solid rgba(46, 138, 138, 0.2);
   animation: floatTopBar 4s ease-in-out infinite alternate;
 }
 
@@ -35,34 +35,35 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
 }
 
 .greeting {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .btn-logout {
-  background: #ff4d4d;
-  padding: 8px 16px;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #ff6b6b, #ff5252);
+  padding: 10px 20px;
+  border-radius: 10px;
   border: none;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+  box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+  font-size: 14px;
 }
 
 .btn-logout:hover {
-  background: #ff1a1a;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 26, 26, 0.5);
+  background: linear-gradient(135deg, #ff5252, #ff3838);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 77, 77, 0.4);
 }
 
 .form-card {
-  /* Mantengo la clase por compatibilidad aunque el wrapper fue eliminado en JSX */
   background: transparent;
   padding: 0;
   width: 100%;
@@ -72,120 +73,197 @@
 
 .tree-log-container-modern > h2 {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 15px;
-  color: #ffffff; /* asegurar legibilidad sobre fondo oscuro */
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 32px;
+  color: #ffffff;
   width: 100%;
   max-width: 900px;
+  letter-spacing: -0.5px;
 }
 
-.tree-log-container-modern .tree-form-modern {
-  width: 100%;
-  max-width: 900px;
-  box-sizing: border-box;
-  background: transparent;
-}
-
-/* Formulario moderno */
+/* Formulario moderno con mejor estructura */
 .tree-form-modern {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
 }
 
 .form-group.full-width {
   grid-column: 1 / -1;
 }
 
-/* Etiquetas y textos del formulario en blanco dentro del contenedor principal */
-.tree-log-container-modern label {
-  font-weight: 600;
-  margin-bottom: 5px;
-  display: block;
-  color: #ffffff;
+/* Sección para agrupar inputs relacionados */
+.form-section {
+  grid-column: 1 / -1;
+  background: rgba(46, 138, 138, 0.08);
+  border: 1px solid rgba(46, 138, 138, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
 }
 
-/* Inputs dentro del contenedor principal: diseño uniforme (fondo translúcido, borde limpio, texto blanco) */
+.form-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #70d8d8;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-section-title::before {
+  content: "🌿";
+  font-size: 18px;
+}
+
+/* Etiquetas mejoradas */
+.tree-log-container-modern label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+}
+
+/* Inputs mejorados */
 .tree-log-container-modern input,
 .tree-log-container-modern textarea,
 .tree-log-container-modern select {
   width: 100%;
-  padding: 14px 18px;
+  padding: 14px 16px;
   border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(112, 216, 216, 0.2);
   outline: none;
   font-size: 16px;
-  transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.25s ease;
+  background: rgba(255, 255, 255, 0.05);
   box-sizing: border-box;
   color: #ffffff;
   height: 48px;
+  font-family: "Poppins", sans-serif;
 }
 
-.tree-log-container-modern textarea {
-  min-height: 120px;
-  height: auto;
-  padding: 12px 15px;
+.tree-log-container-modern input::placeholder,
+.tree-log-container-modern textarea::placeholder {
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .tree-log-container-modern input:focus,
 .tree-log-container-modern textarea:focus,
 .tree-log-container-modern select:focus {
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 8px 24px rgba(13, 88, 88, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: #70d8d8;
+  box-shadow:
+    0 0 0 3px rgba(112, 216, 216, 0.1),
+    0 8px 24px rgba(13, 88, 88, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
 }
 
-textarea {
-  resize: none;
-  min-height: 100px;
+.tree-log-container-modern textarea {
+  min-height: 110px;
+  height: auto;
+  padding: 14px 16px;
+  resize: vertical;
 }
 
+.tree-log-container-modern select {
+  color: #ffffff;
+  cursor: pointer;
+  padding: 12px 14px;
+}
+
+.tree-log-container-modern select option {
+  color: #ffffff;
+  background: #0a5c5c;
+}
+
+/* Sección de imágenes mejorada */
 .image-section-modern {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  gap: 16px;
 }
 
 .image-preview-modern {
   width: 100%;
   max-width: 720px;
-  aspect-ratio: 1 / 1; /* mantiene cuadrado */
-  background: #ffffff; /* caja blanca como en la imagen */
-  border-radius: 12px;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(
+    135deg,
+    rgba(46, 138, 138, 0.1),
+    rgba(112, 216, 216, 0.05)
+  );
+  border: 2px dashed rgba(112, 216, 216, 0.4);
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  margin: 0 auto 18px auto;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  color: #0d5858;
+  padding: 32px 24px;
+  transition: all 0.3s ease;
+  color: #ffffff;
   position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.image-preview-modern::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(112, 216, 216, 0.05),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.image-preview-modern:hover {
+  border-color: #70d8d8;
+  background: linear-gradient(
+    135deg,
+    rgba(46, 138, 138, 0.15),
+    rgba(112, 216, 216, 0.1)
+  );
+  box-shadow: 0 8px 32px rgba(112, 216, 216, 0.1);
 }
 
 .image-preview-modern.has-images {
   padding: 0;
-}
-
-.image-preview-modern:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  border: none;
+  aspect-ratio: 16 / 10;
 }
 
 .image-preview-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   text-align: center;
   max-width: 90%;
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
 }
 
 .image-preview-content .bi {
-  font-size: 48px;
+  font-size: 52px;
+  color: #70d8d8;
+  opacity: 0.8;
 }
 
 .image-preview-main {
@@ -193,11 +271,336 @@ textarea {
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 16px;
 }
 
 .image-preview-overlay {
   position: absolute;
-  bottom: 12px;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 88, 88, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(112, 216, 216, 0.3);
+}
+
+.upload-instructions {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #ffffff;
+}
+
+.upload-hint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.4;
+}
+
+.upload-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #70d8d8;
+  display: block;
+  text-align: center;
+}
+
+/* Galería de imágenes mejorada */
+.image-gallery {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.image-thumbnail {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(112, 216, 216, 0.25);
+  background: linear-gradient(
+    135deg,
+    rgba(46, 138, 138, 0.1),
+    rgba(112, 216, 216, 0.05)
+  );
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.image-thumbnail:hover {
+  border-color: #70d8d8;
+  box-shadow: 0 8px 24px rgba(112, 216, 216, 0.2);
+  transform: translateY(-4px);
+}
+
+.image-thumbnail img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+}
+
+.image-remove-button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(255, 77, 77, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+}
+
+.image-remove-button:hover {
+  transform: scale(1.1);
+  background: rgba(255, 77, 77, 1);
+  box-shadow: 0 6px 16px rgba(255, 77, 77, 0.4);
+}
+
+.image-name {
+  display: block;
+  padding: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.image-preview-modern.dragging {
+  border-color: #70d8d8;
+  background: linear-gradient(
+    135deg,
+    rgba(46, 138, 138, 0.2),
+    rgba(112, 216, 216, 0.15)
+  );
+  box-shadow:
+    0 0 0 3px rgba(112, 216, 216, 0.15),
+    0 12px 40px rgba(13, 88, 88, 0.2);
+  transform: scale(1.02);
+}
+
+/* Botones mejorados */
+.btn-upload-modern {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  margin: 8px auto 0;
+  background: linear-gradient(135deg, #70d8d8, #52c4c4);
+  color: #0a4d4d;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(112, 216, 216, 0.25);
+  font-family: "Poppins", sans-serif;
+}
+
+.btn-upload-modern:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(112, 216, 216, 0.35);
+  background: linear-gradient(135deg, #52c4c4, #70d8d8);
+}
+
+.btn-upload-modern:active {
+  transform: translateY(-1px);
+}
+
+/* Sección del mapa mejorada */
+.map-section-modern {
+  background: linear-gradient(
+    135deg,
+    rgba(22, 112, 112, 0.3),
+    rgba(46, 138, 138, 0.2)
+  );
+  border: 2px solid rgba(112, 216, 216, 0.25);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.map-section-modern:hover {
+  border-color: #70d8d8;
+  box-shadow: 0 8px 32px rgba(112, 216, 216, 0.15);
+  background: linear-gradient(
+    135deg,
+    rgba(22, 112, 112, 0.4),
+    rgba(46, 138, 138, 0.3)
+  );
+}
+
+.map-section-modern p {
+  margin: 0 0 12px;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.map-section-modern .leaflet-container {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.coords {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #70d8d8;
+}
+
+/* Botón de registro mejorado */
+.btn-register-modern {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #70d8d8, #52c4c4);
+  color: #0a4d4d;
+  padding: 16px 28px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(112, 216, 216, 0.3);
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+
+.btn-register-modern:hover {
+  background: linear-gradient(135deg, #52c4c4, #70d8d8);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(112, 216, 216, 0.4);
+}
+
+.btn-register-modern:active {
+  transform: translateY(-1px);
+}
+
+.btn-register-modern:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tree-form-modern {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .tree-log-container-modern {
+    padding: 12px;
+  }
+
+  .tree-log-container-modern > h2 {
+    font-size: 26px;
+    margin-bottom: 24px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 12px 16px;
+  }
+
+  .greeting {
+    font-size: 16px;
+  }
+
+  .image-preview-modern {
+    min-height: 200px;
+  }
+
+  .image-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .form-section {
+    padding: 16px;
+  }
+
+  .map-section-modern {
+    padding: 16px;
+  }
+}
+
+/* -----------------------------
+   Number input spinner styles
+   - Ajusta el color de los botones up/down en navegadores WebKit
+   - En Firefox los controles nativos no son totalmente estilables; si es necesario
+     mantener un aspecto idéntico en todos los navegadores podemos reemplazarlos
+     por controles personalizados, pero aquí solo modificamos los nativos.
+   ----------------------------- */
+.tree-log-container-modern input[type="number"] {
+  /* asegurar que el input mantenga apariencia consistente */
+  -webkit-appearance: textfield; /* evita que Chrome muestre bordes inesperados */
+  appearance: auto;
+}
+
+/* Chrome, Edge y otros basados en WebKit/Blink: colorear el área del spinner */
+.tree-log-container-modern input[type="number"]::-webkit-outer-spin-button,
+.tree-log-container-modern input[type="number"]::-webkit-inner-spin-button {
+  background: linear-gradient(
+    180deg,
+    rgba(112, 216, 216, 0.06),
+    rgba(46, 138, 138, 0.06)
+  );
+  color: #0a4d4d; /* color de las flechas */
+  width: 34px;
+  height: calc(100% - 8px);
+  margin: 4px 6px 4px 0;
+  border-radius: 8px;
+}
+
+/* Reducir contraste del icono para que no quede totalmente blanco */
+.tree-log-container-modern
+  input[type="number"]::-webkit-outer-spin-button::after,
+.tree-log-container-modern
+  input[type="number"]::-webkit-inner-spin-button::after {
+  color: #0a4d4d;
+}
+
+/* Firefox: los spinners no se pueden colorear directamente; ocultamos el nativo
+   para que el diseño quede limpio y consistente. Si prefieres mantenerlos,
+   comenta la siguiente regla. */
+@-moz-document url-prefix() {
+  .tree-log-container-modern input[type="number"] {
+    -moz-appearance: textfield; /* quita el spinner nativo en Firefox */
+    appearance: textfield;
+  }
+}
+
+.image-preview-overlay {
+  position: absolute;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.8);
@@ -266,7 +669,9 @@ textarea {
   justify-content: center;
   color: #ffffff;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .image-remove-button:hover {
@@ -301,8 +706,8 @@ textarea {
   width: 100%;
   max-width: 720px;
   margin: 0 auto;
-  background: #e2e2e2; /* gris claro */
-  color: #ffffff; /* texto blanco como en la imagen */
+  background: linear-gradient(135deg, #70d8d8, #52c4c4); /* verde claro */
+  color: #0a4d4d; /* texto verde oscuro */
   border: none;
   padding: 16px 22px;
   border-radius: 12px;
@@ -324,7 +729,9 @@ textarea {
   border-radius: 20px;
   padding: 15px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .map-section-modern:hover {
@@ -358,12 +765,15 @@ textarea {
 }
 
 .tree-log-container-modern select {
-  color: #ffdd57;
+  color: #ffffff;
 }
 
 .tree-log-container-modern select option {
   color: #0a5c5c;
   background: #ffffff;
+  border-radius: 6px;
+  padding: 8px 6px;
+  margin: 4px 0;
 }
 
 .tree-log-container-modern input::placeholder,
@@ -377,11 +787,13 @@ textarea {
   color: #fff;
   padding: 14px;
   border: none;
-  border-radius: 25px;
+  border-radius: 10px;
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s ease, box-shadow 0.3s;
+  transition:
+    all 0.3s ease,
+    box-shadow 0.3s;
   box-shadow: 0 6px 20px rgba(27, 77, 77, 0.3);
 }
 

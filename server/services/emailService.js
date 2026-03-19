@@ -8,7 +8,7 @@ const createTransporter = () => {
     secure: false,
     auth: {
       user: process.env.EMAIL_USER || "edu.pantoja1210@gmail.com",
-      pass: process.env.EMAIL_PASS || "ahkq qyjx swxy qcka",
+      pass: process.env.EMAIL_PASS || "qvkw hyfl xijt thkp",
     },
   });
 };
@@ -18,7 +18,7 @@ export const sendUserCredentials = async (
   userEmail,
   userName,
   username,
-  password
+  password,
 ) => {
   try {
     const transporter = createTransporter();
@@ -43,7 +43,7 @@ export const sendUserCredentials = async (
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">🌳 AdoptaÁrbol</div>
+            <div class="logo">AdoptaÁrbol</div>
             <h2>¡Bienvenido al sistema!</h2>
           </div>
           
@@ -52,7 +52,7 @@ export const sendUserCredentials = async (
             <p>Tu cuenta ha sido creada exitosamente en nuestro sistema AdoptaÁrbol. A continuación encontrarás tus credenciales de acceso:</p>
             
             <div class="credentials">
-              <h4>📧 Credenciales de Acceso</h4>
+              <h4>Credenciales de Acceso</h4>
               <p><strong>Usuario:</strong> ${username}</p>
               <p><strong>Contraseña:</strong> ${password}</p>
               <p><strong>Correo:</strong> ${userEmail}</p>
@@ -62,7 +62,7 @@ export const sendUserCredentials = async (
             
             <p>Puedes acceder al sistema usando estas credenciales. Si tienes alguna duda o problema, no dudes en contactar al administrador.</p>
             
-            <p>¡Gracias por ser parte de AdoptaÁrbol! 🌱</p>
+            <p>¡Gracias por ser parte de AdoptaÁrbol!</p>
           </div>
           
           <div class="footer">

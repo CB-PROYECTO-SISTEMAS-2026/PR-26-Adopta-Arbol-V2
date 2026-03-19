@@ -171,7 +171,7 @@ export default function TreeLog() {
       images.length === 0
     ) {
       showWarning(
-        "Completa todos los campos obligatorios y selecciona una ubicación 🌳"
+        "Completa todos los campos obligatorios y selecciona una ubicación 🌳",
       );
       return;
     }
@@ -203,9 +203,7 @@ export default function TreeLog() {
       setDescription("");
       setPrice("");
       setAddress("");
-      imagesRef.current.forEach((item) =>
-        URL.revokeObjectURL(item.previewUrl)
-      );
+      imagesRef.current.forEach((item) => URL.revokeObjectURL(item.previewUrl));
       setImages([]);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -324,11 +322,15 @@ export default function TreeLog() {
               >
                 {images.length === 0 ? (
                   <div className="image-preview-content">
-                    <i className="bi bi-images" aria-hidden="true"></i>
-                    <p className="upload-instructions">
-                      Arrastra y suelta aquí o haz clic para seleccionar imágenes
+                    <i
+                      className="text-white bi bi-images"
+                      aria-hidden="true"
+                    ></i>
+                    <p className="text-white upload-instructions">
+                      Arrastra y suelta aquí o haz clic para seleccionar
+                      imágenes
                     </p>
-                    <p className="upload-hint">
+                    <p className="text-white upload-hint">
                       Puedes subir varias imágenes en formato JPG o PNG
                     </p>
                   </div>

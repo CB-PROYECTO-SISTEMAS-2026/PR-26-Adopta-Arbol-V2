@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import "./CreateAccount.css";
 import { useNavigate, Link } from "react-router-dom";
 import { useUsers } from "../context/UserContext";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function CreateAccount() {
   const navigate = useNavigate();
   const { registerUser } = useUsers();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -22,22 +23,22 @@ export default function CreateAccount() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const validateName = (value) => {
     if (!value) return "";
-    
+
     // Verificar espacios al final
     if (value !== value.trimEnd()) {
       return "No se permiten espacios al final";
     }
-    
+
     // Verificar caracteres no permitidos (números y caracteres especiales)
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
       return "Solo se permiten letras y espacios (no números ni caracteres especiales)";
     }
-    
+
     return "";
   };
 
@@ -77,12 +78,13 @@ export default function CreateAccount() {
       fieldError = passwordErrors.join(". ");
       // Validar también confirmPassword si ya tiene valor
       if (formData.confirmPassword) {
-        const confirmError = processedValue !== formData.confirmPassword 
-          ? "Las contraseñas no coinciden" 
-          : "";
-        setFieldErrors(prev => ({
+        const confirmError =
+          processedValue !== formData.confirmPassword
+            ? "Las contraseñas no coinciden"
+            : "";
+        setFieldErrors((prev) => ({
           ...prev,
-          confirmPassword: confirmError
+          confirmPassword: confirmError,
         }));
       }
     } else if (name === "confirmPassword") {
@@ -99,12 +101,12 @@ export default function CreateAccount() {
 
     setFormData({
       ...formData,
-      [name]: processedValue
+      [name]: processedValue,
     });
 
-    setFieldErrors(prev => ({
+    setFieldErrors((prev) => ({
       ...prev,
-      [name]: fieldError
+      [name]: fieldError,
     }));
 
     // Limpiar error general
@@ -126,7 +128,7 @@ export default function CreateAccount() {
         hasErrors = true;
       }
     }
-    
+
     // Validar apellido
     if (!formData.lastName.trim()) {
       errors.lastName = "El apellido es obligatorio";
@@ -152,7 +154,11 @@ export default function CreateAccount() {
     }
 
     // Validar coincidencia de contraseñas
-    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
+    if (
+      formData.password &&
+      formData.confirmPassword &&
+      formData.password !== formData.confirmPassword
+    ) {
       errors.confirmPassword = "Las contraseñas no coinciden";
       hasErrors = true;
     }
@@ -166,7 +172,7 @@ export default function CreateAccount() {
 
     setFieldErrors(errors);
 
-    if (hasErrors || Object.values(errors).some(err => err !== "")) {
+    if (hasErrors || Object.values(errors).some((err) => err !== "")) {
       setError("Por favor corrige los errores en el formulario");
       return false;
     }
@@ -184,9 +190,9 @@ export default function CreateAccount() {
       ...formData,
       name: formData.name.trim(),
       lastName: formData.lastName.trim(),
-      email: formData.email.trim()
+      email: formData.email.trim(),
     };
-    
+
     setFormData(trimmedData);
 
     if (!validateForm()) {
@@ -200,22 +206,26 @@ export default function CreateAccount() {
         name: trimmedData.name,
         lastName: trimmedData.lastName,
         email: trimmedData.email,
-        password: trimmedData.password
+        password: trimmedData.password,
       };
 
       const result = await registerUser(registrationData);
-      
-      setSuccess(`¡Cuenta creada exitosamente! Tu nombre de usuario es: ${result.username}. Tu solicitud está pendiente de aprobación.`);
+
+      setSuccess(
+        `¡Cuenta creada exitosamente! Tu nombre de usuario es: ${result.username}. Tu solicitud está pendiente de aprobación.`,
+      );
       setFormData({
         name: "",
         lastName: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
       });
-      
     } catch (error) {
-      setError(error.response?.data?.message || "Error al crear la cuenta. Intenta nuevamente.");
+      setError(
+        error.response?.data?.message ||
+          "Error al crear la cuenta. Intenta nuevamente.",
+      );
     } finally {
       setLoading(false);
     }
@@ -228,156 +238,126 @@ export default function CreateAccount() {
           <img src="/logo.png" alt="Logo" />
         </div>
 
-        <h2>Crear Cuenta</h2>
+        <h2>🌳 Crear Cuenta</h2>
+        <p className="register-subtitle">Crea tu cuenta para adoptar árboles</p>
 
         <form onSubmit={handleRegister}>
           <div className="input-group">
-            <label>Nombre</label>
-            <input 
-              type="text" 
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Ingresa tu nombre"
-              required
-            />
+            <label htmlFor="name">Nombre</label>
+            <div className="input-wrapper">
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Tu nombre"
+                autoComplete="given-name"
+                required
+              />
+              <i className="bi bi-person input-icon"></i>
+            </div>
             {fieldErrors.name && (
-              <div className="error-message" style={{
-                color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
-              }}>
-                {fieldErrors.name}
-              </div>
+              <div className="error-message">{fieldErrors.name}</div>
             )}
           </div>
 
           <div className="input-group">
-            <label>Apellido</label>
-            <input 
-              type="text" 
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              placeholder="Ingresa tu apellido"
-              required
-            />
+            <label htmlFor="lastName">Apellido</label>
+            <div className="input-wrapper">
+              <input
+                id="lastName"
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Tu apellido"
+                autoComplete="family-name"
+                required
+              />
+              <i className="bi bi-person input-icon"></i>
+            </div>
             {fieldErrors.lastName && (
-              <div className="error-message" style={{
-                color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
-              }}>
-                {fieldErrors.lastName}
-              </div>
+              <div className="error-message">{fieldErrors.lastName}</div>
             )}
           </div>
 
           <div className="input-group">
-            <label>Correo Electrónico</label>
-            <input 
-              type="email" 
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="ejemplo@correo.com"
-              required
-            />
+            <label htmlFor="email">Correo Electrónico</label>
+            <div className="input-wrapper">
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="tu@correo.com"
+                autoComplete="email"
+                required
+              />
+              <i className="bi bi-envelope input-icon"></i>
+            </div>
             {fieldErrors.email && (
-              <div className="error-message" style={{
-                color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
-              }}>
-                {fieldErrors.email}
-              </div>
+              <div className="error-message">{fieldErrors.email}</div>
             )}
           </div>
 
           <div className="input-group">
-            <label>Contraseña</label>
-            <input 
-              type="password" 
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Crea una contraseña"
-              required
-            />
+            <label htmlFor="password">Contraseña</label>
+            <div className="input-wrapper">
+              <input
+                id="password"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Crea una contraseña securaa"
+                autoComplete="new-password"
+                required
+              />
+              <i className="bi bi-lock input-icon"></i>
+            </div>
             {fieldErrors.password && (
-              <div className="error-message" style={{
-                color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
-              }}>
-                {fieldErrors.password}
-              </div>
+              <div className="error-message">{fieldErrors.password}</div>
             )}
           </div>
 
           <div className="input-group">
-            <label>Confirmar Contraseña</label>
-            <input 
-              type="password" 
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Repite tu contraseña"
-              required
-            />
+            <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+            <div className="input-wrapper">
+              <input
+                id="confirmPassword"
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Repite tu contraseña"
+                autoComplete="new-password"
+                required
+              />
+              <i className="bi bi-lock input-icon"></i>
+            </div>
             {fieldErrors.confirmPassword && (
-              <div className="error-message" style={{
-                color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
-              }}>
-                {fieldErrors.confirmPassword}
-              </div>
+              <div className="error-message">{fieldErrors.confirmPassword}</div>
             )}
           </div>
 
-          {error && (
-            <div className="error-message" style={{
-              color: '#e74c3c',
-              textAlign: 'center',
-              marginBottom: '15px',
-              fontSize: '14px',
-              backgroundColor: '#fee',
-              border: '1px solid #fcc',
-              borderRadius: '8px',
-              padding: '10px'
-            }}>
-              {error}
-            </div>
-          )}
+          {error && <div className="error-message">⚠️ {error}</div>}
 
-          {success && (
-            <div className="success-message" style={{
-              color: '#27ae60',
-              textAlign: 'center',
-              marginBottom: '15px',
-              fontSize: '14px',
-              backgroundColor: '#efe',
-              border: '1px solid #cfc',
-              borderRadius: '8px',
-              padding: '10px'
-            }}>
-              {success}
-            </div>
-          )}
+          {success && <div className="success-message">✓ {success}</div>}
 
-          <button
-            type="submit"
-            className="btn-register"
-            disabled={loading}
-          >
+          <button type="submit" className="btn-register" disabled={loading}>
             {loading ? "Creando cuenta..." : "Crear Cuenta"}
           </button>
         </form>
 
-        <p className="login-text">
-          ¿Ya tienes cuenta? <Link to="/login">Iniciar sesión</Link>
-        </p>
+        <div className="divider">O</div>
+
+        <div className="login-section">
+          <p className="login-text">
+            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
