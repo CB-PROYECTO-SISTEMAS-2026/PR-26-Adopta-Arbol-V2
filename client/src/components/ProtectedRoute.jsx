@@ -8,6 +8,11 @@ const ProtectedRoute = ({ children, requiredRole = null, allowedRoles = null }) 
   const { isAuthenticated, loggedUser } = useUsers();
 
   useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log("MODO DESARROLLO: Acceso sin autenticación");
+      return;
+    }
+
     console.log("=== PROTECTED ROUTE DEBUG ===");
     console.log("isAuthenticated:", isAuthenticated);
     console.log("loggedUser:", loggedUser);

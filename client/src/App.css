@@ -1,27 +1,33 @@
-/* App.css - layout principal usando bootstrap pero controlando el espacio para la sidebar */
+/* App.css - layout principal con diseño moderno y dinámico */
 :root {
-  --sidebar-width: 220px; /* cambia aquí para ajustar ancho globalmente */
-  --sidebar-gap: 16px; /* separación izquierda desde el borde del viewport */
+  --sidebar-width: 220px;
+  --sidebar-gap: 16px;
+  --gradient-primary: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  --gradient-secondary: linear-gradient(135deg, #16c78d, #0f9f6f);
+  --shadow-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-elevation-2: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-elevation-3: 0 16px 40px rgba(0, 0, 0, 0.16);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Envoltorio principal: sidebar + contenido */
 .app-layout {
   display: flex;
   min-height: 100vh;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9f0f5 100%);
   box-sizing: border-box;
 }
 
-/* Si usas sidebar fija (position:fixed) mantén esto:
-   app-content debe dejar margen izquierdo equivalente al ancho de la sidebar + gap */
+/* Contenido principal */
 .app-content {
   flex: 1;
   padding: 24px;
   box-sizing: border-box;
   margin-left: calc(var(--sidebar-width) + var(--sidebar-gap));
+  transition: var(--transition-smooth);
 }
 
-/* Para pantallas pequeñas: sidebar colapsa y contenido usa todo el ancho */
+/* Para pantallas pequeñas */
 @media (max-width: 992px) {
   .app-content {
     margin-left: 0;

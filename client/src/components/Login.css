@@ -1,6 +1,14 @@
-/* Fondo con degradado dinámico + hojas flotantes múltiples */
+/* Login.css - Diseño moderno y dinámico */
+
+:root {
+  --gradient-primary: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  --gradient-secondary: linear-gradient(135deg, #16c78d, #0f9f6f);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Contenedor principal con degradado dinámico */
 .login-container {
-  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  background: var(--gradient-primary);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -8,9 +16,19 @@
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
   position: relative;
+  animation: bgShift 8s ease-in-out infinite alternate;
 }
 
-/* Hojas flotantes múltiples usando pseudo-elementos y animaciones distintas */
+@keyframes bgShift {
+  0% {
+    background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  }
+  100% {
+    background: linear-gradient(225deg, #1b4d4d, #3a9999);
+  }
+}
+
+/* Hojas decorativas flotantes con mejor animación */
 .login-container::before,
 .login-container::after,
 .login-container .leaf1,
@@ -19,180 +37,206 @@
   position: absolute;
   width: 250px;
   height: 250px;
-  background-image: url('https://img.icons8.com/ios-filled/100/ffffff/leaf.png'); /* hoja blanca */
+  background-image: url('https://img.icons8.com/ios-filled/100/ffffff/leaf.png');
   background-size: contain;
   background-repeat: no-repeat;
-  opacity: 0.05;
+  opacity: 0.08;
   z-index: 0;
 }
 
 .login-container::before {
   top: -50px;
   left: -50px;
-  animation: floatLeaf1 25s linear infinite;
+  animation: floatLeaf1 25s ease-in-out infinite;
 }
 
 .login-container::after {
   bottom: -50px;
   right: -50px;
-  animation: floatLeaf2 30s linear infinite;
+  animation: floatLeaf2 30s ease-in-out infinite;
   animation-delay: 10s;
 }
 
-/* Hojas adicionales flotando */
 .login-container .leaf1 {
   top: 20%;
   left: 70%;
-  animation: floatLeaf3 28s linear infinite;
-  opacity: 0.03;
+  animation: floatLeaf3 28s ease-in-out infinite;
+  opacity: 0.06;
 }
 
 .login-container .leaf2 {
   bottom: 10%;
   left: 30%;
-  animation: floatLeaf4 35s linear infinite;
-  opacity: 0.04;
+  animation: floatLeaf4 35s ease-in-out infinite;
+  opacity: 0.07;
 }
 
-/* Animaciones para hojas */
 @keyframes floatLeaf1 {
-  0% { transform: translateY(0) rotate(0deg); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-40px) rotate(20deg); }
-  100% { transform: translateY(0) rotate(0deg); }
 }
 
 @keyframes floatLeaf2 {
-  0% { transform: translateY(0) rotate(0deg); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-50px) rotate(-15deg); }
-  100% { transform: translateY(0) rotate(0deg); }
 }
 
 @keyframes floatLeaf3 {
-  0% { transform: translateY(0) rotate(0deg); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-35px) rotate(10deg); }
-  100% { transform: translateY(0) rotate(0deg); }
 }
 
 @keyframes floatLeaf4 {
-  0% { transform: translateY(0) rotate(0deg); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-45px) rotate(-10deg); }
-  100% { transform: translateY(0) rotate(0deg); }
 }
 
-/* Caja de login moderna */
+/* Caja de login con diseño moderno */
 .login-box {
-  background-color: #f0fff0;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, #f9fffe, #f0f7f7);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.1);
   padding: 50px 40px;
   width: 360px;
   text-align: center;
   position: relative;
   z-index: 1;
-  animation: fadeIn 0.8s ease-in-out;
-  transition: transform 0.3s, box-shadow 0.3s;
+  animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: var(--transition-smooth);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
 }
 
 .login-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25), inset 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
-
+/* Logo con animación de flotación */
 .logo img {
   height: 90px;
-  width: 100px; 
+  width: 100px;
   margin-bottom: 25px;
-  animation: floatLogo 3s ease-in-out infinite alternate;
+  animation: floatLogo 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  transition: var(--transition-smooth);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
-/* Título */
+.login-box:hover .logo img {
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+}
+
+/* Título con estilo mejorado */
 h2 {
-  color: #1b4d4d;
+  color: #0a5c5c;
   margin-bottom: 25px;
   font-size: 1.8rem;
   letter-spacing: 0.5px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Inputs */
+/* Grupo de inputs */
 .input-group {
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .input-group label {
-  font-size: 14px;
+  font-size: 13px;
   color: #1b4d4d;
   font-weight: 600;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* Inputs con diseño mejorado */
 .input-group input {
   width: 100%;
   padding: 12px 15px;
-  border: 1.5px solid #1b4d4d;
-  border-radius: 12px; 
+  border: 1.5px solid #d0e8e8;
+  border-radius: 12px;
   outline: none;
   font-size: 14px;
-  transition: all 0.3s ease;
-  background: #f7fdf7;
-  box-sizing: border-box; 
+  transition: var(--transition-smooth);
+  background: linear-gradient(135deg, #f9fffe, #f0f7f7);
+  box-sizing: border-box;
+  color: #333;
 }
 
+.input-group input::placeholder {
+  color: #a0c8c8;
+}
 
 .input-group input:focus {
-  border-color: #2e8a8a;
-  box-shadow: 0 0 10px rgba(46, 138, 138, 0.4);
-  background: #e6f7f7;
+  border-color: #16c78d;
+  box-shadow: 0 0 0 3px rgba(22, 199, 141, 0.1);
+  background: #ffffff;
 }
 
-/* Botón login moderno */
+.input-group input:hover:not(:focus) {
+  border-color: #2e8a8a;
+  box-shadow: 0 0 0 2px rgba(46, 138, 138, 0.05);
+}
+
+/* Botón de login mejorado */
 .btn-login {
   width: 100%;
-  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
+  background: var(--gradient-secondary);
   color: #fff;
   border: none;
   padding: 12px;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 15px rgba(27, 77, 77, 0.3);
+  font-size: 15px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 8px 20px rgba(22, 199, 141, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 8px;
 }
 
 .btn-login:hover {
-  background: linear-gradient(135deg, #2e8a8a, #1b4d4d);
-  box-shadow: 0 10px 25px rgba(27, 77, 77, 0.4);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(22, 199, 141, 0.4);
 }
 
-/* Registro */
+.btn-login:active {
+  transform: translateY(-1px);
+}
+
+/* Texto de registro */
 .register-text {
   margin-top: 20px;
-  font-size: 14px;
+  font-size: 13px;
   color: #1b4d4d;
   transition: color 0.3s;
 }
 
 .register-text a {
-  color: #2e8a8a;
-  font-weight: 600;
+  color: #16c78d;
+  font-weight: 700;
   text-decoration: none;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .register-text a:hover {
+  color: #0a5c5c;
   text-decoration: underline;
-  color: #1b4d4d;
 }
 
 /* Animaciones */
-@keyframes fadeIn {
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -201,12 +245,16 @@ h2 {
 }
 
 @keyframes floatLogo {
-  from { transform: translateY(0); }
-  to { transform: translateY(-10px); }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
-/* Responsivo */
-@media (max-width: 400px) {
+/* Responsive */
+@media (max-width: 480px) {
   .login-box {
     padding: 40px 25px;
     width: 90%;
@@ -217,7 +265,17 @@ h2 {
   }
 
   .logo img {
-    height: 90px;
-    width: 90px; /* ajustar para móviles */
+    height: 75px;
+    width: 85px;
+  }
+
+  .input-group input {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+
+  .btn-login {
+    padding: 11px;
+    font-size: 14px;
   }
 }

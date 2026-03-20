@@ -1,27 +1,40 @@
-/* AdminDashboard.css - Diseño exacto como la imagen */
+/* AdminDashboard.css - Dashboard administrativo moderno */
+
+:root {
+  --gradient-primary: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  --gradient-secondary: linear-gradient(135deg, #16c78d, #0f9f6f);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-elevation-2: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
 
 .dashboard-container {
   width: 100%;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9f0f5 100%);
   min-height: 100vh;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Header principal con buscador y admin info */
+/* Header principal */
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  padding: 15px 25px;
-  border-bottom: 1px solid #e9ecef;
+  background: linear-gradient(135deg, #ffffff, #f9fffe);
+  padding: 18px 30px;
+  border-bottom: 1px solid #e0e8ef;
   margin-bottom: 0;
+  box-shadow: var(--shadow-elevation-1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
+/* Sección de búsqueda */
 .search-section {
   flex: 1;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .search-input-container {
@@ -31,124 +44,170 @@
 
 .search-input {
   width: 100%;
-  padding: 12px 45px 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  background: #f8f9fa;
+  padding: 11px 45px 11px 16px;
+  border: 1.5px solid #d0e8e8;
+  border-radius: 10px;
+  font-size: 15px;
+  background: linear-gradient(135deg, #f9fffe, #f0f7f7);
   box-sizing: border-box;
+  transition: var(--transition-smooth);
+  color: #333;
+}
+
+.search-input::placeholder {
+  color: #a0c8c8;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #16c78d;
   background: white;
+  box-shadow: 0 0 0 3px rgba(22, 199, 141, 0.1);
 }
 
 .search-icon {
   position: absolute;
-  right: 15px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: #6c757d;
+  color: #a0c8c8;
   font-size: 16px;
   pointer-events: none;
+  transition: color 0.3s ease;
 }
 
+.search-input:focus ~ .search-icon {
+  color: #16c78d;
+}
+
+/* Info del admin */
 .admin-info {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 
 .admin-text {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  color: #2c5aa0;
+  color: #0a5c5c;
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .admin-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #2c5aa0;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #16c78d, #0f9f6f);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(22, 199, 141, 0.3);
+  transition: var(--transition-smooth);
+}
+
+.admin-avatar:hover {
+  box-shadow: 0 6px 18px rgba(22, 199, 141, 0.4);
+  transform: scale(1.05);
 }
 
 .avatar-icon {
   color: white;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* Sección de filtros */
 .filters-section {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
   background: white;
-  padding: 20px 25px;
-  border-bottom: 1px solid #e9ecef;
+  padding: 22px 30px;
+  border-bottom: 1px solid #e0e8ef;
   margin-bottom: 0;
+  box-shadow: var(--shadow-elevation-1);
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .date-filters {
   display: flex;
   gap: 20px;
-  align-items: end;
+  align-items: flex-end;
+  flex-wrap: wrap;
 }
 
 .date-input-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .date-input-group label {
-  font-size: 14px;
-  color: #6c757d;
-  font-weight: 500;
+  font-size: 13px;
+  color: #1b4d4d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .date-input {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border: 1.5px solid #d0e8e8;
+  border-radius: 10px;
   font-size: 14px;
-  background: white;
+  background: linear-gradient(135deg, #f9fffe, #f0f7f7);
   min-width: 150px;
+  transition: var(--transition-smooth);
+  color: #333;
+  box-sizing: border-box;
 }
 
 .date-input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #16c78d;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(22, 199, 141, 0.1);
 }
 
+/* Botón agregar usuario */
 .add-user-btn {
-  background: #90ee90;
-  color: #2d5016;
+  background: linear-gradient(135deg, #16c78d, #0f9f6f);
+  color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: var(--transition-smooth);
   display: flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 12px rgba(22, 199, 141, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .add-user-btn:hover {
-  background: #7dd87d;
+  box-shadow: 0 8px 20px rgba(22, 199, 141, 0.4);
+  transform: translateY(-2px);
 }
 
-/* Tabla de usuarios */
+.add-user-btn:active {
+  transform: translateY(0);
+}
+
+/* Tabla */
 .table-section {
   background: white;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-elevation-1);
 }
 
 .users-table {
@@ -158,43 +217,46 @@
 }
 
 .users-table thead {
-  background: #6c7b7f;
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
 }
 
 .users-table thead th {
-  padding: 15px 25px;
+  padding: 16px 25px;
   text-align: left;
   font-weight: 600;
   color: white;
-  font-size: 16px;
+  font-size: 14px;
   border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .users-table tbody tr {
   border-bottom: 1px solid #e9ecef;
-  transition: background 0.2s;
+  transition: var(--transition-smooth);
 }
 
 .users-table tbody tr:hover {
-  background: #f8f9fa;
+  background: linear-gradient(90deg, rgba(22, 199, 141, 0.05), transparent);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .users-table tbody tr:nth-child(even) {
-  background: #f8f9fa;
+  background: #f8fafb;
 }
 
 .users-table tbody tr:nth-child(even):hover {
-  background: #e9ecef;
+  background: linear-gradient(90deg, rgba(22, 199, 141, 0.08), rgba(248, 250, 251, 1));
 }
 
 .users-table tbody td {
-  padding: 15px 25px;
+  padding: 16px 25px;
   color: #333;
-  font-size: 15px;
+  font-size: 14px;
   vertical-align: middle;
 }
 
-/* Columna de nombres con avatar */
+/* Celdas de usuario con avatar */
 .users-table .user-cell {
   display: flex;
   align-items: center;
@@ -202,19 +264,23 @@
 }
 
 .user-avatar {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background: #6c757d;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-placeholder {
-  color: #6c757d;
-  font-size: 24px;
+  color: white;
+  font-size: 18px;
 }
 
 /* Botones de acciones */
@@ -225,29 +291,31 @@
 .action-btn {
   border: none;
   padding: 8px 12px;
-  border-radius: 50%;
-  margin: 0 3px;
+  border-radius: 8px;
+  margin: 0 4px;
   cursor: pointer;
-  font-size: 14px;
-  transition: transform 0.2s;
+  font-size: 13px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .action-btn:hover {
-  transform: scale(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .view-btn {
-  background: #6c757d;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
 }
 
 .accept-btn {
-  background: #28a745;
+  background: linear-gradient(135deg, #16c78d, #0f9f6f);
   color: white;
 }
 
 .delete-btn {
-  background: #dc3545;
+  background: linear-gradient(135deg, #dc3545, #c82333);
   color: white;
 }
 
@@ -258,31 +326,35 @@
   align-items: center;
   gap: 8px;
   background: white;
-  padding: 20px 25px;
+  padding: 20px 30px;
   border-top: 1px solid #e9ecef;
 }
 
 .pagination-btn {
-  border: none;
+  border: 1px solid #d0e8e8;
   background: white;
-  color: #6c757d;
-  padding: 10px 15px;
+  color: #1b4d4d;
+  padding: 9px 13px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.2s;
-  min-width: 45px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+  min-width: 40px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-.pagination-btn:hover {
-  background: #e9ecef;
-  color: #333;
+.pagination-btn:hover:not(:disabled) {
+  background: #f0f7f7;
+  border-color: #16c78d;
+  color: #16c78d;
 }
 
 .pagination-btn.active {
-  background: #2c5aa0;
+  background: linear-gradient(135deg, #16c78d, #0f9f6f);
   color: white;
+  border-color: transparent;
 }
 
 .pagination-btn:disabled {
@@ -290,14 +362,10 @@
   cursor: not-allowed;
 }
 
-.pagination-btn:disabled:hover {
-  background: white;
-  color: #6c757d;
-}
-
 .pagination-dots {
-  color: #6c757d;
-  font-size: 16px;
+  color: #1b4d4d;
+  font-size: 14px;
+  font-weight: 600;
   padding: 0 10px;
 }
 
@@ -307,6 +375,7 @@
     flex-direction: column;
     gap: 15px;
     align-items: stretch;
+    padding: 16px 20px;
   }
 
   .search-section {
@@ -315,44 +384,55 @@
 
   .filters-section {
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
     align-items: stretch;
+    padding: 18px 20px;
   }
 
   .date-filters {
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .date-input {
+    min-width: auto;
+  }
+
+  .add-user-btn {
+    width: 100%;
   }
 
   .users-table {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .users-table thead th,
   .users-table tbody td {
-    padding: 10px 15px;
+    padding: 12px 15px;
   }
 
   .pagination-section {
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 8px;
+    padding: 16px 20px;
   }
 
   .pagination-btn {
     padding: 8px 12px;
-    min-width: 40px;
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 
 @media (max-width: 576px) {
   .admin-header,
   .filters-section {
-    padding: 15px 20px;
+    padding: 14px 16px;
   }
 
   .users-table thead th,
   .users-table tbody td {
-    padding: 8px 12px;
+    padding: 10px 12px;
+    font-size: 12px;
   }
 
   .users-table .user-cell {
@@ -360,11 +440,17 @@
   }
 
   .user-avatar {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
   }
 
   .avatar-placeholder {
-    font-size: 14px;
+    font-size: 16px;
+  }
+
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 12px;
   }
 }
