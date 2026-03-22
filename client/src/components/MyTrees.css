@@ -127,6 +127,34 @@
   transform: translateY(-2px);
 }
 
+.buy-credits-button {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #0a5c5c;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.buy-credits-button:hover {
+  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ffed4e, #ffd700);
+}
+
+.cart-icon {
+  font-size: 16px;
+}
+
 /* Search Bar mejorado */
 .search-container {
   padding: 24px 20px;

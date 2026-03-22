@@ -7,6 +7,7 @@ import { getStaticUrl } from "../config/api.config.js";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import Card from "./Card";
 import "./MyTrees.css";
 import "./ViewDetailsModal.css";
 
@@ -66,6 +67,7 @@ export default function MyTrees() {
   const [newTreeName, setNewTreeName] = useState("");
   const [selectedTree, setSelectedTree] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showBuyCreditsModal, setShowBuyCreditsModal] = useState(false);
 
   useEffect(() => {
     loadMyTrees();
@@ -213,6 +215,10 @@ export default function MyTrees() {
               <span className="points-amount">{loggedUser?.point || 0}</span>
             </div>
           </div>
+          <button className="buy-credits-button" onClick={() => setShowBuyCreditsModal(true)}>
+            <span className="cart-icon">🛒</span>
+            Comprar
+          </button>
           <button className="ranking-button" onClick={goToRanking}>
             <span className="crown-icon">👑</span>
             Ranking
@@ -493,6 +499,11 @@ export default function MyTrees() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de Compra de Créditos */}
+      {showBuyCreditsModal && (
+        <Card onClose={() => setShowBuyCreditsModal(false)} />
       )}
 
       {/* Footer */}

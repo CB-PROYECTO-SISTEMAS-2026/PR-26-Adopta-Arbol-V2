@@ -1,0 +1,341 @@
+/* Card Component Styles */
+
+.card-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.card-container {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.card-header {
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 16px 16px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.card-back-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: transform 0.2s;
+}
+
+.card-back-btn:hover {
+  transform: scale(1.2);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  flex: 1;
+}
+
+/* Progress Indicator */
+.card-progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 20px;
+  gap: 12px;
+}
+
+.progress-step {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e9ecef;
+  border: 2px solid #dee2e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.progress-step.active {
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  color: white;
+  border-color: #0a5c5c;
+}
+
+.progress-line {
+  width: 30px;
+  height: 2px;
+  background: #dee2e6;
+  transition: all 0.3s;
+}
+
+/* Card Display Section */
+.card-display-section {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.credit-card {
+  background: linear-gradient(135deg, #0a5c5c 0%, #2e8a8a 100%);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(10, 92, 92, 0.3);
+}
+
+.credit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+}
+
+.card-chip {
+  width: 50px;
+  height: 40px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-pattern {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  border-radius: 3px;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.card-balance,
+.card-credits {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.balance-label,
+.credits-label {
+  font-weight: 400;
+}
+
+.balance-amount,
+.credits-amount {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.card-holder {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.card-instruction {
+  text-align: center;
+  color: #6c757d;
+  font-size: 13px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Credit Options Grid */
+.credit-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 0 20px;
+}
+
+.other-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px 20px 0;
+}
+
+.credit-card-option {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.credit-card-option:hover {
+  border-color: #0a5c5c;
+  background: #f0f8f8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(10, 92, 92, 0.15);
+}
+
+.credit-icon {
+  font-size: 24px;
+}
+
+.credit-amount {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0a5c5c;
+}
+
+.credit-label {
+  font-size: 11px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.credit-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2e8a8a;
+}
+
+.credit-offer {
+  font-size: 10px;
+  color: #16c78d;
+  font-weight: 600;
+}
+
+/* Buy Button */
+.card-buy-btn {
+  background: linear-gradient(135deg, #16c78d, #0f9f6f);
+  border: none;
+  color: white;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  margin: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(22, 199, 141, 0.3);
+}
+
+.card-buy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 199, 141, 0.4);
+}
+
+.card-buy-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card-container {
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .card-title {
+    font-size: 16px;
+  }
+
+  .credit-card {
+    min-height: 120px;
+    padding: 16px;
+  }
+
+  .credit-options,
+  .other-options {
+    gap: 10px;
+    padding: 0 16px;
+  }
+
+  .card-buy-btn {
+    margin: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-progress {
+    gap: 8px;
+  }
+
+  .progress-step {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .progress-line {
+    width: 20px;
+  }
+}
