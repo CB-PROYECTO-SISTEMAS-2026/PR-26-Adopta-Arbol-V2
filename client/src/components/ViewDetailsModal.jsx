@@ -63,7 +63,13 @@ const ReceiptImage = ({ purchaseId }) => {
   );
 };
 
-function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
+function ViewDetailsModal({
+  isOpen,
+  onClose,
+  data,
+  type = "user",
+  onDeactivate,
+}) {
   // Función para obtener el texto del estado
   const getStatusText = (status) => {
     switch (parseInt(status)) {
@@ -174,14 +180,14 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
   const handlePrevTreeImage = () => {
     if (treeImages.length <= 1) return;
     setCurrentTreeImageIndex((prev) =>
-      prev === 0 ? treeImages.length - 1 : prev - 1
+      prev === 0 ? treeImages.length - 1 : prev - 1,
     );
   };
 
   const handleNextTreeImage = () => {
     if (treeImages.length <= 1) return;
     setCurrentTreeImageIndex((prev) =>
-      prev === treeImages.length - 1 ? 0 : prev + 1
+      prev === treeImages.length - 1 ? 0 : prev + 1,
     );
   };
 
@@ -202,18 +208,20 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
           type === "user"
             ? "modal-user"
             : type === "adoption"
-            ? "modal-adoption"
-            : type === "irrigation"
-            ? "modal-irrigation"
-            : type === "purchase"
-            ? "modal-purchase"
-            : type === "redemption"
-            ? "modal-redemption"
-            : type === "category"
-            ? "modal-category"
-            : type === "tree"
-            ? "modal-tree"
-            : ""
+              ? "modal-adoption"
+              : type === "irrigation"
+                ? "modal-irrigation"
+                : type === "purchase"
+                  ? "modal-purchase"
+                  : type === "redemption"
+                    ? "modal-redemption"
+                    : type === "category"
+                      ? "modal-category"
+                      : type === "qrcode"
+                        ? "modal-qrcode"
+                        : type === "tree"
+                          ? "modal-tree"
+                          : ""
         }`}
       >
         {type === "user" ? (
@@ -531,8 +539,8 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
                     {data.status === 1
                       ? "Aprobado"
                       : data.status === 0
-                      ? "Rechazado"
-                      : "Pendiente"}
+                        ? "Rechazado"
+                        : "Pendiente"}
                   </span>
                 </div>
 
@@ -713,6 +721,73 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
               </button>
             </div>
           </>
+        ) : type === "qrcode" ? (
+          // Diseño especial para Códigos QR
+          <>
+            <div className="qrcode-header">
+              <button className="modal-close-simple" onClick={onClose}>
+                <i className="bi bi-x-lg"></i>
+              </button>
+              <div className="qrcode-header-icon">
+                <i className="bi bi-qr-code-scan"></i>
+              </div>
+            </div>
+
+            <div className="qrcode-body">
+              <h2 className="user-name">Código QR #{data.id || "N/A"}</h2>
+
+              <div className="qrcode-info-grid">
+                <div className="qrcode-info-item">
+                  <label className="qrcode-info-label">Estado</label>
+                  <span className="qrcode-info-value">
+                    {data.status === 1 ? "✅ Activo" : "❌ Inactivo"}
+                  </span>
+                </div>
+
+                <div className="qrcode-info-item">
+                  <label className="qrcode-info-label">
+                    Fecha de Vencimiento
+                  </label>
+                  <span className="qrcode-info-value">
+                    {data.expirationDate
+                      ? formatDateSimple(data.expirationDate)
+                      : "Sin fecha asignada"}
+                  </span>
+                </div>
+
+                <div className="qrcode-info-item">
+                  <label className="qrcode-info-label">Fecha de Registro</label>
+                  <span className="qrcode-info-value">
+                    {formatDateSimple(data.registerDate)}
+                  </span>
+                </div>
+
+                {data.userId && (
+                  <div className="qrcode-info-item">
+                    <label className="qrcode-info-label">Usuario</label>
+                    <span className="qrcode-info-value">
+                      {`${data.userName || ""} ${data.userLastName || ""}`.trim() ||
+                        "No disponible"}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Imagen del QR */}
+              {data.url && (
+                <div className="qrcode-image-section">
+                  <label className="qrcode-info-label">Código QR</label>
+                  <div className="qrcode-image-container">
+                    <img
+                      src={getStaticUrl(data.url)}
+                      alt={`QR ${data.id}`}
+                      className="qrcode-image"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
         ) : (
           // Diseño para árboles
           <>
@@ -784,9 +859,7 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
               {/* Imágenes del árbol */}
               {treeImages.length > 0 && (
                 <div className="tree-image-section">
-                  <label className="tree-info-label">
-                    Imágenes del Árbol
-                  </label>
+                  <label className="tree-info-label">Imágenes del Árbol</label>
                   <div className="tree-carousel">
                     {treeImages.length > 1 && (
                       <button
@@ -795,7 +868,10 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
                         onClick={handlePrevTreeImage}
                         aria-label="Imagen anterior"
                       >
-                        <i className="bi bi-chevron-left" aria-hidden="true"></i>
+                        <i
+                          className="bi bi-chevron-left"
+                          aria-hidden="true"
+                        ></i>
                       </button>
                     )}
                     <div className="tree-carousel-main">
@@ -808,7 +884,7 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
                         onError={(e) => {
                           console.error(
                             "Error al cargar imagen:",
-                            e.target.src
+                            e.target.src,
                           );
                           e.target.style.display = "none";
                           const container = e.target.parentElement;
@@ -826,7 +902,10 @@ function ViewDetailsModal({ isOpen, onClose, data, type = "user" }) {
                         onClick={handleNextTreeImage}
                         aria-label="Imagen siguiente"
                       >
-                        <i className="bi bi-chevron-right" aria-hidden="true"></i>
+                        <i
+                          className="bi bi-chevron-right"
+                          aria-hidden="true"
+                        ></i>
                       </button>
                     )}
                   </div>

@@ -500,6 +500,131 @@
   background: #004d40;
 }
 
+/* ===== ESTILOS PARA MODAL DE CÓDIGOS QR ===== */
+
+.modal-content.modal-qrcode {
+  max-width: 400px;
+  padding: 0;
+  border-radius: 15px;
+  position: relative;
+}
+
+.qrcode-header {
+  background: #096c6c;
+  color: white;
+  padding: 30px;
+  border-radius: 15px 15px 0 0;
+  text-align: center;
+  position: relative;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrcode-header-icon {
+  font-size: 4rem;
+  opacity: 0.95;
+  background: rgba(255, 255, 255, 0.25);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.qrcode-body {
+  padding: 25px 30px 30px 30px;
+  background: #ffffff;
+  font-style: normal;
+  color: #000000;
+}
+
+.qrcode-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.qrcode-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.qrcode-info-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #096c6c;
+  margin: 0;
+}
+
+.qrcode-info-value {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #000000;
+  word-wrap: break-word;
+  font-style: normal;
+}
+
+/* Sección de imagen del QR */
+.qrcode-image-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.qrcode-image-section .qrcode-info-label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #096c6c;
+  font-size: 1rem;
+}
+
+.qrcode-image-container {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrcode-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 10px;
+}
+
+.qrcode-close-btn {
+  background: #096c6c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  flex: 1;
+  display: block;
+  box-shadow: none;
+}
+
+.qrcode-close-btn:hover {
+  background: #004d40;
+}
+
 /* ===== ESTILOS PARA MODAL DE ÁRBOLES ===== */
 
 .modal-content.modal-tree {
@@ -640,7 +765,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .tree-carousel-button:hover {
@@ -670,7 +797,9 @@
   padding: 2px;
   background: transparent;
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .tree-carousel-thumb:hover {

@@ -5,23 +5,25 @@ import path from "path";
 // Crear solicitud de compra
 export const createPurchase = async (req, res) => {
   try {
-    const { userId, amount, adminId } = req.body;
+    const { userId, qrcodeId, creditId } = req.body;
 
     // Validar datos requeridos
-    if (!userId || !amount) {
-      return res.status(400).json({ message: "Faltan datos requeridos" });
+    if (!userId || !qrcodeId || !creditId) {
+      return res.status(400).json({
+        message: "Faltan datos requeridos: userId, qrcodeId, creditId",
+      });
     }
 
-    // Crear la solicitud de compra
+    // Crear la solicitud de compra - adminId será NULL inicialmente
     const [result] = await pool.query(
-      "INSERT INTO purchase (userId, amount, adminId, status) VALUES (?, ?, ?, 2)",
-      [userId, amount, adminId || 1]
+      "INSERT INTO purchase (userId, qrcodeId, creditId, adminId, status) VALUES (?, ?, ?, NULL, 2)",
+      [userId, qrcodeId, creditId],
     );
 
     res.json({
       id: result.insertId,
       message: "Solicitud de compra creada exitosamente",
-      status: 2 // Pendiente
+      status: 2, // Pendiente
     });
   } catch (error) {
     console.error("Error al crear compra:", error);
@@ -35,7 +37,7 @@ export const uploadPurchaseProof = async (req, res) => {
     console.log("=== INICIO uploadPurchaseProof ===");
     console.log("Body:", req.body);
     console.log("File:", req.file);
-    
+
     const { purchaseId } = req.body;
     const file = req.file;
 
@@ -57,7 +59,7 @@ export const uploadPurchaseProof = async (req, res) => {
     console.log("Verificando compra en BD...");
     const [purchase] = await pool.query(
       "SELECT id FROM purchase WHERE id = ?",
-      [purchaseId]
+      [purchaseId],
     );
 
     if (purchase.length === 0) {
@@ -70,7 +72,7 @@ export const uploadPurchaseProof = async (req, res) => {
     // Carpeta para los comprobantes
     const proofFolder = path.join("client", "public", "receipts");
     console.log("Carpeta destino:", proofFolder);
-    
+
     if (!fs.existsSync(proofFolder)) {
       console.log("Creando carpeta:", proofFolder);
       fs.mkdirSync(proofFolder, { recursive: true });
@@ -86,7 +88,9 @@ export const uploadPurchaseProof = async (req, res) => {
     // Verificar que el archivo temporal existe
     if (!fs.existsSync(file.path)) {
       console.log("ERROR: Archivo temporal no existe:", file.path);
-      return res.status(500).json({ message: "Archivo temporal no encontrado" });
+      return res
+        .status(500)
+        .json({ message: "Archivo temporal no encontrado" });
     }
 
     // Mover el archivo
@@ -102,7 +106,7 @@ export const uploadPurchaseProof = async (req, res) => {
     console.log("Actualizando BD con comprobante...");
     await pool.query(
       "UPDATE purchase SET receipt = ?, lastUpdate = NOW() WHERE id = ?",
-      [fileUrl, purchaseId]
+      [fileUrl, purchaseId],
     );
     console.log("BD actualizada con comprobante");
 
@@ -110,16 +114,16 @@ export const uploadPurchaseProof = async (req, res) => {
     res.json({
       message: "Comprobante subido exitosamente",
       fileUrl: fileUrl,
-      purchaseId: purchaseId
+      purchaseId: purchaseId,
     });
   } catch (error) {
     console.error("=== ERROR uploadPurchaseProof ===");
     console.error("Error completo:", error);
     console.error("Stack trace:", error.stack);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Error al subir comprobante",
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
   }
 };
@@ -136,7 +140,7 @@ export const confirmPurchaseRequest = async (req, res) => {
     // Verificar que la compra existe y tiene comprobante
     const [purchase] = await pool.query(
       "SELECT id, status, receipt FROM purchase WHERE id = ?",
-      [purchaseId]
+      [purchaseId],
     );
 
     if (purchase.length === 0) {
@@ -144,18 +148,19 @@ export const confirmPurchaseRequest = async (req, res) => {
     }
 
     if (!purchase[0].receipt) {
-      return res.status(400).json({ message: "Debe adjuntar un comprobante antes de confirmar" });
+      return res
+        .status(400)
+        .json({ message: "Debe adjuntar un comprobante antes de confirmar" });
     }
 
     // Mantener el status 2 (pendiente) - solo actualizar lastUpdate
-    await pool.query(
-      "UPDATE purchase SET lastUpdate = NOW() WHERE id = ?",
-      [purchaseId]
-    );
+    await pool.query("UPDATE purchase SET lastUpdate = NOW() WHERE id = ?", [
+      purchaseId,
+    ]);
 
     res.json({
       message: "Solicitud confirmada exitosamente",
-      status: 2
+      status: 2,
     });
   } catch (error) {
     console.error("Error al confirmar compra:", error);

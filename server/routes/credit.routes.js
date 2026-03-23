@@ -4,14 +4,38 @@ import {
   getPendingPurchases,
   approvePurchase,
   rejectPurchase,
-  getPurchaseDetails
+  getPurchaseDetails,
+  getAllCreditOptions,
+  getCreditOptionById,
+  createCreditOption,
+  updateCreditOption,
+  deleteCreditOption,
 } from "../controllers/credit.controller.js";
 
 const router = Router();
 
-// -----------------------------
-// Rutas para gestión de compras
-// -----------------------------
+// ========================================
+// Rutas para gestión de OPCIONES DE CRÉDITO
+// ========================================
+
+// Obtener todas las opciones de crédito activas
+router.get("/credit-options", getAllCreditOptions);
+
+// Obtener opción de crédito específica
+router.get("/credit-options/:id", getCreditOptionById);
+
+// Crear opción de crédito (Admin)
+router.post("/credit-options", createCreditOption);
+
+// Actualizar opción de crédito (Admin)
+router.put("/credit-options/:id", updateCreditOption);
+
+// Eliminar (delete lógico) opción de crédito (Admin)
+router.delete("/credit-options/:id", deleteCreditOption);
+
+// ========================================
+// Rutas para gestión de COMPRAS
+// ========================================
 
 // Obtener todas las compras
 router.get("/purchases", getAllPurchases);

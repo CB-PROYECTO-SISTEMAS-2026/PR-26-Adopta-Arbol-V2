@@ -10,10 +10,12 @@ import {
   getRedemptionDetails,
   getUserQr,
   getQRCodeById,
+  getAllQRCodes,
+  updateQRCodeStatus,
   createRedemption,
   uploadRedemptionProof,
   confirmRedemptionRequest,
-  createIrrigatorRedemption
+  createIrrigatorRedemption,
 } from "../controllers/redemption.controller.js";
 
 const router = Router();
@@ -35,7 +37,7 @@ const qrStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname); // Nombre temporal, luego se renombra
-  }
+  },
 });
 
 // Configuración de multer para subir comprobantes
@@ -46,36 +48,36 @@ const proofStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname); // Nombre temporal
-  }
+  },
 });
 
-const uploadQR = multer({ 
+const uploadQR = multer({
   storage: qrStorage,
   fileFilter: (req, file, cb) => {
     // Aceptar solo archivos de imagen
-    if (file.mimetype.startsWith('image/')) {
+    if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
-      cb(new Error('Solo se permiten archivos de imagen'), false);
+      cb(new Error("Solo se permiten archivos de imagen"), false);
     }
   },
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB máximo
-  }
+    fileSize: 5 * 1024 * 1024, // 5MB máximo
+  },
 });
-const uploadProof = multer({ 
+const uploadProof = multer({
   storage: proofStorage,
   fileFilter: (req, file, cb) => {
     // Aceptar solo archivos de imagen
-    if (file.mimetype.startsWith('image/')) {
+    if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
-      cb(new Error('Solo se permiten archivos de imagen'), false);
+      cb(new Error("Solo se permiten archivos de imagen"), false);
     }
   },
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB máximo
-  }
+    fileSize: 5 * 1024 * 1024, // 5MB máximo
+  },
 });
 
 // -----------------------------
@@ -83,36 +85,51 @@ const uploadProof = multer({
 // -----------------------------
 
 // Subir QR
-router.post("/upload-qr", (req, res, next) => {
-  console.log("=== INICIO RUTA UPLOAD-QR ===");
-  console.log("Headers:", req.headers);
-  console.log("Body antes de multer:", req.body);
-  
-  uploadQR.single("qrFile")(req, res, (err) => {
-    console.log("=== DESPUÉS DE MULTER ===");
-    console.log("Error:", err);
-    console.log("File:", req.file);
-    console.log("Body después de multer:", req.body);
-    
-    if (err) {
-      console.error("Error de multer:", err);
-      if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json({ message: "El archivo es demasiado grande. Máximo 5MB" });
+router.post(
+  "/upload-qr",
+  (req, res, next) => {
+    console.log("=== INICIO RUTA UPLOAD-QR ===");
+    console.log("Headers:", req.headers);
+    console.log("Body antes de multer:", req.body);
+
+    uploadQR.single("qrFile")(req, res, (err) => {
+      console.log("=== DESPUÉS DE MULTER ===");
+      console.log("Error:", err);
+      console.log("File:", req.file);
+      console.log("Body después de multer:", req.body);
+
+      if (err) {
+        console.error("Error de multer:", err);
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res
+            .status(400)
+            .json({ message: "El archivo es demasiado grande. Máximo 5MB" });
+        }
+        if (err.message === "Solo se permiten archivos de imagen") {
+          return res
+            .status(400)
+            .json({
+              message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)",
+            });
+        }
+        return res
+          .status(400)
+          .json({
+            message: "Error al procesar el archivo",
+            error: err.message,
+          });
       }
-      if (err.message === 'Solo se permiten archivos de imagen') {
-        return res.status(400).json({ message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)" });
+
+      if (!req.file) {
+        console.log("ERROR: No se recibió archivo en multer");
+        return res.status(400).json({ message: "No se recibió archivo" });
       }
-      return res.status(400).json({ message: "Error al procesar el archivo", error: err.message });
-    }
-    
-    if (!req.file) {
-      console.log("ERROR: No se recibió archivo en multer");
-      return res.status(400).json({ message: "No se recibió archivo" });
-    }
-    
-    next();
-  });
-}, uploadQrForUser);
+
+      next();
+    });
+  },
+  uploadQrForUser,
+);
 
 // Obtener todas las redemptions pendientes
 router.get("/pending", getPendingRedemptions);
@@ -132,30 +149,55 @@ router.get("/qrcode/:userId", getUserQr);
 // Obtener QR por ID específico
 router.get("/qrcode-by-id/:qrId", getQRCodeById);
 
+// Obtener todos los códigos QR
+router.get("/qrcodes", getAllQRCodes);
+
+// Actualizar estado del código QR
+router.put("/qrcode/:qrId/status", updateQRCodeStatus);
+
 // Crear solicitud de redención
 router.post("/redemption", createRedemption);
 
 // Subir comprobante de redención
-router.post("/redemption-proof", (req, res, next) => {
-  uploadProof.single("proofFile")(req, res, (err) => {
-    if (err) {
-      console.error("Error de multer:", err);
-      if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json({ message: "El archivo es demasiado grande. Máximo 5MB" });
+router.post(
+  "/redemption-proof",
+  (req, res, next) => {
+    uploadProof.single("proofFile")(req, res, (err) => {
+      if (err) {
+        console.error("Error de multer:", err);
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res
+            .status(400)
+            .json({ message: "El archivo es demasiado grande. Máximo 5MB" });
+        }
+        if (err.message === "Solo se permiten archivos de imagen") {
+          return res
+            .status(400)
+            .json({
+              message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)",
+            });
+        }
+        return res
+          .status(400)
+          .json({
+            message: "Error al procesar el archivo",
+            error: err.message,
+          });
       }
-      if (err.message === 'Solo se permiten archivos de imagen') {
-        return res.status(400).json({ message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)" });
-      }
-      return res.status(400).json({ message: "Error al procesar el archivo", error: err.message });
-    }
-    next();
-  });
-}, uploadRedemptionProof);
+      next();
+    });
+  },
+  uploadRedemptionProof,
+);
 
 // Confirmar solicitud de redención
 router.put("/redemption/:redemptionId/confirm", confirmRedemptionRequest);
 
 // Crear redención del regador con QR
-router.post("/irrigator-redemption", uploadQR.single("qrFile"), createIrrigatorRedemption);
+router.post(
+  "/irrigator-redemption",
+  uploadQR.single("qrFile"),
+  createIrrigatorRedemption,
+);
 
 export default router;

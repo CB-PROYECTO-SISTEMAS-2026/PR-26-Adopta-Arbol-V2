@@ -4,7 +4,7 @@
   background: linear-gradient(135deg, #0a5c5c 0%, #2e8a8a 100%);
   display: flex;
   flex-direction: column;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
 }
 
@@ -138,63 +138,130 @@
 .credit-options {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
 }
 
 .credit-option-row {
-  display: flex;
-  gap: 15px;
   width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.credits-button {
-  flex: 1;
+.credit-option-row.selected .credit-option-card {
+  background: linear-gradient(135deg, #0a3a3a, #1e5a5a);
+  border-color: #ffd700;
+  box-shadow:
+    0 8px 25px rgba(27, 77, 77, 0.5),
+    0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.credit-option-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
-  color: white;
-  border: none;
-  padding: 15px 20px;
+  border: 2px solid transparent;
   border-radius: 15px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(27, 77, 77, 0.3);
+  color: white;
 }
 
-.credits-button:hover {
+.credit-option-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(27, 77, 77, 0.4);
 }
 
-.credits-button.selected {
-  background: linear-gradient(135deg, #0a3a3a, #1e5a5a);
-  box-shadow: 0 6px 20px rgba(27, 77, 77, 0.5);
-}
-
-.price-button {
+.credit-option-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
   flex: 1;
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #333;
-  border: none;
-  padding: 15px 20px;
-  border-radius: 15px;
-  font-size: 16px;
+}
+
+.credit-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.credit-label {
+  font-size: 12px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.price-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+.credit-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffd700;
 }
 
-.price-button.selected {
-  background: linear-gradient(135deg, #ffc107, #ffd54f);
-  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+.bonus-badge {
+  font-size: 11px;
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.price-label {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.selected-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.selected-indicator i {
+  font-size: 24px;
+  color: #ffd700;
+}
+
+.no-options {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: white;
+  font-size: 18px;
 }
 
 /* Generate QR Button */
@@ -219,7 +286,7 @@
 }
 
 .generate-qr-button:disabled {
-  background: #CCCCCC;
+  background: #cccccc;
   color: #666;
   cursor: not-allowed;
   box-shadow: none;
@@ -240,23 +307,23 @@
   .user-buy-credits-container {
     padding: 10px;
   }
-  
+
   .user-buy-credits-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .main-content {
     padding: 20px 15px;
     gap: 25px;
   }
-  
+
   .credit-option-row {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .credits-button,
   .price-button {
     width: 100%;
@@ -267,18 +334,18 @@
   .username {
     font-size: 16px;
   }
-  
+
   .buy-credits-title {
     font-size: 16px;
     padding: 12px 30px;
   }
-  
+
   .credits-button,
   .price-button {
     font-size: 14px;
     padding: 12px 15px;
   }
-  
+
   .generate-qr-button {
     font-size: 14px;
     padding: 12px 20px;

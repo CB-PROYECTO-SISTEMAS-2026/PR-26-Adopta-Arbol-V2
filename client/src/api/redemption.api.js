@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "../config/api.config.js"; 
+import { API_URL } from "../config/api.config.js";
 
 // Subir QR para un usuario
 export const uploadQr = async (userId, file, expirationDate) => {
@@ -8,7 +8,14 @@ export const uploadQr = async (userId, file, expirationDate) => {
   formData.append("expirationDate", expirationDate);
   formData.append("userId", String(userId)); // Asegurar que sea string
 
-  console.log("FormData preparado - userId:", userId, "expirationDate:", expirationDate, "file:", file.name);
+  console.log(
+    "FormData preparado - userId:",
+    userId,
+    "expirationDate:",
+    expirationDate,
+    "file:",
+    file.name,
+  );
 
   return await axios.post(`${API_URL}/upload-qr`, formData, {
     headers: {
@@ -59,6 +66,30 @@ export const getQRCodeById = async (qrId) => {
   }
 };
 
+// Obtener todos los códigos QR
+export const getAllQRCodes = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/qrcodes`);
+    return response;
+  } catch (error) {
+    console.error("Error al obtener todos los QR codes:", error);
+    throw error;
+  }
+};
+
+// Actualizar estado del código QR
+export const updateQRCodeStatus = async (qrId, status) => {
+  try {
+    const response = await axios.put(`${API_URL}/qrcode/${qrId}/status`, {
+      status,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al actualizar estado del QR code:", error);
+    throw error;
+  }
+};
+
 // Crear solicitud de compra
 export const createPurchaseRequest = async (purchaseData) => {
   try {
@@ -97,11 +128,15 @@ export const createIrrigatorRedemption = async (userId, amount, qrFile) => {
     formData.append("amount", amount);
     formData.append("qrFile", qrFile);
 
-    const response = await axios.post(`${API_URL}/irrigator-redemption`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
+    const response = await axios.post(
+      `${API_URL}/irrigator-redemption`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       },
-    });
+    );
     return response;
   } catch (error) {
     console.error("Error al crear redención:", error);

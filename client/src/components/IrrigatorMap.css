@@ -242,7 +242,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    opacity 0.12s ease;
   box-shadow: 0 3px 8px rgba(15, 48, 48, 0.18);
 }
 

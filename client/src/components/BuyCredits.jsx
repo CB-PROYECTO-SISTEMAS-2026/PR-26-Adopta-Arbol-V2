@@ -19,13 +19,13 @@ const ReceiptImage = ({ purchaseId }) => {
     const tryLoadImage = async () => {
       setLoading(true);
       setError(false);
-      
+
       // Extensiones a probar en orden de prioridad
-      const extensions = ['png', 'jpg', 'jpeg'];
-      
+      const extensions = ["png", "jpg", "jpeg"];
+
       for (const ext of extensions) {
         const imagePath = `/receipts/${purchaseId}.${ext}`;
-        
+
         try {
           // Crear una promesa para verificar si la imagen existe
           const imageExists = await new Promise((resolve) => {
@@ -34,7 +34,7 @@ const ReceiptImage = ({ purchaseId }) => {
             img.onerror = () => resolve(false);
             img.src = imagePath;
           });
-          
+
           if (imageExists) {
             setImageSrc(imagePath);
             setLoading(false);
@@ -45,7 +45,7 @@ const ReceiptImage = ({ purchaseId }) => {
           console.log(`Failed to load: ${imagePath}`);
         }
       }
-      
+
       // Si no se encontró ninguna imagen
       setError(true);
       setLoading(false);
@@ -70,15 +70,17 @@ const ReceiptImage = ({ purchaseId }) => {
     return (
       <div className="no-qr">
         <i className="bi bi-exclamation-triangle"></i>
-        <p>No hay comprobante disponible para este registro (ID: {purchaseId})</p>
+        <p>
+          No hay comprobante disponible para este registro (ID: {purchaseId})
+        </p>
       </div>
     );
   }
 
   return (
-    <img 
+    <img
       src={imageSrc}
-      alt="Comprobante de compra" 
+      alt="Comprobante de compra"
       className="qr-image"
       onError={() => {
         console.error(`Error displaying image: ${imageSrc}`);
@@ -121,9 +123,11 @@ export default function BuyCredits() {
   };
 
   const aprobar = async (id) => {
-    const purchase = purchases.find(p => p.id === id);
-    const purchaseInfo = purchase ? `${purchase.name} ${purchase.lastName}` : "esta compra";
-    
+    const purchase = purchases.find((p) => p.id === id);
+    const purchaseInfo = purchase
+      ? `${purchase.name} ${purchase.lastName}`
+      : "esta compra";
+
     showConfirm(
       `¿Estás seguro de que deseas aprobar la compra de ${purchaseInfo}?`,
       async () => {
@@ -137,14 +141,16 @@ export default function BuyCredits() {
           console.error("Error aprobando compra:", error);
           showError("Error al aprobar la compra. Inténtalo nuevamente.");
         }
-      }
+      },
     );
   };
 
   const rechazar = async (id) => {
-    const purchase = purchases.find(p => p.id === id);
-    const purchaseInfo = purchase ? `${purchase.name} ${purchase.lastName}` : "esta compra";
-    
+    const purchase = purchases.find((p) => p.id === id);
+    const purchaseInfo = purchase
+      ? `${purchase.name} ${purchase.lastName}`
+      : "esta compra";
+
     showConfirm(
       `¿Estás seguro de que deseas rechazar la compra de ${purchaseInfo}?`,
       async () => {
@@ -158,7 +164,7 @@ export default function BuyCredits() {
           console.error("Error rechazando compra:", error);
           showError("Error al rechazar la compra. Inténtalo nuevamente.");
         }
-      }
+      },
     );
   };
 
@@ -210,7 +216,7 @@ export default function BuyCredits() {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
-    
+
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -218,12 +224,12 @@ export default function BuyCredits() {
     } else {
       const start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
       const end = Math.min(totalPages, start + maxVisiblePages - 1);
-      
+
       for (let i = start; i <= end; i++) {
         pages.push(i);
       }
     }
-    
+
     return pages;
   };
 
@@ -342,7 +348,9 @@ export default function BuyCredits() {
                 </td>
                 <td>{p.lastName}</td>
                 <td>{new Date(p.registerDate).toLocaleDateString()}</td>
-                <td>{p.amount}</td>
+                <td>
+                  {p.price ? `${parseFloat(p.price).toFixed(2)} Bs` : "N/A"}
+                </td>
                 <td>
                   <span className={`status-badge ${getStatusClass(p.status)}`}>
                     {getStatusText(p.status)}

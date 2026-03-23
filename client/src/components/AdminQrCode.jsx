@@ -10,15 +10,22 @@ import {
   getRedemptionDetails,
   uploadQr,
   getQRCodeById,
+  getAllQRCodes,
+  updateQRCodeStatus,
 } from "../api/redemption.api.js";
 import { getUserByIdRequest } from "../api/user.api.js";
+import { getStaticUrl } from "../config/api.config.js";
 
 export default function RedemptionAdmin() {
   const { loggedUser } = useUsers();
-  const { showSuccess, showError, showWarning, showConfirm } = useNotification();
+  const { showSuccess, showError, showWarning, showConfirm } =
+    useNotification();
   const [redemptions, setRedemptions] = useState([]);
+  const [allQRCodes, setAllQRCodes] = useState([]);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedRedemption, setSelectedRedemption] = useState(null);
+  const [selectedQRCode, setSelectedQRCode] = useState(null);
+  const [isQRDetailsModalOpen, setIsQRDetailsModalOpen] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [qrFile, setQrFile] = useState(null);
   const [expiryDate, setExpiryDate] = useState(""); // fecha de vencimiento
@@ -38,16 +45,54 @@ export default function RedemptionAdmin() {
     }
   };
 
+  const fetchAllQRCodes = async () => {
+    try {
+      const res = await getAllQRCodes();
+      console.log("📊 Todos los QR codes recibidos:", res.data);
+      console.log("📊 Cantidad de QR codes:", res.data?.length || 0);
+      setAllQRCodes(res.data);
+    } catch (error) {
+      console.error("Error fetching QR codes:", error);
+    }
+  };
+
   // Función para verificar fechas de vencimiento - Solo para QR con id 5 desde tabla qrcode
   const checkQr5Expiration = async () => {
-    console.log("🔍 Iniciando verificación de fecha de vencimiento para QR 5 desde tabla qrcode...");
-    
+    console.log(
+      "🔍 Iniciando verificación de fecha de vencimiento para QR 5 desde tabla qrcode...",
+    );
+
     try {
-      // Obtener QR directamente de la tabla qrcode con id 5
-      const qrResponse = await getQRCodeById(5);
-      const qr5 = qrResponse.data;
-      
-      console.log("✅ QR 5 encontrado en tabla qrcode:", qr5);
+      // Obtener red de redemptions y escoger un QR dinámico en lugar del id fijo 5
+      let qr5 = null;
+      try {
+        const pendingRes = await getPendingRedemptions();
+        const pending = pendingRes.data || [];
+        const firstWithQr = pending.find((p) => p.qrCodeId);
+        if (firstWithQr) {
+          try {
+            const qrResponse = await getQRCodeById(firstWithQr.qrCodeId);
+            qr5 = qrResponse.data;
+          } catch (err) {
+            console.warn(
+              "No se pudo obtener QR por id desde pending:",
+              firstWithQr.qrCodeId,
+              err.message,
+            );
+          }
+        } else {
+          console.log(
+            "No hay redemptions con qrCodeId para verificar expiración",
+          );
+        }
+      } catch (err) {
+        console.warn(
+          "Error al obtener redemptions para determinar QR dinámico:",
+          err.message,
+        );
+      }
+
+      console.log("✅ QR encontrado en tabla qrcode:", qr5);
 
       if (!qr5) {
         console.log("⚠️ No se encontró QR con ID 5 en la tabla qrcode");
@@ -63,21 +108,23 @@ export default function RedemptionAdmin() {
 
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fechas
-      console.log("📅 Fecha de hoy:", today.toISOString().split('T')[0]);
+      console.log("📅 Fecha de hoy:", today.toISOString().split("T")[0]);
 
       const expirationDate = new Date(qr5.expirationDate);
-      
+
       // Validar que la fecha sea válida
       if (isNaN(expirationDate.getTime())) {
         console.log("⚠️ Fecha inválida para QR 5:", qr5.expirationDate);
         setQr5Notification(null);
         return;
       }
-      
+
       expirationDate.setHours(0, 0, 0, 0);
-      
-      const daysUntilExpiry = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
-      
+
+      const daysUntilExpiry = Math.ceil(
+        (expirationDate - today) / (1000 * 60 * 60 * 24),
+      );
+
       // Obtener información del usuario si el QR tiene userId
       let userName = "Usuario desconocido";
       if (qr5.userId) {
@@ -90,8 +137,10 @@ export default function RedemptionAdmin() {
           console.error("⚠️ Error al obtener usuario:", error);
         }
       }
-      
-      console.log(`📅 QR #5 - ${userName}: Días hasta expiración: ${daysUntilExpiry}`);
+
+      console.log(
+        `📅 QR #5 - ${userName}: Días hasta expiración: ${daysUntilExpiry}`,
+      );
 
       // Guardar información en el estado para mostrar notificación permanente
       if (daysUntilExpiry < 0) {
@@ -99,27 +148,27 @@ export default function RedemptionAdmin() {
         setQr5Notification({
           name: userName,
           days: Math.abs(daysUntilExpiry),
-          type: 'expired',
-          message: `⚠️ QR #5 de ${userName} está expirado hace ${Math.abs(daysUntilExpiry)} día${Math.abs(daysUntilExpiry) !== 1 ? 's' : ''}`
+          type: "expired",
+          message: `⚠️ QR #5 de ${userName} está expirado hace ${Math.abs(daysUntilExpiry)} día${Math.abs(daysUntilExpiry) !== 1 ? "s" : ""}`,
         });
       } else if (daysUntilExpiry <= 30) {
         // Próximo a vencer
-        let type = 'info';
-        let emoji = '🟠';
-        
+        let type = "info";
+        let emoji = "🟠";
+
         if (daysUntilExpiry <= 7) {
-          type = 'critical';
-          emoji = '🔴';
+          type = "critical";
+          emoji = "🔴";
         } else if (daysUntilExpiry <= 15) {
-          type = 'warning';
-          emoji = '🟡';
+          type = "warning";
+          emoji = "🟡";
         }
-        
+
         setQr5Notification({
           name: userName,
           days: daysUntilExpiry,
           type: type,
-          message: `${emoji} QR  expira en ${daysUntilExpiry} día${daysUntilExpiry !== 1 ? 's' : ''}`
+          message: `${emoji} QR  expira en ${daysUntilExpiry} día${daysUntilExpiry !== 1 ? "s" : ""}`,
         });
       } else {
         // Más de 30 días, no mostrar notificación
@@ -134,13 +183,16 @@ export default function RedemptionAdmin() {
 
   useEffect(() => {
     fetchRedemptions();
+    fetchAllQRCodes();
     checkQr5Expiration();
   }, []);
 
   const handleConfirm = async (id) => {
-    const redemption = redemptions.find(r => r.id === id);
-    const redemptionInfo = redemption ? `${redemption.name} ${redemption.lastName}` : "esta redención";
-    
+    const redemption = redemptions.find((r) => r.id === id);
+    const redemptionInfo = redemption
+      ? `${redemption.name} ${redemption.lastName}`
+      : "esta redención";
+
     showConfirm(
       `¿Estás seguro de que deseas confirmar la redención de ${redemptionInfo}?`,
       async () => {
@@ -153,14 +205,16 @@ export default function RedemptionAdmin() {
           console.error("Error al confirmar:", error);
           showError("Error al confirmar la redención. Inténtalo nuevamente.");
         }
-      }
+      },
     );
   };
 
   const handleReject = async (id) => {
-    const redemption = redemptions.find(r => r.id === id);
-    const redemptionInfo = redemption ? `${redemption.name} ${redemption.lastName}` : "esta redención";
-    
+    const redemption = redemptions.find((r) => r.id === id);
+    const redemptionInfo = redemption
+      ? `${redemption.name} ${redemption.lastName}`
+      : "esta redención";
+
     showConfirm(
       `¿Estás seguro de que deseas rechazar la redención de ${redemptionInfo}?`,
       async () => {
@@ -173,7 +227,7 @@ export default function RedemptionAdmin() {
           console.error("Error al rechazar:", error);
           showError("Error al rechazar la redención. Inténtalo nuevamente.");
         }
-      }
+      },
     );
   };
 
@@ -190,6 +244,39 @@ export default function RedemptionAdmin() {
     setSelectedRedemption(null);
   };
 
+  // Función para ver los detalles del QR code
+  const handleViewQRCodeDetails = (qr) => {
+    setSelectedQRCode(qr);
+    setIsQRDetailsModalOpen(true);
+  };
+
+  // Función para cerrar el modal de detalles del QR code
+  const closeQRDetailsModal = () => {
+    setIsQRDetailsModalOpen(false);
+    setSelectedQRCode(null);
+  };
+
+  // Función para dar de baja un QR code (cambiar estado a 2)
+  const handleDeactivateQRCode = async (qrId) => {
+    const qr = allQRCodes.find((q) => q.id === qrId);
+    const qrInfo = qr ? `QR #${qr.id}` : "este QR code";
+
+    showConfirm(
+      `¿Estás seguro de que deseas dar de baja ${qrInfo}?`,
+      async () => {
+        try {
+          await updateQRCodeStatus(qrId, 0);
+          showSuccess("QR code dado de baja exitosamente");
+          await fetchAllQRCodes();
+          closeQRDetailsModal();
+        } catch (error) {
+          console.error("Error al dar de baja QR code:", error);
+          showError("Error al dar de baja el QR code. Inténtalo nuevamente.");
+        }
+      },
+    );
+  };
+
   const handleUploadQr = async (e) => {
     e.preventDefault();
     if (!qrFile || !expiryDate) {
@@ -203,11 +290,11 @@ export default function RedemptionAdmin() {
 
     try {
       // Verificar que el archivo sea válido
-      if (!qrFile.type.startsWith('image/')) {
+      if (!qrFile.type.startsWith("image/")) {
         showError("El archivo debe ser una imagen (JPG, PNG, GIF)");
         return;
       }
-      
+
       // Verificar tamaño del archivo (máximo 5MB)
       if (qrFile.size > 5 * 1024 * 1024) {
         showError("El archivo es demasiado grande. Máximo 5MB");
@@ -221,12 +308,22 @@ export default function RedemptionAdmin() {
       }
 
       // Limpiar el nombre del archivo si tiene espacios u otros caracteres problemáticos
-      const cleanFileName = qrFile.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '');
-      const cleanedFile = cleanFileName !== qrFile.name 
-        ? new File([qrFile], cleanFileName, { type: qrFile.type })
-        : qrFile;
+      const cleanFileName = qrFile.name
+        .replace(/\s+/g, "-")
+        .replace(/[^a-zA-Z0-9.-]/g, "");
+      const cleanedFile =
+        cleanFileName !== qrFile.name
+          ? new File([qrFile], cleanFileName, { type: qrFile.type })
+          : qrFile;
 
-      console.log("Enviando QR - userId:", loggedUser.id, "expiryDate:", expiryDate, "file:", cleanedFile.name);
+      console.log(
+        "Enviando QR - userId:",
+        loggedUser.id,
+        "expiryDate:",
+        expiryDate,
+        "file:",
+        cleanedFile.name,
+      );
       await uploadQr(loggedUser.id, cleanedFile, expiryDate); // Usar el ID del usuario logueado
       showSuccess("QR subido correctamente");
       setQrFile(null);
@@ -238,10 +335,10 @@ export default function RedemptionAdmin() {
       console.error("Error uploading QR:", error);
       console.error("Error response:", error.response);
       console.error("Error response data:", error.response?.data);
-      
+
       // Obtener el mensaje de error más específico
       let errorMessage = "Error desconocido al subir QR";
-      
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.response?.data?.error) {
@@ -249,7 +346,7 @@ export default function RedemptionAdmin() {
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       showError(`Error al subir QR: ${errorMessage}`);
     }
   };
@@ -257,7 +354,7 @@ export default function RedemptionAdmin() {
   const filteredRedemptions = redemptions.filter(
     (r) =>
       r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+      r.lastName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Cálculos de paginación
@@ -335,12 +432,18 @@ export default function RedemptionAdmin() {
 
       {/* Notificación persistente del QR 5 */}
       {qr5Notification && (
-        <div className={`qr5-notification-banner qr5-notification-${qr5Notification.type}`}>
+        <div
+          className={`qr5-notification-banner qr5-notification-${qr5Notification.type}`}
+        >
           <div className="qr5-notification-content">
-            <i className={`bi ${qr5Notification.type === 'expired' || qr5Notification.type === 'critical' ? 'bi-exclamation-triangle-fill' : qr5Notification.type === 'warning' ? 'bi-exclamation-circle-fill' : 'bi-info-circle-fill'}`}></i>
-            <span className="qr5-notification-message">{qr5Notification.message}</span>
+            <i
+              className={`bi ${qr5Notification.type === "expired" || qr5Notification.type === "critical" ? "bi-exclamation-triangle-fill" : qr5Notification.type === "warning" ? "bi-exclamation-circle-fill" : "bi-info-circle-fill"}`}
+            ></i>
+            <span className="qr5-notification-message">
+              {qr5Notification.message}
+            </span>
           </div>
-          <button 
+          <button
             className="qr5-notification-close"
             onClick={() => setQr5Notification(null)}
             title="Cerrar notificación"
@@ -360,113 +463,97 @@ export default function RedemptionAdmin() {
         </button>
       </div>
 
-      {/* Tabla */}
-      <section className="table-section">
+      {/* Sección: Todos los Códigos QR */}
+      <section className="table-section" style={{ marginTop: "60px" }}>
         <table className="users-table">
           <thead>
             <tr>
-              <th>Nombres</th>
-              <th>Apellidos</th>
-              <th>Fecha</th>
-              <th>Amount</th>
+              <th>Imagen</th>
+              <th>Estado</th>
+              <th>Fecha Registro</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {currentRedemptions.map((r) => (
-              <tr key={r.id}>
-                <td>
-                  <div className="redemption-cell">
-                    <div className="user-avatar">
-                      <i className="bi bi-person-circle avatar-placeholder"></i>
-                    </div>
-                    {r.name}
-                  </div>
-                </td>
-                <td>{r.lastName}</td>
-                <td>{new Date(r.registerDate).toLocaleDateString()}</td>
-                <td>{r.amount}</td>
-                <td className="actions-cell">
-                  <button
-                    className="action-btn view-btn"
-                    onClick={() => handleViewRedemptionDetails(r.id)}
-                    title="Ver detalles"
-                  >
-                    <i className="bi bi-eye-fill"></i>
-                  </button>
-                  <button
-                    className="action-btn approve-btn"
-                    onClick={() => handleConfirm(r.id)}
-                  >
-                    <i className="bi bi-check-lg"></i>
-                  </button>
-                  <button
-                    className="action-btn reject-btn"
-                    onClick={() => handleReject(r.id)}
-                  >
-                    <i className="bi bi-x-lg"></i>
-                  </button>
+            {allQRCodes && allQRCodes.length > 0 ? (
+              allQRCodes.map((qr) => (
+                <tr key={qr.id}>
+                  <td>
+                    {qr.url ? (
+                      <img
+                        src={getStaticUrl(qr.url)}
+                        alt={`QR ${qr.id}`}
+                        style={{ width: 60, height: "auto", borderRadius: 4 }}
+                      />
+                    ) : (
+                      <i className="bi bi-qr-code avatar-placeholder"></i>
+                    )}
+                  </td>
+                  <td>
+                    <span
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "0.85rem",
+                        fontWeight: "bold",
+                        backgroundColor:
+                          qr.status === 1 ? "#d4edda" : "#f8d7da",
+                        color: qr.status === 1 ? "#155724" : "#721c24",
+                      }}
+                    >
+                      {qr.status === 1 ? "✅ Activo" : "❌ Inactivo"}
+                    </span>
+                  </td>
+                  <td>{new Date(qr.registerDate).toLocaleDateString()}</td>
+                  <td className="actions-cell">
+                    <button
+                      className="action-btn view-btn"
+                      onClick={() => handleViewQRCodeDetails(qr)}
+                      title="Ver detalles"
+                    >
+                      <i className="bi bi-eye-fill"></i>
+                    </button>
+                    {qr.status !== 0 && (
+                      <button
+                        className="action-btn reject-btn"
+                        onClick={() => handleDeactivateQRCode(qr.id)}
+                        title="Dar de baja"
+                      >
+                        <i className="bi bi-x-lg"></i>
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="4"
+                  style={{
+                    textAlign: "center",
+                    padding: "40px",
+                    color: "#999",
+                  }}
+                >
+                  <i
+                    className="bi bi-inbox"
+                    style={{ fontSize: "24px", marginRight: "10px" }}
+                  ></i>
+                  No hay códigos QR registrados aún
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </section>
 
-      {/* Paginación */}
-      {totalPages > 1 && (
-        <div className="pagination-section">
-          <button
-            className="pagination-btn"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            {"<"}
-          </button>
-
-          {getPageNumbers().map((pageNum) => (
-            <button
-              key={pageNum}
-              className={`pagination-btn ${
-                currentPage === pageNum ? "active" : ""
-              }`}
-              onClick={() => handlePageChange(pageNum)}
-            >
-              {pageNum}
-            </button>
-          ))}
-
-          {totalPages > 5 && currentPage < totalPages - 2 && (
-            <span className="pagination-dots">...</span>
-          )}
-
-          {totalPages > 5 && currentPage < totalPages - 1 && (
-            <button
-              className={`pagination-btn ${
-                currentPage === totalPages ? "active" : ""
-              }`}
-              onClick={() => handlePageChange(totalPages)}
-            >
-              {totalPages}
-            </button>
-          )}
-
-          <button
-            className="pagination-btn"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            {">"}
-          </button>
-        </div>
-      )}
-
-      {/* Modal para ver detalles de redención */}
+      {/* Modal para ver detalles del QR code */}
       <ViewDetailsModal
-        isOpen={isDetailsModalOpen}
-        onClose={closeDetailsModal}
-        data={selectedRedemption}
-        type="redemption"
+        isOpen={isQRDetailsModalOpen}
+        onClose={closeQRDetailsModal}
+        data={selectedQRCode}
+        type="qrcode"
+        onDeactivate={handleDeactivateQRCode}
       />
 
       {/* Modal Subir QR */}

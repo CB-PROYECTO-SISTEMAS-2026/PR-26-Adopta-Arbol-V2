@@ -21,11 +21,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Configurar CORS
-app.use(cors({
-  origin: NODE_ENV === "production" ? FRONTEND_URL : "http://localhost:5173",
-  credentials: true
-}));
-app.use(express.json());
+app.use(
+  cors({
+    origin: NODE_ENV === "production" ? FRONTEND_URL : "http://localhost:5173",
+    credentials: true,
+  }),
+);
+
+// Aumentar límite para archivos más grandes
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Routes
 app.use(indexRoutes);
@@ -41,17 +46,26 @@ app.use("/api", categoryRoutes);
 app.use("/api", notificationRoutes);
 
 // Servir archivos estáticos desde las carpetas public
-app.use("/qrcodes", express.static(path.join(__dirname, "..", "public", "qrcodes")));
-app.use("/receipts", express.static(path.join(__dirname, "..", "client", "public", "receipts")));
+app.use(
+  "/qrcodes",
+  express.static(path.join(__dirname, "..", "public", "qrcodes")),
+);
+app.use(
+  "/receipts",
+  express.static(path.join(__dirname, "..", "client", "public", "receipts")),
+);
 app.use("/Tree", express.static(path.join(__dirname, "..", "public", "Tree")));
-app.use("/evidence", express.static(path.join(__dirname, "..", "public", "evidence")));
+app.use(
+  "/evidence",
+  express.static(path.join(__dirname, "..", "public", "evidence")),
+);
 app.use("/", express.static(path.join(__dirname, "..", "client", "public")));
 
 // En producción, servir el frontend construido
 if (NODE_ENV === "production") {
   const clientBuildPath = path.join(__dirname, "..", "client", "dist");
   app.use(express.static(clientBuildPath));
-  
+
   // Middleware para servir index.html en todas las rutas que no sean API o archivos estáticos
   // Esto es necesario para el routing del SPA (Single Page Application)
   app.use((req, res, next) => {

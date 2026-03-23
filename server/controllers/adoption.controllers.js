@@ -68,12 +68,6 @@ export const approveAdoption = async (req, res) => {
       [price, userId]
     );
     
-    // Registrar modificación de créditos (aprobación)
-    await connection.query(`
-      INSERT INTO creditsmodification (userId, previousAmount, status, registerDate, modifiedBy) 
-      VALUES (?, ?, 1, CURRENT_TIMESTAMP, 1)
-    `, [userId, currentCredits]);
-    
     await connection.commit();
     
     // Crear notificación para el usuario
@@ -141,12 +135,6 @@ export const rejectAdoption = async (req, res) => {
       "UPDATE tree SET status = 1 WHERE id = ?",
       [treeId]
     );
-    
-    // Registrar modificación de créditos (devolución)
-    await connection.query(`
-      INSERT INTO creditsmodification (userId, previousAmount, status, registerDate, modifiedBy) 
-      VALUES (?, ?, 3, CURRENT_TIMESTAMP, 1)
-    `, [userId, currentCredits]);
     
     await connection.commit();
     
@@ -323,17 +311,7 @@ export const createAdoption = async (req, res) => {
       // No fallar la transacción por esto
     }
 
-    // Registrar modificación de créditos (temporalmente comentado para debug)
-    try {
-      await connection.query(`
-        INSERT INTO creditsmodification (userId, previousAmount, status, registerDate, modifiedBy) 
-        VALUES (?, ?, 0, CURRENT_TIMESTAMP, 1)
-      `, [Number(userId), Number(userCredits)]);
-      console.log("Registro de modificación de créditos exitoso");
-    } catch (creditError) {
-      console.log("Error al registrar modificación de créditos:", creditError.message);
-      // No fallar la transacción por esto
-    }
+
 
     await connection.commit();
     console.log("✅ Transacción completada exitosamente");

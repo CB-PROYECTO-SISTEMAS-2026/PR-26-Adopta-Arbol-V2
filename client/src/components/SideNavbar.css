@@ -20,7 +20,9 @@
   justify-content: space-between;
   border-radius: 16px;
   padding: 16px 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow-y: auto;
   z-index: 1050;
   transition: var(--transition-smooth);
@@ -28,7 +30,9 @@
 }
 
 .sidebar:hover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Difuminar sidebar cuando hay modal abierto */
@@ -43,7 +47,11 @@ body.modal-open .sidebar {
   font-size: 22px;
   font-weight: 700;
   text-align: center;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
   color: #fff;
   margin-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -54,7 +62,11 @@ body.modal-open .sidebar {
 }
 
 .sidebar .logo:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.08)
+  );
 }
 
 /* Navegación */
@@ -83,7 +95,7 @@ body.modal-open .sidebar {
 }
 
 .sidebar nav ul li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -142,7 +154,7 @@ body.modal-open .sidebar {
 .sidebar .logout {
   margin-top: 20px;
   padding: 12px 16px;
-  background: linear-gradient(135deg, #c82333, #a91d2a);
+  background: linear-gradient(135deg, #096c6c, #074e4e);
   border: none;
   color: white;
   cursor: pointer;
@@ -157,18 +169,18 @@ body.modal-open .sidebar {
   position: relative;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(200, 35, 51, 0.3);
+  box-shadow: 0 4px 12px rgba(9, 108, 108, 0.28);
   overflow: hidden;
 }
 
 .sidebar .logout::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
   width: 0;
   height: 100%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
   transition: width 0.3s ease;
 }
 
@@ -189,7 +201,7 @@ body.modal-open .sidebar {
 
 .sidebar .logout:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(200, 35, 51, 0.4);
+  box-shadow: 0 6px 20px rgba(9, 108, 108, 0.36);
 }
 
 .sidebar .logout:hover::before {
@@ -206,13 +218,21 @@ body.modal-open .sidebar {
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.1)
+  );
   border-radius: 10px;
   transition: var(--transition-smooth);
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.2)
+  );
 }
 
 /* Responsive */

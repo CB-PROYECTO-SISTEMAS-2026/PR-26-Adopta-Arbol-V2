@@ -74,7 +74,11 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.05)
+  );
   padding: 8px 14px;
   border-radius: 20px;
   font-size: 14px;
@@ -85,7 +89,11 @@
 }
 
 .credits-display-header:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1)
+  );
   transform: translateY(-2px);
 }
 
@@ -238,7 +246,9 @@
   display: flex;
   align-items: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .ranking-item:hover {

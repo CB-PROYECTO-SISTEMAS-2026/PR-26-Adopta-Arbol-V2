@@ -7,7 +7,7 @@ export const uploadQrForUser = async (req, res) => {
   console.log("=== INICIO uploadQrForUser ===");
   console.log("Body:", req.body);
   console.log("File:", req.file);
-  
+
   const { expirationDate, userId } = req.body; // Obtener userId del body
   const file = req.file;
 
@@ -31,38 +31,41 @@ export const uploadQrForUser = async (req, res) => {
 
   // Obtener la extensión del archivo original
   const fileExtension = path.extname(file.originalname).toLowerCase();
-  const allowedExtensions = ['.png', '.jpg', '.jpeg'];
-  
+  const allowedExtensions = [".png", ".jpg", ".jpeg"];
+
   if (!allowedExtensions.includes(fileExtension)) {
     console.log("ERROR: Extensión no permitida:", fileExtension);
-    return res.status(400).json({ message: "Solo se permiten archivos PNG y JPG" });
+    return res
+      .status(400)
+      .json({ message: "Solo se permiten archivos PNG y JPG" });
   }
 
   // Determinar el nombre del archivo basado en la extensión
-  const fileName = fileExtension === '.jpg' || fileExtension === '.jpeg' ? '1.jpg' : '1.png';
+  const fileName =
+    fileExtension === ".jpg" || fileExtension === ".jpeg" ? "1.jpg" : "1.png";
   const filePath = path.join(qrFolder, fileName);
   console.log("Archivo destino:", filePath);
-  
+
   // Eliminar archivos anteriores (tanto .png como .jpg)
   const pngPath = path.join(qrFolder, "1.png");
   const jpgPath = path.join(qrFolder, "1.jpg");
-  
+
   if (fs.existsSync(pngPath)) {
     console.log("Eliminando archivo anterior 1.png");
     fs.unlinkSync(pngPath);
   }
-  
+
   if (fs.existsSync(jpgPath)) {
     console.log("Eliminando archivo anterior 1.jpg");
     fs.unlinkSync(jpgPath);
   }
-  
+
   // Verificar que el archivo temporal existe
   if (!fs.existsSync(file.path)) {
     console.log("ERROR: Archivo temporal no existe:", file.path);
     return res.status(500).json({ message: "Archivo temporal no encontrado" });
   }
-  
+
   // Mover el nuevo archivo
   console.log("Moviendo archivo de", file.path, "a", filePath);
   fs.renameSync(file.path, filePath);
@@ -72,29 +75,36 @@ export const uploadQrForUser = async (req, res) => {
   const qrUrl = `/qrcodes/${fileName}`;
 
   try {
-    console.log("Actualizando BD con userId:", userId, "expirationDate:", expirationDate, "qrUrl:", qrUrl);
+    console.log(
+      "Actualizando BD con userId:",
+      userId,
+      "expirationDate:",
+      expirationDate,
+      "qrUrl:",
+      qrUrl,
+    );
 
     // Verificar si ya existe un QR para este usuario
     const [existingQr] = await pool.query(
       "SELECT id FROM qrcode WHERE userId = ?",
-      [userId]
+      [userId],
     );
 
     if (existingQr.length > 0) {
       // Actualizar QR existente
       await pool.query(
         `UPDATE qrcode 
-         SET url = ?, expirationDate = ?, lastUpdate = NOW(), status = 1
+         SET url = ?, expirationDate = ?, status = 1
          WHERE userId = ?`,
-        [qrUrl, expirationDate, userId]
+        [qrUrl, expirationDate, userId],
       );
       console.log("QR actualizado para usuario:", userId);
     } else {
       // Crear nuevo QR
       await pool.query(
-        `INSERT INTO qrcode (url, expirationDate, userId, status, registerDate, lastUpdate)
-         VALUES (?, ?, ?, 1, NOW(), NOW())`,
-        [qrUrl, expirationDate, userId]
+        `INSERT INTO qrcode (url, expirationDate, userId, status, registerDate)
+         VALUES (?, ?, ?, 1, NOW())`,
+        [qrUrl, expirationDate, userId],
       );
       console.log("Nuevo QR creado para usuario:", userId);
     }
@@ -105,15 +115,13 @@ export const uploadQrForUser = async (req, res) => {
     console.error("=== ERROR uploadQrForUser ===");
     console.error("Error completo:", error);
     console.error("Stack trace:", error.stack);
-    res.status(500).json({ 
-      message: "Error al guardar QR", 
+    res.status(500).json({
+      message: "Error al guardar QR",
       error: error.message,
-      stack: error.stack 
+      stack: error.stack,
     });
   }
 };
-
-
 
 export const getPendingRedemptions = async (req, res) => {
   try {
@@ -135,14 +143,14 @@ export const getPendingRedemptions = async (req, res) => {
 export const confirmRedemption = async (req, res) => {
   const { id } = req.params;
   const { adminId } = req.body; // ID del admin que confirma
-  
+
   try {
     // Obtener información de la redención
     const [redemption] = await pool.query(
       `SELECT r.amount, r.userId 
        FROM redemption r 
        WHERE r.id = ?`,
-      [id]
+      [id],
     );
 
     if (redemption.length === 0) {
@@ -156,7 +164,7 @@ export const confirmRedemption = async (req, res) => {
       `UPDATE user 
        SET credits = credits - ? 
        WHERE id = ?`,
-      [amount, userId]
+      [amount, userId],
     );
 
     // Actualizar la redención
@@ -166,7 +174,7 @@ export const confirmRedemption = async (req, res) => {
            lastUpdate = CURRENT_TIMESTAMP,
            adminId = ?
        WHERE id = ?`,
-      [adminId || 1, id]
+      [adminId || 1, id],
     );
 
     // Crear notificación para el regador
@@ -176,15 +184,15 @@ export const confirmRedemption = async (req, res) => {
         "credits_purchased",
         "¡Pago de Créditos Confirmado!",
         `Tu solicitud de pago de ${amount} créditos ha sido confirmada. Los créditos han sido descontados de tu cuenta.`,
-        id
+        id,
       );
     } catch (notifError) {
       console.error("Error al crear notificación:", notifError);
     }
 
-    res.json({ 
-      message: "Redemption confirmado", 
-      creditsDeducted: amount 
+    res.json({
+      message: "Redemption confirmado",
+      creditsDeducted: amount,
     });
   } catch (error) {
     console.error(error);
@@ -192,11 +200,10 @@ export const confirmRedemption = async (req, res) => {
   }
 };
 
-
 export const rejectRedemption = async (req, res) => {
   const { id } = req.params;
   const { adminId } = req.body; // ID del admin que rechaza
-  
+
   try {
     // Actualizar la redención
     await pool.query(
@@ -205,7 +212,7 @@ export const rejectRedemption = async (req, res) => {
            lastUpdate = CURRENT_TIMESTAMP,
            adminId = ?
        WHERE id = ?`,
-      [adminId || 1, id]
+      [adminId || 1, id],
     );
 
     res.json({ message: "Redemption rechazado" });
@@ -215,24 +222,29 @@ export const rejectRedemption = async (req, res) => {
   }
 };
 
-
 export const getRedemptionDetails = async (req, res) => {
   const { id } = req.params;
   try {
-    const [rows] = await pool.query(`
+    const [rows] = await pool.query(
+      `
       SELECT r.id, r.amount, r.registerDate, u.id as userId, u.name, u.lastName, u.email, q.url as qrUrl
       FROM redemption r
       JOIN user u ON r.userId = u.id
       LEFT JOIN qrcode q ON u.id = q.userId
       WHERE r.id = ?
-    `, [id]);
+    `,
+      [id],
+    );
 
-    if (rows.length === 0) return res.status(404).json({ message: "Redemption no encontrado" });
+    if (rows.length === 0)
+      return res.status(404).json({ message: "Redemption no encontrado" });
 
     res.json(rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error al obtener detalles del redemption" });
+    res
+      .status(500)
+      .json({ message: "Error al obtener detalles del redemption" });
   }
 };
 
@@ -240,14 +252,16 @@ export const getRedemptionDetails = async (req, res) => {
 export const getUserQr = async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     const [result] = await pool.query(
       "SELECT id, url, expirationDate, status FROM qrcode WHERE userId = ? AND status = 1 ORDER BY registerDate DESC LIMIT 1",
-      [userId]
+      [userId],
     );
 
     if (result.length === 0) {
-      return res.status(404).json({ message: "No se encontró QR para este usuario" });
+      return res
+        .status(404)
+        .json({ message: "No se encontró QR para este usuario" });
     }
 
     res.json(result[0]);
@@ -261,10 +275,10 @@ export const getUserQr = async (req, res) => {
 export const getQRCodeById = async (req, res) => {
   try {
     const { qrId } = req.params;
-    
+
     const [result] = await pool.query(
       "SELECT id, url, expirationDate, status, userId FROM qrcode WHERE id = ?",
-      [qrId]
+      [qrId],
     );
 
     if (result.length === 0) {
@@ -275,6 +289,49 @@ export const getQRCodeById = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener QR por ID:", error);
     res.status(500).json({ message: "Error al obtener QR por ID" });
+  }
+};
+
+// Obtener todos los códigos QR
+export const getAllQRCodes = async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT qr.id, qr.url, qr.expirationDate, qr.status, qr.userId, qr.registerDate, u.name as userName, u.lastName as userLastName FROM qrcode qr LEFT JOIN user u ON qr.userId = u.id ORDER BY qr.registerDate DESC",
+    );
+    res.json(rows);
+  } catch (error) {
+    console.error("Error al obtener todos los QR codes:", error);
+    res.status(500).json({ message: "Error al obtener QR codes" });
+  }
+};
+
+// Actualizar estado del código QR
+export const updateQRCodeStatus = async (req, res) => {
+  try {
+    const { qrId } = req.params;
+    const { status } = req.body;
+
+    if (status === undefined || status === null) {
+      return res.status(400).json({ message: "Estado requerido" });
+    }
+
+    const [result] = await pool.query(
+      "UPDATE qrcode SET status = ? WHERE id = ?",
+      [status, qrId],
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "QR code no encontrado" });
+    }
+
+    res.json({
+      message: "Estado del QR code actualizado exitosamente",
+      id: qrId,
+      status: status,
+    });
+  } catch (error) {
+    console.error("Error al actualizar estado del QR code:", error);
+    res.status(500).json({ message: "Error al actualizar QR code" });
   }
 };
 
@@ -291,13 +348,13 @@ export const createRedemption = async (req, res) => {
     // Crear la solicitud de redención
     const [result] = await pool.query(
       "INSERT INTO redemption (userId, qrCodeId, amount, adminId, status) VALUES (?, ?, ?, ?, 2)",
-      [userId, qrCodeId, amount, adminId || 1]
+      [userId, qrCodeId, amount, adminId || 1],
     );
 
     res.json({
       id: result.insertId,
       message: "Solicitud de redención creada exitosamente",
-      status: 2 // Pendiente
+      status: 2, // Pendiente
     });
   } catch (error) {
     console.error("Error al crear redención:", error);
@@ -311,7 +368,7 @@ export const uploadRedemptionProof = async (req, res) => {
     console.log("=== INICIO uploadRedemptionProof ===");
     console.log("Body:", req.body);
     console.log("File:", req.file);
-    
+
     const { redemptionId } = req.body;
     const file = req.file;
 
@@ -333,7 +390,7 @@ export const uploadRedemptionProof = async (req, res) => {
     console.log("Verificando redención en BD...");
     const [redemption] = await pool.query(
       "SELECT id FROM redemption WHERE id = ?",
-      [redemptionId]
+      [redemptionId],
     );
 
     if (redemption.length === 0) {
@@ -346,7 +403,7 @@ export const uploadRedemptionProof = async (req, res) => {
     // Carpeta para los comprobantes
     const proofFolder = path.join("client", "public", "receipts");
     console.log("Carpeta destino:", proofFolder);
-    
+
     if (!fs.existsSync(proofFolder)) {
       console.log("Creando carpeta:", proofFolder);
       fs.mkdirSync(proofFolder, { recursive: true });
@@ -362,7 +419,9 @@ export const uploadRedemptionProof = async (req, res) => {
     // Verificar que el archivo temporal existe
     if (!fs.existsSync(file.path)) {
       console.log("ERROR: Archivo temporal no existe:", file.path);
-      return res.status(500).json({ message: "Archivo temporal no encontrado" });
+      return res
+        .status(500)
+        .json({ message: "Archivo temporal no encontrado" });
     }
 
     // Mover el archivo
@@ -379,13 +438,17 @@ export const uploadRedemptionProof = async (req, res) => {
       redemptionId: redemptionId,
       fileUrl: fileUrl,
       fileName: fileName,
-      uploadDate: new Date().toISOString()
+      uploadDate: new Date().toISOString(),
     };
 
     // Leer archivo existente o crear uno nuevo
-    const evidenceFile = path.join("server", "data", "redemption-evidence.json");
+    const evidenceFile = path.join(
+      "server",
+      "data",
+      "redemption-evidence.json",
+    );
     const evidenceDir = path.dirname(evidenceFile);
-    
+
     if (!fs.existsSync(evidenceDir)) {
       fs.mkdirSync(evidenceDir, { recursive: true });
     }
@@ -393,17 +456,20 @@ export const uploadRedemptionProof = async (req, res) => {
     let evidenceList = [];
     if (fs.existsSync(evidenceFile)) {
       try {
-        const data = fs.readFileSync(evidenceFile, 'utf8');
+        const data = fs.readFileSync(evidenceFile, "utf8");
         evidenceList = JSON.parse(data);
       } catch (error) {
-        console.log("Error al leer archivo de evidencia, creando nuevo:", error.message);
+        console.log(
+          "Error al leer archivo de evidencia, creando nuevo:",
+          error.message,
+        );
         evidenceList = [];
       }
     }
 
     // Agregar nueva evidencia
     evidenceList.push(evidenceData);
-    
+
     // Guardar archivo actualizado
     fs.writeFileSync(evidenceFile, JSON.stringify(evidenceList, null, 2));
     console.log("Evidencia guardada en archivo JSON");
@@ -412,16 +478,16 @@ export const uploadRedemptionProof = async (req, res) => {
     res.json({
       message: "Comprobante subido exitosamente",
       fileUrl: fileUrl,
-      redemptionId: redemptionId
+      redemptionId: redemptionId,
     });
   } catch (error) {
     console.error("=== ERROR uploadRedemptionProof ===");
     console.error("Error completo:", error);
     console.error("Stack trace:", error.stack);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Error al subir comprobante",
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
   }
 };
@@ -438,7 +504,7 @@ export const confirmRedemptionRequest = async (req, res) => {
     // Verificar que la redención existe
     const [redemption] = await pool.query(
       "SELECT id, status FROM redemption WHERE id = ?",
-      [redemptionId]
+      [redemptionId],
     );
 
     if (redemption.length === 0) {
@@ -446,32 +512,40 @@ export const confirmRedemptionRequest = async (req, res) => {
     }
 
     // Verificar si existe comprobante en el archivo JSON
-    const evidenceFile = path.join("server", "data", "redemption-evidence.json");
+    const evidenceFile = path.join(
+      "server",
+      "data",
+      "redemption-evidence.json",
+    );
     let hasEvidence = false;
-    
+
     if (fs.existsSync(evidenceFile)) {
       try {
-        const data = fs.readFileSync(evidenceFile, 'utf8');
+        const data = fs.readFileSync(evidenceFile, "utf8");
         const evidenceList = JSON.parse(data);
-        hasEvidence = evidenceList.some(evidence => evidence.redemptionId == redemptionId);
+        hasEvidence = evidenceList.some(
+          (evidence) => evidence.redemptionId == redemptionId,
+        );
       } catch (error) {
         console.log("Error al leer archivo de evidencia:", error.message);
       }
     }
 
     if (!hasEvidence) {
-      return res.status(400).json({ message: "Debe adjuntar un comprobante antes de confirmar" });
+      return res
+        .status(400)
+        .json({ message: "Debe adjuntar un comprobante antes de confirmar" });
     }
 
     // Actualizar el status a confirmado (status = 1)
     await pool.query(
       "UPDATE redemption SET status = 1, lastUpdate = NOW() WHERE id = ?",
-      [redemptionId]
+      [redemptionId],
     );
 
     res.json({
       message: "Solicitud confirmada exitosamente",
-      status: 1
+      status: 1,
     });
   } catch (error) {
     console.error("Error al confirmar redención:", error);
@@ -491,7 +565,9 @@ export const createIrrigatorRedemption = async (req, res) => {
 
     // Validaciones
     if (!userId || !amount || !file) {
-      return res.status(400).json({ message: "Faltan datos requeridos (userId, amount, qrFile)" });
+      return res
+        .status(400)
+        .json({ message: "Faltan datos requeridos (userId, amount, qrFile)" });
     }
 
     // Asegurar que existe la carpeta temporal
@@ -509,7 +585,9 @@ export const createIrrigatorRedemption = async (req, res) => {
     }
 
     // Obtener el próximo ID de qrcode
-    const [maxIdResult] = await pool.query("SELECT MAX(id) as maxId FROM qrcode");
+    const [maxIdResult] = await pool.query(
+      "SELECT MAX(id) as maxId FROM qrcode",
+    );
     const nextId = (maxIdResult[0].maxId || 0) + 1;
     console.log("Próximo ID de QR:", nextId);
 
@@ -528,8 +606,8 @@ export const createIrrigatorRedemption = async (req, res) => {
 
     // Insertar en qrcode
     const [qrResult] = await pool.query(
-      "INSERT INTO qrcode (url, expirationDate, lastUpdate, userId) VALUES (?, NULL, NULL, ?)",
-      [qrUrl, userId]
+      "INSERT INTO qrcode (url, expirationDate, userId) VALUES (?, NULL, ?)",
+      [qrUrl, userId],
     );
 
     const qrCodeId = qrResult.insertId;
@@ -538,7 +616,7 @@ export const createIrrigatorRedemption = async (req, res) => {
     // Insertar en redemption
     const [redemptionResult] = await pool.query(
       "INSERT INTO redemption (amount, userId, qrCodeId) VALUES (?, ?, ?)",
-      [amount, userId, qrCodeId]
+      [amount, userId, qrCodeId],
     );
 
     const redemptionId = redemptionResult.insertId;
@@ -549,14 +627,14 @@ export const createIrrigatorRedemption = async (req, res) => {
       message: "Solicitud de redención creada exitosamente",
       redemptionId: redemptionId,
       qrCodeId: qrCodeId,
-      qrUrl: qrUrl
+      qrUrl: qrUrl,
     });
   } catch (error) {
     console.error("=== ERROR createIrrigatorRedemption ===");
     console.error("Error completo:", error);
     res.status(500).json({
       message: "Error al crear solicitud de redención",
-      error: error.message
+      error: error.message,
     });
   }
 };
