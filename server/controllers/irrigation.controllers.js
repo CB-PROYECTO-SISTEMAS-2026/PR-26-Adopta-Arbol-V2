@@ -38,14 +38,19 @@ export const createIrrigation = async (req, res) => {
 
   try {
     // Verificar que el usuario sea dueño del árbol y obtener el precio
-    const [ownershipCheck] = await pool.query(`
+    const [ownershipCheck] = await pool.query(
+      `
       SELECT a.id, t.price FROM adoption a 
       JOIN tree t ON a.treeId = t.id
       WHERE a.userId = ? AND a.treeId = ? AND a.status = 1
-    `, [userId, treeId]);
+    `,
+      [userId, treeId],
+    );
 
     if (ownershipCheck.length === 0) {
-      return res.status(403).json({ message: "No tienes permisos para regar este árbol" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permisos para regar este árbol" });
     }
 
     // Insertar riego con status = 4
@@ -103,19 +108,23 @@ export const approveIrrigation = async (req, res) => {
       FROM irrigation i
       JOIN tree t ON i.treeId = t.id
       WHERE i.id = ? AND i.status = 2
-    `, [id]);
+    `,
+      [id],
+    );
 
     if (irrigationData.length === 0) {
       await connection.rollback();
-      return res.status(404).json({ message: "Riego no encontrado o ya procesado" });
+      return res
+        .status(404)
+        .json({ message: "Riego no encontrado o ya procesado" });
     }
 
     const { userId, treeName } = irrigationData[0];
 
     // Actualizar estado del riego
     const [result] = await connection.query(
-      "UPDATE irrigation SET status = 1 WHERE id = ?", 
-      [id]
+      "UPDATE irrigation SET status = 1 WHERE id = ?",
+      [id],
     );
 
     if (result.affectedRows === 0) {
@@ -126,7 +135,7 @@ export const approveIrrigation = async (req, res) => {
     // Note: Reward system would require additional database columns
 
     await connection.commit();
-    
+
     // Crear notificación para el usuario
     try {
       await createNotification(
@@ -139,9 +148,8 @@ export const approveIrrigation = async (req, res) => {
     } catch (notifError) {
       console.error("Error al crear notificación:", notifError);
     }
-    
-    res.json({ message: "Riego aprobado exitosamente y puntos agregados" });
 
+    res.json({ message: "Riego aprobado exitosamente y puntos agregados" });
   } catch (error) {
     await connection.rollback();
     console.error("Error al aprobar riego:", error.message);
@@ -157,8 +165,8 @@ export const rejectIrrigation = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "UPDATE irrigation SET status = 0 WHERE id = ?", 
-      [id]
+      "UPDATE irrigation SET status = 0 WHERE id = ?",
+      [id],
     );
 
     if (result.affectedRows === 0) {
@@ -177,7 +185,8 @@ export const getIrrigation = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const [result] = await pool.query(`
+    const [result] = await pool.query(
+      `
       SELECT 
         irrigation.id, 
         irrigation.registerDate, 
@@ -192,7 +201,9 @@ export const getIrrigation = async (req, res) => {
       INNER JOIN user ON irrigation.userId = user.id
       INNER JOIN tree ON irrigation.treeId = tree.id
       WHERE irrigation.id = ?
-    `, [id]);
+    `,
+      [id],
+    );
 
     if (result.length === 0) {
       return res.status(404).json({ message: "Riego no encontrado" });
@@ -235,9 +246,10 @@ export const getPendingIrrigations = async (req, res) => {
 // Obtener irrigation asignado al regador (status = 3)
 export const getAssignedIrrigation = async (req, res) => {
   const { irrigatorId } = req.params;
-  
+
   try {
-    const [result] = await pool.query(`
+    const [result] = await pool.query(
+      `
       SELECT 
         irrigation.id AS irrigationId,
         irrigation.treeId,
@@ -253,7 +265,9 @@ export const getAssignedIrrigation = async (req, res) => {
       INNER JOIN tree ON irrigation.treeId = tree.id
       WHERE irrigation.userId = ? AND irrigation.status = 3
       ORDER BY irrigation.registerDate ASC
-    `, [irrigatorId]);
+    `,
+      [irrigatorId],
+    );
     res.json(result);
   } catch (error) {
     console.error("Error al obtener irrigation asignado:", error.message);
@@ -277,13 +291,15 @@ export const assignTreeToIrrigator = async (req, res) => {
     );
 
     if (irrigationCheck.length === 0) {
-      return res.status(400).json({ message: "El riego no está disponible para asignación" });
+      return res
+        .status(400)
+        .json({ message: "El riego no está disponible para asignación" });
     }
 
     // Verificar que el regador no tenga ya un riego asignado
     const [existingAssignment] = await pool.query(
       "SELECT id FROM irrigation WHERE userId = ? AND status = 3",
-      [irrigatorId]
+      [irrigatorId],
     );
 
     if (existingAssignment.length > 0) {
@@ -297,7 +313,7 @@ export const assignTreeToIrrigator = async (req, res) => {
       // Cambiar status del irrigation a 3 (asignado al regador)
       await pool.query(
         "UPDATE irrigation SET userId = ?, status = 3, lastUpdate = NOW() WHERE id = ?",
-        [irrigatorId, irrigationId]
+        [irrigatorId, irrigationId],
       );
 
       await pool.query("COMMIT");
@@ -325,7 +341,7 @@ export const confirmIrrigation = async (req, res) => {
     // Verificar que el riego existe y está en status 3
     const [irrigationData] = await pool.query(
       "SELECT id, status FROM irrigation WHERE id = ?",
-      [id]
+      [id],
     );
 
     if (irrigationData.length === 0) {
@@ -333,7 +349,9 @@ export const confirmIrrigation = async (req, res) => {
     }
 
     if (irrigationData[0].status !== 3) {
-      return res.status(400).json({ message: "El riego no está disponible para confirmar" });
+      return res
+        .status(400)
+        .json({ message: "El riego no está disponible para confirmar" });
     }
 
     // Actualizar el riego con status = 2
@@ -355,4 +373,34 @@ export const confirmIrrigation = async (req, res) => {
   }
 };
 
+// Obtener irrigaciones aprobadas de un árbol específico
+export const getTreeIrrigationEvidence = async (req, res) => {
+  const { treeId } = req.params;
 
+  if (!treeId) {
+    return res.status(400).json({ message: "Tree ID es requerido" });
+  }
+
+  try {
+    const [result] = await pool.query(
+      `
+      SELECT 
+        irrigation.id AS irrigationId,
+        irrigation.evidence,
+        irrigation.registerDate,
+        irrigation.observations,
+        irrigation.status
+      FROM irrigation
+      WHERE irrigation.treeId = ? AND irrigation.status IN (1, 2) AND irrigation.evidence IS NOT NULL
+      ORDER BY irrigation.registerDate DESC
+      LIMIT 10
+    `,
+      [treeId],
+    );
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error al obtener evidencia de riego:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};

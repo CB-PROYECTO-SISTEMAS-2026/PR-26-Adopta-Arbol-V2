@@ -4,98 +4,12 @@
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mytrees-container {
-  min-height: 100vh;
+/* MyTrees Content - reutiliza treehome-container del navbar */
+.mytrees-content {
+  flex: 1;
   background: linear-gradient(135deg, #f5f7fa 0%, #e9f0f5 100%);
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Header */
-.mytrees-header {
-  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
-  color: white;
-  padding: 18px 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.header-left .back-button {
-  background: none;
-  border: none;
-  color: #4caf50;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.username {
-  font-weight: bold;
-  font-size: 16px;
-  color: white;
-}
-
-.credits-display {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: var(--transition-smooth);
-}
-
-.credits-display:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-  transform: translateY(-2px);
-}
-
-.credits-icon {
-  font-size: 16px;
-}
-
-.credits-amount {
-  font-size: 14px;
-  font-weight: bold;
-  color: white;
-}
-
-.points-display {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, rgba(255, 193, 7, 0.25), rgba(255, 193, 7, 0.15));
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 193, 7, 0.3);
-  transition: var(--transition-smooth);
-}
-
-.points-display:hover {
-  background: linear-gradient(135deg, rgba(255, 193, 7, 0.35), rgba(255, 193, 7, 0.25));
-  transform: translateY(-2px);
-}
-
-.points-icon {
-  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  padding: 0;
 }
 
 .points-amount {
@@ -218,26 +132,32 @@
 }
 
 .tree-card {
-  background: linear-gradient(135deg, #ffffff, #f9fffe);
-  border-radius: 16px;
-  padding: 20px;
+  background: white;
+  border-radius: 20px;
+  padding: 0;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   transition: var(--transition-smooth);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: none;
   overflow: hidden;
+  position: relative;
+  height: 100%;
 }
 
 .tree-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.5s ease;
   z-index: 0;
 }
@@ -252,17 +172,23 @@
 }
 
 .tree-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 16px 40px rgba(22, 199, 141, 0.15);
+  transform: translateY(-12px);
+  box-shadow: 0 20px 50px rgba(10, 92, 92, 0.2);
 }
 
 .tree-image {
   width: 100%;
-  height: 250px;
-  border-radius: 10px;
+  height: 200px;
+  border-radius: 0;
   overflow: hidden;
-  margin-bottom: 15px;
+  margin-bottom: 0;
+  position: relative;
+  background: linear-gradient(135deg, #e8f5f0, #d0e8e8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .tree-image img {
   width: 100%;
   height: 100%;
@@ -275,16 +201,20 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #999;
+  color: #a0c8c8;
+  background: linear-gradient(135deg, #f0f9f8, #e0f2f1);
 }
 
 .tree-icon {
-  font-size: 48px;
-  margin-bottom: 10px;
+  font-size: 64px;
+  margin-bottom: 8px;
+  opacity: 0.6;
 }
 
 .tree-name {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
+  padding: 15px 16px 0;
+  width: 100%;
 }
 
 .irrigation-pricing {
@@ -466,7 +396,8 @@
   gap: 10px;
 }
 
-.save-btn, .cancel-btn {
+.save-btn,
+.cancel-btn {
   border: none;
   border-radius: 4px;
   padding: 6px 12px;
@@ -491,63 +422,104 @@
 /* === Botones de acción dentro del card === */
 .action-buttons {
   display: flex;
-  justify-content: center; /* Centra los botones horizontalmente */
-  gap: 10px;
-  margin-top: 15px;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
   width: 100%;
-  max-width: 300px; /* Limita el ancho de los botones */
+  padding: 12px 16px 16px;
+  box-sizing: border-box;
 }
 
 .action-buttons button {
-  flex: 1;
-  min-width: 80px;
-  padding: 10px;
+  width: 100%;
+  padding: 12px 14px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.action-buttons button:active {
+  transform: scale(0.98);
 }
 
 /* Botón: Regar */
 .btn-water {
-  background: linear-gradient(135deg, #4caf50, #3c8d40);
+  background: linear-gradient(135deg, #51c878, #35a660);
   color: white;
+  box-shadow: 0 4px 15px rgba(81, 200, 120, 0.3);
 }
+
 .btn-water:hover {
-  background: linear-gradient(135deg, #45a049, #2f7032);
+  background: linear-gradient(135deg, #43b76a, #2d8c51);
+  box-shadow: 0 6px 20px rgba(81, 200, 120, 0.4);
   transform: translateY(-2px);
+}
+
+.btn-water::before {
+  content: "💧";
+  font-size: 16px;
 }
 
 /* Botón: Detalles */
 .btn-details {
-  background: linear-gradient(135deg, #1b4d4d, #236d6d);
+  background: linear-gradient(135deg, #0a7fa8, #065b85);
   color: white;
+  box-shadow: 0 4px 15px rgba(10, 127, 168, 0.3);
 }
+
 .btn-details:hover {
-  background: linear-gradient(135deg, #0f3a3a, #1f5a5a);
+  background: linear-gradient(135deg, #085f8a, #04476b);
+  box-shadow: 0 6px 20px rgba(10, 127, 168, 0.4);
   transform: translateY(-2px);
+}
+
+.btn-details::before {
+  content: "ℹ️";
+  font-size: 16px;
 }
 
 /* Botón: Eliminar / Cancelar */
 .btn-delete {
   background: linear-gradient(135deg, #f44336, #d32f2f);
   color: white;
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
 }
+
 .btn-delete:hover {
   background: linear-gradient(135deg, #e53935, #b71c1c);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
   transform: translateY(-2px);
+}
+
+.btn-delete::before {
+  content: "🗑️";
+  font-size: 16px;
 }
 
 /* Botón: Pendiente */
 .btn-pending {
-  background: linear-gradient(135deg, #ff9800, #ef6c00);
+  background: linear-gradient(135deg, #ffa726, #fb8c00);
   color: white;
   cursor: not-allowed;
-  opacity: 0.8;
+  opacity: 0.7;
+  box-shadow: 0 4px 15px rgba(255, 167, 38, 0.2);
 }
 
+.btn-pending::before {
+  content: "⏳";
+  font-size: 16px;
+}
 
 /* No Trees State */
 .no-trees {
@@ -596,11 +568,121 @@
   color: #666;
 }
 
+/* === Responsive Design === */
 
-/* Responsive */
+/* Tablets (768px and below) */
 @media (max-width: 768px) {
+  .mytrees-content {
+    padding: 15px 10px;
+  }
+
   .trees-grid {
     grid-template-columns: 1fr;
-    padding: 0 15px 20px;
+    gap: 16px;
+    padding: 0 10px 20px;
+  }
+
+  .tree-card {
+    padding: 0;
+    border-radius: 12px;
+  }
+
+  .tree-image {
+    height: 180px;
+  }
+
+  .action-buttons {
+    gap: 6px;
+    padding: 10px 12px 12px;
+  }
+
+  .action-buttons button {
+    padding: 10px 10px;
+    font-size: 12px;
+  }
+
+  .action-buttons button::before {
+    display: none;
+  }
+
+  .search-container input {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .mytrees-content {
+    padding: 10px;
+  }
+
+  .search-container {
+    margin-bottom: 12px;
+  }
+
+  .search-container input {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .trees-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 5px 15px;
+  }
+
+  .tree-card {
+    border-radius: 10px;
+    max-height: 600px;
+  }
+
+  .tree-image {
+    height: 150px;
+  }
+
+  .tree-name {
+    padding: 10px 12px 0;
+    font-size: 14px;
+  }
+
+  .tree-name-text {
+    font-size: 14px;
+  }
+
+  .status-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .action-buttons {
+    flex-direction: row;
+    gap: 4px;
+    padding: 8px 10px 10px;
+    flex-wrap: wrap;
+  }
+
+  .action-buttons button {
+    flex: 0 1 calc(50% - 2px);
+    padding: 8px 6px;
+    font-size: 11px;
+    letter-spacing: 0;
+    text-transform: capitalize;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .tree-name-display {
+    word-break: break-word;
+  }
+
+  .no-trees {
+    padding: 40px 15px;
+    font-size: 14px;
+  }
+
+  .no-trees p {
+    font-size: 14px;
   }
 }

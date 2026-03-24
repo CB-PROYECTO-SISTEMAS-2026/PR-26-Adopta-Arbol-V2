@@ -7,15 +7,17 @@ import {
   createPurchaseRequest,
   uploadPurchaseProof,
 } from "../api/redemption.api";
-import { getAllCreditOptions } from "../api/credit.api.js";
 import { getStaticUrl, API_URL } from "../config/api.config.js";
 import "./QRCodeDisplay.css";
+import "./IrrigatorMap.css";
+import "./TreeHome.css";
 
 export default function QRCodeDisplay() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { loggedUser } = useUsers();
-  const { showSuccess, showError, showWarning } = useNotification();
+  const { loggedUser, logout } = useUsers();
+  const { showSuccess, showError, showWarning, showConfirm } =
+    useNotification();
   const [qrCode, setQrCode] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,10 +25,8 @@ export default function QRCodeDisplay() {
   const [filePreview, setFilePreview] = useState(null);
   const [purchaseId, setPurchaseId] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState(null);
-  const [creditOptions, setCreditOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [loadingOptions, setLoadingOptions] = useState(false);
+  const [showLogoutCard, setShowLogoutCard] = useState(false);
+  const [showNavMenu, setShowNavMenu] = useState(false);
   const fileInputRef = useRef(null);
 
   // Obtener la información de la opción seleccionada del estado
@@ -38,84 +38,38 @@ export default function QRCodeDisplay() {
 
   useEffect(() => {
     loadQRCode();
-    loadCreditOptions();
   }, []);
-
-  const loadCreditOptions = async () => {
-    try {
-      setLoadingOptions(true);
-      const response = await getAllCreditOptions();
-      console.log("Opciones de crédito:", response.data);
-      setCreditOptions(response.data || []);
-
-      // Establecer la opción seleccionada inicialmente
-      if (locationOption && response.data.length > 0) {
-        const foundOption = response.data.find(
-          (opt) => opt.id === locationOption.id,
-        );
-        if (foundOption) {
-          setSelectedOption(foundOption);
-        }
-      }
-    } catch (error) {
-      console.error("Error cargando opciones de crédito:", error);
-    } finally {
-      setLoadingOptions(false);
-    }
-  };
 
   const loadQRCode = async () => {
     try {
       setLoading(true);
       // Obtener QR code con ID 1 de la base de datos
       const response = await getQRCodeById(1);
-      const creditsAmount = selectedOption
-        ? parseFloat(selectedOption.purchased) +
-          parseFloat(selectedOption.bonus)
-        : initialCredits;
 
       setQrCode({
         id: response.data.id,
         imagePath: getStaticUrl(response.data.url),
-        credits: creditsAmount,
+        credits: initialCredits,
       });
     } catch (error) {
       console.error("Error al cargar QR code:", error);
       setError("Error al cargar el código QR");
       // Fallback a imagen local si hay error
-      const creditsAmount = selectedOption
-        ? parseFloat(selectedOption.purchased) +
-          parseFloat(selectedOption.bonus)
-        : initialCredits;
-
       setQrCode({
         id: 1,
         imagePath: "/qrcodes/1.png",
-        credits: creditsAmount,
+        credits: initialCredits,
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSelectCreditOption = (option) => {
-    setSelectedOption(option);
-    console.log("Opción de crédito seleccionada:", option);
-    // Actualizar el QR code con los nuevos créditos
-    const creditsAmount =
-      parseFloat(option.purchased) + parseFloat(option.bonus);
-    setQrCode((prev) => ({
-      ...prev,
-      credits: creditsAmount,
-    }));
-  };
-
-  const handleBack = () => {
-    navigate("/user-buy-credits");
-  };
-
-  const handleRanking = () => {
-    navigate("/ranking");
+  const handleLogout = () => {
+    showConfirm("¿Estás seguro de que deseas cerrar sesión?", () => {
+      logout();
+      navigate("/login");
+    });
   };
 
   const handleDownloadQR = () => {
@@ -221,7 +175,7 @@ export default function QRCodeDisplay() {
 
       // 1. Crear la solicitud de compra
       console.log("Creando solicitud de compra...");
-      const currentOption = selectedOption || locationOption;
+      const currentOption = locationOption;
       const tempPurchaseData = {
         userId: loggedUser.id,
         qrcodeId: qrCode?.id || 1,
@@ -262,10 +216,14 @@ export default function QRCodeDisplay() {
         setFilePreview(null);
         setPurchaseId(tempPurchaseId);
 
-        // Redirigir después de 2 segundos
-        setTimeout(() => {
-          navigate("/tree-home");
-        }, 2000);
+        // Redirigir al paso 3 de revisión
+        navigate("/purchase-review", {
+          state: {
+            purchaseId: tempPurchaseId,
+            credits: initialCredits,
+            price: initialPrice,
+          },
+        });
       } else {
         throw new Error("Error al confirmar la solicitud");
       }
@@ -286,56 +244,146 @@ export default function QRCodeDisplay() {
 
   if (loading) {
     return (
-      <div className="qrcode-display-container">
-        <div className="loading">Cargando código QR...</div>
+      <div className="treehome-container">
+        <div className="loading-message">Cargando código QR...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="qrcode-display-container">
-        <div className="error">{error}</div>
+      <div className="treehome-container">
+        <div className="error-message">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="qrcode-display-container">
-      {/* Input de archivo oculto */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept="image/*"
-        style={{ display: "none" }}
-      />
+    <div className="treehome-container">
+      {/* Navbar igual a TreeHome */}
+      <nav className="map-navbar">
+        <div className="navbar-container">
+          <button className="btn-back-map" onClick={() => navigate(-1)}>
+            <i className="bi bi-arrow-left"></i>
+          </button>
 
-      {/* Header */}
-      <header className="qrcode-display-header">
-        <button className="back-button" onClick={handleBack}>
-          <span className="back-arrow">←</span>
-        </button>
-        <div className="user-info">
-          <span className="username">
-            🍃 {loggedUser?.username || "Usuario"}
-          </span>
-          <div className="credits-display">
-            <span className="credits-icon">💰</span>
-            <span className="credits-amount">{loggedUser?.credits || 0}</span>
+          <div className="navbar-center">
+            <span className="navbar-greeting">
+              BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
+            </span>
+          </div>
+
+          <div className="navbar-actions">
+            <button
+              className="btn-hamburger"
+              onClick={() => setShowNavMenu(!showNavMenu)}
+              aria-label="Menú"
+            >
+              <i className={showNavMenu ? "bi bi-x-lg" : "bi bi-list"}></i>
+            </button>
+
+            <div className="user-icon-container">
+              <div
+                className="user-icon"
+                onClick={() => setShowLogoutCard(!showLogoutCard)}
+                style={{ cursor: "pointer" }}
+              >
+                <i className="bi bi-person-fill"></i>
+              </div>
+              {showLogoutCard && (
+                <div className="logout-card">
+                  <div className="logout-card-info">
+                    <div className="navbar-points">
+                      <span className="points-icon">⭐</span>
+                      <span className="points-amount">
+                        {loggedUser?.point || 0}
+                      </span>
+                    </div>
+                    <div className="navbar-credits">
+                      <i className="bi bi-currency-dollar"></i>
+                      <span>{loggedUser?.credits || 0}</span>
+                    </div>
+                  </div>
+                  <button className="logout-card-button" onClick={handleLogout}>
+                    <i className="bi bi-box-arrow-right"></i>
+                    Cerrar Sesión
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        <button className="btn-ranking" onClick={handleRanking}>
-          Ranking
-        </button>
-      </header>
+
+        {/* Menú desplegable */}
+        {showNavMenu && (
+          <div className="navbar-menu">
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/tree-home");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-map-fill"></i>
+              <span>Mapa de Árboles</span>
+            </button>
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/my-trees");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-tree-fill"></i>
+              <span>Mis Árboles</span>
+            </button>
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/ranking");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-trophy-fill"></i>
+              <span>Ranking</span>
+            </button>
+          </div>
+        )}
+      </nav>
 
       {/* Main Content */}
-      <div className="main-content">
-        {/* QR Code Section */}
-        <div className="qr-section">
-          <div className="qr-code-container">
-            <div className="qr-frame">
+      <main className="qr-display-main">
+        <div className="qr-display-content bg-white rounded">
+          {/* Input de archivo oculto */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            style={{ display: "none" }}
+          />
+
+          {/* Title */}
+          <h2 className="qr-display-title">
+            Escaneé el Código Qr o Descárguelo y adjunte el comprobante
+          </h2>
+
+          {/* Step Indicator */}
+          <div className="steps-indicator">
+            <div className="step">
+              <span>1</span>
+            </div>
+            <div className="step active">
+              <span>2</span>
+            </div>
+            <div className="step">
+              <span>3</span>
+            </div>
+          </div>
+
+          {/* QR Code Section */}
+          <div>
+            <div className="p-1 bg-white rounded">
               <img
                 src={qrCode?.imagePath || "/qrcodes/1.png"}
                 alt="Código QR"
@@ -346,183 +394,52 @@ export default function QRCodeDisplay() {
                 }}
               />
             </div>
-          </div>
 
-          {/* Credits Display and Options */}
-          <div className="credits-section">
-            <div className="credits-display">
-              <div className="credits-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm2.5-10.5l-1.5 1.5c-.32-.4-.74-.75-1.24-1.01C13.5 6.5 12.8 6 12 6s-1.5.5-1.76 1.49c-.5.26-.92.61-1.24 1.01L7.5 6.5C8.5 5.5 10.2 5 12 5s3.5.5 4.5 1.5z" />
-                </svg>
-              </div>
-              <div className="credits-info">
-                <span className="credits-text">
-                  CREDITOS:{" "}
-                  {selectedOption
-                    ? (
-                        parseFloat(selectedOption.purchased) +
-                        parseFloat(selectedOption.bonus)
-                      ).toFixed(0)
-                    : initialCredits}
-                </span>
-                <span className="price-text">
-                  PRECIO:{" "}
-                  {selectedOption
-                    ? parseFloat(selectedOption.price).toFixed(2)
-                    : initialPrice}{" "}
-                  Bs
-                </span>
-              </div>
+            {/* Credits Display */}
+            <div className="qr-credits mt-3 fw-bold">
+              <h4 className="credits-amount">{initialCredits} Créditos</h4>
             </div>
-
-            {/* Credit Options */}
-            {creditOptions.length > 0 && (
-              <div className="credit-options-selector">
-                <label className="options-label">
-                  Selecciona una opción de créditos:
-                </label>
-                <div className="credit-options-grid">
-                  {creditOptions.map((option) => {
-                    const totalCredits =
-                      parseFloat(option.purchased) + parseFloat(option.bonus);
-                    const isSelected = selectedOption?.id === option.id;
-
-                    return (
-                      <button
-                        key={option.id}
-                        className={`credit-option-btn ${isSelected ? "selected" : ""}`}
-                        onClick={() => handleSelectCreditOption(option)}
-                      >
-                        <div className="option-credits">
-                          {totalCredits.toFixed(0)}
-                        </div>
-                        <div className="option-price">
-                          {parseFloat(option.price).toFixed(2)} Bs
-                        </div>
-                        {option.bonus > 0 && (
-                          <div className="option-bonus">
-                            +{parseFloat(option.bonus).toFixed(0)} bonus
-                          </div>
-                        )}
-                        {isSelected && (
-                          <div className="option-indicator">✓</div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
-        </div>
 
-        {/* Vista previa del comprobante */}
-        {filePreview && (
-          <div className="proof-preview-container">
-            <label className="proof-preview-label">
-              Comprobante de pago adjuntado:
-            </label>
-            <img
-              src={filePreview}
-              alt="Vista previa del comprobante"
-              className="proof-preview-image"
-            />
-          </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className="action-buttons">
-          <button
-            className="btn-download"
-            onClick={handleDownloadQR}
-            disabled={isUploading}
-          >
-            <svg
-              className="btn-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+          {/* Action Buttons */}
+          <div className="qr-action-buttons">
+            <button
+              className="btn-qr-action btn-download"
+              onClick={handleDownloadQR}
+              disabled={isUploading}
             >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-            Descargar QR
-          </button>
+              Descargar Qr
+            </button>
+            <button
+              className={`btn-qr-action btn-attach ${selectedFile ? "btn-success" : ""}`}
+              onClick={handleAttachProof}
+              disabled={isUploading}
+            >
+              {selectedFile ? "Comprobante adjuntado" : "Adjuntar Comprobante"}
+            </button>
+          </div>
+
+          {/* Attached File Display */}
+          {filePreview && (
+            <div className="proof-preview-container">
+              <img
+                src={filePreview}
+                alt="Vista previa del comprobante"
+                className="proof-preview-image"
+              />
+            </div>
+          )}
+
+          {/* Confirm Button */}
           <button
-            className={`btn-attach ${selectedFile ? "btn-success" : ""} ${isUploading ? "btn-loading" : ""}`}
-            onClick={handleAttachProof}
-            disabled={isUploading}
-          >
-            {isUploading ? (
-              <>
-                <svg
-                  className="btn-icon spinner"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                Cargando...
-              </>
-            ) : selectedFile ? (
-              <>
-                <svg
-                  className="btn-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.64 16.2a2 2 0 0 1-2.83-2.83l8.49-8.49" />
-                </svg>
-                Comprobante adjuntado
-              </>
-            ) : (
-              <>
-                <svg
-                  className="btn-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.64 16.2a2 2 0 0 1-2.83-2.83l8.49-8.49" />
-                </svg>
-                Adjuntar comprobante
-              </>
-            )}
-          </button>
-          <button
-            className={`btn-confirm ${!selectedFile ? "btn-disabled" : ""}`}
+            className={`btn-confirm-purchase ${!selectedFile || isUploading ? "btn-disabled" : ""}`}
             onClick={handleConfirm}
             disabled={!selectedFile || isUploading}
           >
-            <svg
-              className="btn-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M20 6L9 17l-5-5" />
-            </svg>
-            {isUploading ? "Procesando..." : "Confirmar y enviar"}
+            {isUploading ? "Procesando..." : "Confirmar"}
           </button>
         </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="qrcode-display-footer">
-        <div className="footer-content">
-          <span className="copyright">
-            Copyright © 2020. All rights reserved.
-          </span>
-        </div>
-      </footer>
+      </main>
     </div>
   );
 }

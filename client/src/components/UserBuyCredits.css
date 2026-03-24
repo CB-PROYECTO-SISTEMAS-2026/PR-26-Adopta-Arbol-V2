@@ -1,257 +1,403 @@
-/* User Buy Credits Styles */
-.user-buy-credits-container {
+/* User Buy Credits Styles - Updated UI with Navbar */
+
+/* Reutilizar estilos de TreeHome para el container */
+.treehome-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a5c5c 0%, #2e8a8a 100%);
+  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
   display: flex;
   flex-direction: column;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px;
-}
-
-/* Header */
-.user-buy-credits-header {
-  background: #f0fff0;
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.back-button {
-  background: none;
-  border: none;
-  color: #1b4d4d;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.back-button:hover {
-  background-color: rgba(27, 77, 77, 0.1);
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.username {
-  color: #1b4d4d;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.credits-display {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  padding: 10px 15px;
-  border-radius: 25px;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-}
-
-.credits-icon {
-  font-size: 1.2rem;
-}
-
-.credits-amount {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.ranking-button {
-  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.ranking-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(27, 77, 77, 0.4);
-}
-
-.crown-icon {
-  font-size: 12px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
+  padding: 0;
 }
 
 /* Main Content */
-.main-content {
+.buy-credits-content {
   flex: 1;
-  background: #f0fff0;
-  border-radius: 15px;
-  padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  gap: 25px;
+  padding: 30px 20px;
+  overflow-y: auto;
 }
 
-/* Buy Credits Title Button */
-.buy-credits-title {
-  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
+/* Credit Card Section */
+.credit-card-section {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.credit-card {
+  width: 100%;
+  max-width: 440px;
+  height: 248px;
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(70, 255, 157, 0.22),
+      transparent 42%
+    ),
+    linear-gradient(135deg, #0d5a58 0%, #117356 42%, #1db55c 100%);
+  border-radius: 24px;
+  padding: 24px 24px 22px;
   color: white;
-  border: none;
-  padding: 15px 40px;
-  border-radius: 25px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 18px 42px rgba(5, 30, 24, 0.35),
+    0 2px 10px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.credit-card::before {
+  content: "";
+  position: absolute;
+  top: -28%;
+  right: -14%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.17) 0%,
+    transparent 72%
+  );
+  border-radius: 50%;
+}
+
+.credit-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 28%,
+    rgba(255, 255, 255, 0.12) 47%,
+    transparent 58%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.credit-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow:
+    0 24px 52px rgba(5, 30, 24, 0.42),
+    0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Top - Chip and Contactless */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.card-chip-container {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  max-width: 300px;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(27, 77, 77, 0.3);
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  padding: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.chip-image {
+  width: 44px;
+  height: 34px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
+.card-contactless-icon {
+  font-size: 22px;
+  opacity: 0.95;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+}
+
+/* Card Middle - Balance Info */
+.card-middle-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  padding: 12px 0 8px;
+}
+
+.balance-item,
+.credits-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 140px;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.balance-label,
+.credits-label {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.92;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.balance-value,
+.credits-value {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1.1;
+}
+
+/* Card Bottom - Cardholder Name */
+.card-bottom {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 10px;
+}
+
+.cardholder-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: inline-block;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Section Title */
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+/* Steps Indicator */
+.buy-credits-content .steps-indicator {
+  --step-size: 38px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: min(260px, 100%);
+  margin: 8px auto 2px;
+  padding: 0 2px;
+}
+
+.buy-credits-content .steps-indicator::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--step-size) / 2);
+  right: calc(var(--step-size) / 2);
+  top: 50%;
+  height: 2px;
+  background: #c8ccd4;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.buy-credits-content .step {
+  position: relative;
+  z-index: 1;
+  width: var(--step-size);
+  height: var(--step-size);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  background: #aeb5c2;
+  color: #ffffff;
+  border: 2px solid #aeb5c2;
+  box-shadow: 0 1px 3px rgba(44, 52, 65, 0.2);
   transition: all 0.3s ease;
 }
 
-.buy-credits-title:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(27, 77, 77, 0.4);
+.buy-credits-content .step.active {
+  background: #505865;
+  color: #ffffff;
+  border-color: #505865;
+  box-shadow: 0 3px 8px rgba(40, 47, 58, 0.35);
 }
 
-.dollar-icon {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-/* Credit Options */
-.credit-options {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* Credit Options Grid */
+.credit-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
   width: 100%;
-  max-width: 450px;
-}
-
-.credit-option-row {
-  width: 100%;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.credit-option-row.selected .credit-option-card {
-  background: linear-gradient(135deg, #0a3a3a, #1e5a5a);
-  border-color: #ffd700;
-  box-shadow:
-    0 8px 25px rgba(27, 77, 77, 0.5),
-    0 0 20px rgba(255, 215, 0, 0.3);
+  max-width: 520px;
+  margin: 20px 0 30px;
 }
 
 .credit-option-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
+  width: 100%;
+  min-height: 240px;
+  border-radius: 20px;
   border: 2px solid transparent;
-  border-radius: 15px;
-  padding: 20px;
+  padding: 24px 18px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(27, 77, 77, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
   color: white;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Color Variants */
+.credit-option-card.card-color-dark {
+  background: linear-gradient(135deg, #1a3a47 0%, #2d5a6f 100%);
+}
+
+.credit-option-card.card-color-purple1 {
+  background: linear-gradient(135deg, #4a2d7a 0%, #6b4ba8 100%);
+  box-shadow: 0 8px 24px rgba(106, 75, 168, 0.25);
+}
+
+.credit-option-card.card-color-purple2 {
+  background: linear-gradient(135deg, #6b4ba8 0%, #8b5fb8 100%);
+  box-shadow: 0 8px 24px rgba(107, 75, 168, 0.3);
+}
+
+.credit-option-card.card-color-purple3 {
+  background: linear-gradient(135deg, #8b5fb8 0%, #a77dcc 100%);
+  box-shadow: 0 8px 24px rgba(139, 95, 184, 0.25);
+}
+
+.credit-option-card.card-color-orange {
+  background: linear-gradient(135deg, #d97a3a 0%, #e89050 100%);
+  box-shadow: 0 8px 24px rgba(217, 122, 58, 0.3);
+}
+
+.credit-option-card.card-color-coral {
+  background: linear-gradient(135deg, #e89050 0%, #f0a866 100%);
+  box-shadow: 0 8px 24px rgba(232, 144, 80, 0.25);
 }
 
 .credit-option-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(27, 77, 77, 0.4);
+  transform: translateY(-10px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
 }
 
-.credit-option-main {
+.credit-option-card.selected {
+  border-color: #ffd700;
+  box-shadow:
+    0 0 0 3px rgba(255, 215, 0, 0.3),
+    0 16px 40px rgba(255, 215, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-12px) scale(1.02);
+}
+
+.card-icon {
+  font-size: 40px;
+  color: white;
+  width: 75px;
+  height: 75px;
+  background: #ffd700;
+  border-radius: 50%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 40px;
-  flex: 1;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(255, 215, 0, 0.45);
+  margin-top: 4px;
+  font-weight: 700;
 }
 
-.credit-section {
+.card-price {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0.9;
+  letter-spacing: 0.3px;
+}
+
+.card-credits-number {
+  font-size: 48px;
+  font-weight: 800;
+  color: #f0f0f0;
+  text-align: center;
+  line-height: 1;
+  margin: 2px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card-credits-text {
+  font-size: 15px;
+  font-weight: 700;
+  opacity: 0.95;
+  text-align: center;
+  letter-spacing: 0.4px;
+}
+
+.card-offer-section {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
+  gap: 6px;
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 10px;
 }
 
-.credit-label {
-  font-size: 12px;
-  font-weight: 600;
-  opacity: 0.8;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.credit-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #ffd700;
-}
-
-.bonus-badge {
+.card-offer {
   font-size: 11px;
-  background: rgba(255, 215, 0, 0.2);
-  color: #ffd700;
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-weight: 600;
-  margin-top: 3px;
-}
-
-.price-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 5px;
-}
-
-.price-label {
-  font-size: 12px;
-  font-weight: 600;
-  opacity: 0.8;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  opacity: 0.95;
+  color: #ffd700;
 }
 
-.price-value {
-  font-size: 24px;
+.card-bonus {
+  font-size: 12px;
   font-weight: 700;
-  color: #ffd700;
-}
-
-.selected-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 20px;
-}
-
-.selected-indicator i {
-  font-size: 24px;
-  color: #ffd700;
+  color: #e8ff99;
+  text-align: center;
+  letter-spacing: 0.3px;
 }
 
 .no-options {
+  grid-column: 1 / -1;
   text-align: center;
-  color: #999;
-  padding: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 40px 20px;
   font-size: 14px;
 }
 
@@ -264,90 +410,247 @@
   font-size: 18px;
 }
 
-/* Generate QR Button */
-.generate-qr-button {
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #333;
+/* Canjear Button */
+.exchange-button {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #0d6b7e;
   border: none;
-  padding: 15px 30px;
+  padding: 14px 50px;
   border-radius: 25px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  width: 100%;
-  max-width: 400px;
+  width: 90%;
+  max-width: 320px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
 }
 
-.generate-qr-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+.exchange-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
 }
 
-.generate-qr-button:disabled {
+.exchange-button:disabled {
   background: #cccccc;
   color: #666;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
-}
-
-/* Footer */
-.user-buy-credits-footer {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 30px;
-  padding: 20px;
-  font-size: 14px;
+  opacity: 0.6;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .user-buy-credits-container {
-    padding: 10px;
-  }
-
-  .user-buy-credits-header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-
-  .main-content {
+  .buy-credits-content {
     padding: 20px 15px;
-    gap: 25px;
+    gap: 20px;
   }
 
-  .credit-option-row {
-    flex-direction: column;
+  .credit-card-section {
+    max-width: 390px;
+  }
+
+  .credit-card {
+    max-width: 100%;
+    height: 220px;
+    padding: 18px;
+  }
+
+  .balance-value {
+    font-size: 16px;
+  }
+
+  .credits-value {
+    font-size: 16px;
+  }
+
+  .card-middle-info {
+    gap: 8px;
+    padding: 10px 0 6px;
+  }
+
+  .balance-item,
+  .credits-item {
+    min-width: 0;
+    flex: 1;
+    padding: 8px 10px;
+  }
+
+  .cardholder-name {
+    font-size: 14px;
+    letter-spacing: 1.2px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .credit-options-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    max-width: 420px;
+  }
+
+  .credit-option-card {
+    min-height: 200px;
+    padding: 18px 14px;
     gap: 10px;
   }
 
-  .credits-button,
-  .price-button {
-    width: 100%;
+  .card-icon {
+    width: 65px;
+    height: 65px;
+    font-size: 36px;
+  }
+
+  .card-price {
+    font-size: 12px;
+  }
+
+  .card-credits-number {
+    font-size: 40px;
+  }
+
+  .card-credits-text {
+    font-size: 13px;
+  }
+
+  .buy-credits-content .steps-indicator {
+    --step-size: 34px;
+    width: min(230px, 100%);
+  }
+
+  .buy-credits-content .step {
+    font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .username {
-    font-size: 16px;
+  .buy-credits-content {
+    padding: 15px 12px;
+    gap: 15px;
   }
 
-  .buy-credits-title {
-    font-size: 16px;
-    padding: 12px 30px;
+  .credit-card-section {
+    max-width: 100%;
   }
 
-  .credits-button,
-  .price-button {
+  .credit-card {
+    max-width: 100%;
+    height: 198px;
+    border-radius: 18px;
+    padding: 14px;
+  }
+
+  .card-chip-container {
+    padding: 6px;
+  }
+
+  .chip-image {
+    width: 36px;
+    height: 28px;
+  }
+
+  .card-contactless-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+
+  .card-middle-info {
+    gap: 6px;
+    padding: 8px 0 4px;
+  }
+
+  .balance-item,
+  .credits-item {
+    padding: 7px 8px;
+    border-radius: 10px;
+  }
+
+  .balance-label,
+  .credits-label {
+    font-size: 9px;
+    letter-spacing: 0.6px;
+  }
+
+  .balance-value,
+  .credits-value {
+    font-size: 13px;
+  }
+
+  .card-bottom {
+    padding-top: 6px;
+  }
+
+  .cardholder-name {
+    font-size: 11px;
+    letter-spacing: 0.9px;
+  }
+
+  .credit-options-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    max-width: 100%;
+  }
+
+  .credit-option-card {
+    min-height: 180px;
+    padding: 16px 12px;
+    gap: 8px;
+  }
+
+  .card-icon {
+    width: 55px;
+    height: 55px;
+    font-size: 30px;
+  }
+
+  .card-price {
+    font-size: 11px;
+  }
+
+  .card-credits-number {
+    font-size: 36px;
+  }
+
+  .card-credits-text {
+    font-size: 12px;
+  }
+
+  .card-offer-section {
+    gap: 4px;
+    padding-top: 8px;
+  }
+
+  .card-offer {
+    font-size: 9px;
+  }
+
+  .card-bonus {
+    font-size: 10px;
+  }
+
+  .buy-credits-content .steps-indicator {
+    --step-size: 30px;
+    width: min(205px, 100%);
+  }
+
+  .buy-credits-content .step {
+    font-size: 11px;
+  }
+
+  .exchange-button {
+    padding: 12px 40px;
     font-size: 14px;
-    padding: 12px 15px;
+    width: 95%;
   }
 
-  .generate-qr-button {
-    font-size: 14px;
-    padding: 12px 20px;
+  .section-title {
+    font-size: 16px;
   }
 }
