@@ -178,9 +178,6 @@ export default function IrrigatorMap() {
 
   const selectedPriceValue = toNumeric(selectedIrrigation?.price);
   const hasSelectedPrice = selectedPriceValue > 0;
-  const selectedRewardBase = toNumeric(selectedIrrigation?.reward);
-  const hasSelectedReward = selectedRewardBase > 0;
-  const selectedRewardShare = hasSelectedReward ? calculateRewardShare(selectedRewardBase) : 0;
 
   return (
     <div className="irrigator-map-container">
@@ -321,10 +318,7 @@ export default function IrrigatorMap() {
               {/* Marcadores de irrigation */}
               {irrigations.map((irrigation) => {
                 const priceValue = toNumeric(irrigation.price);
-                const rewardBase = toNumeric(irrigation.reward);
-                const rewardShare = calculateRewardShare(rewardBase);
                 const hasPrice = priceValue > 0;
-                const hasReward = rewardBase > 0;
 
                 return (
                 <Marker
@@ -348,12 +342,6 @@ export default function IrrigatorMap() {
                       <p>
                         <strong>Precio:</strong> {hasPrice ? `${formatPoints(priceValue)} pts` : "No disponible"}
                       </p>
-                    
-                      {hasReward && (
-                        <p>
-                          <strong>Recompensa para regador:</strong> {formatPoints(rewardShare)} pts
-                        </p>
-                      )}
                     </div>
                   </Popup>
                 </Marker>
@@ -382,15 +370,6 @@ export default function IrrigatorMap() {
                 <div className="detail-row">
                   <span className="label">Precio:</span>
                   <span>{hasSelectedPrice ? `${formatPoints(selectedPriceValue)} pts` : "No disponible"}</span>
-                </div>
-
-                <div className="detail-row">
-                  <span className="label">Recompensa para regador:</span>
-                  <span>
-                    {hasSelectedReward
-                      ? `${formatPoints(selectedRewardShare)} pts `
-                      : "No disponible"}
-                  </span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Dirección:</span>
