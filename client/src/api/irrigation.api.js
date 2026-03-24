@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import { API_URL } from "../config/api.config.js";
 
 // Función para obtener todos los riegos pendientes
@@ -50,7 +50,7 @@ export const createIrrigationRequest = async (irrigationData) => {
   try {
     const response = await axios.post(`${API_URL}/irrigations`, {
       userId: irrigationData.userId,
-      treeId: irrigationData.treeId
+      treeId: irrigationData.treeId,
     });
     return response;
   } catch (error) {
@@ -73,7 +73,9 @@ export const getPendingIrrigationsRequest = async () => {
 // Función para obtener irrigation asignado al regador (status = 3)
 export const getAssignedIrrigationRequest = async (irrigatorId) => {
   try {
-    const response = await axios.get(`${API_URL}/irrigations/assigned/${irrigatorId}`);
+    const response = await axios.get(
+      `${API_URL}/irrigations/assigned/${irrigatorId}`,
+    );
     return response;
   } catch (error) {
     console.error("Error al obtener irrigation asignado:", error);
@@ -81,12 +83,26 @@ export const getAssignedIrrigationRequest = async (irrigatorId) => {
   }
 };
 
+// Función para obtener el historial de riego de un árbol (evidencia de fotos)
+export const getTreeIrrigationEvidenceRequest = async (treeId) => {
+  try {
+    const response = await axios.get(`${API_URL}/irrigations/tree/${treeId}`);
+    return response;
+  } catch (error) {
+    console.error("Error al obtener evidencia de riego:", error);
+    throw error;
+  }
+};
+
 // Función para asignar irrigation a regador
-export const assignTreeToIrrigatorRequest = async (irrigationId, irrigatorId) => {
+export const assignTreeToIrrigatorRequest = async (
+  irrigationId,
+  irrigatorId,
+) => {
   try {
     const response = await axios.post(`${API_URL}/irrigations/assign`, {
       irrigationId: irrigationId,
-      irrigatorId: irrigatorId
+      irrigatorId: irrigatorId,
     });
     return response;
   } catch (error) {
@@ -98,16 +114,18 @@ export const assignTreeToIrrigatorRequest = async (irrigationId, irrigatorId) =>
 // Función para confirmar riego con evidencia (regador)
 export const confirmIrrigationRequest = async (id, formData) => {
   try {
-    const response = await axios.put(`${API_URL}/irrigations/${id}/confirm`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+    const response = await axios.put(
+      `${API_URL}/irrigations/${id}/confirm`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
     return response;
   } catch (error) {
     console.error("Error al confirmar riego:", error);
     throw error;
   }
 };
-
-

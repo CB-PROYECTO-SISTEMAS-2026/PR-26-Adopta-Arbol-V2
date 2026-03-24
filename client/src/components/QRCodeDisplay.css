@@ -1,523 +1,257 @@
-/* QR Code Display Styles - Matching TreeHome */
-.qrcode-display-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0a5c5c 0%, #2e8a8a 100%);
-  padding: 20px;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Header - Matching TreeHome style */
-.qrcode-display-header {
-  background: #f0fff0;
-  border-radius: 15px;
-  padding: 20px;
-  margin: 20px;
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.back-button {
-  background: none;
-  border: none;
-  color: #1b4d4d;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.back-button:hover {
-  background-color: rgba(27, 77, 77, 0.1);
-}
-
-.back-arrow {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.user-info {
+/* QR Code Display Styles - Simple Clean Design */
+.qr-display-main {
+  min-height: calc(100vh - 72px);
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  padding: 24px 12px;
 }
 
-.username {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #1b4d4d;
-}
-
-.credits-display {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  padding: 10px 15px;
-  border-radius: 25px;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-}
-
-.credits-icon {
-  font-size: 1.2rem;
-}
-
-.credits-amount {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.btn-ranking {
-  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
-  text-align: center;
-}
-
-.btn-ranking:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(27, 77, 77, 0.4);
-}
-
-/* Main Content */
-.main-content {
-  flex: 1;
-  background: #f0fff0;
-  border-radius: 15px;
-  padding: 30px;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-/* QR Section */
-.qr-section {
+.qr-display-content {
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 25px;
-  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-/* QR Code Container */
-.qr-code-container {
+/* Title */
+.qr-display-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1b4d4d;
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Step Indicator */
+.qr-display-content .steps-indicator {
+  --step-size: 38px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: min(260px, 100%);
+  margin: 8px auto 2px;
+  padding: 0 2px;
+}
+
+.qr-display-content .steps-indicator::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--step-size) / 2);
+  right: calc(var(--step-size) / 2);
+  top: 50%;
+  height: 2px;
+  background: #c8ccd4;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.qr-display-content .step {
+  position: relative;
+  z-index: 1;
+  width: var(--step-size);
+  height: var(--step-size);
+  border-radius: 50%;
+  background: #aeb5c2;
+  border: 2px solid #aeb5c2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(44, 52, 65, 0.2);
+  transition: all 0.3s ease;
+}
+
+.qr-display-content .step.active {
+  background: #505865;
+  border-color: #505865;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(40, 47, 58, 0.35);
+}
+
+/* QR Container */
+.qr-container {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  border: none;
+  border-left: none;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.qr-frame {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  border: 2px solid #e9ecef;
 }
 
 .qr-code-image {
-  width: 200px;
-  height: 200px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Credits Display */
-.credits-display {
-  text-align: center;
-  background: #f8f9fa;
-  padding: 15px 25px;
-  border-radius: 15px;
-  border: 2px solid #e9ecef;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.credits-icon {
-  width: 24px;
-  height: 24px;
-  color: #1b4d4d;
-  flex-shrink: 0;
-}
-
-.credits-info {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.credits-text {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #1b4d4d;
-}
-
-.price-text {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #666;
-}
-
-/* Action Buttons - Professional Style */
-.action-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 320px;
-}
-
-.btn-download,
-.btn-attach {
-  background: linear-gradient(135deg, #2d5a87 0%, #1e3a5f 100%);
-  color: white;
-  border: none;
-  padding: 16px 24px;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 8px 25px rgba(45, 90, 135, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  letter-spacing: -0.025em;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-download::before,
-.btn-attach::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.btn-download:hover::before,
-.btn-attach:hover::before {
-  left: 100%;
-}
-
-.btn-download:hover,
-.btn-attach:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 12px 35px rgba(45, 90, 135, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, #1e4a6b 0%, #0f2a4a 100%);
-}
-
-.btn-confirm {
-  background: linear-gradient(135deg, #90ee90 0%, #7ed321 100%);
-  color: #1a1a1a;
-  border: none;
-  padding: 16px 24px;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 8px 25px rgba(144, 238, 144, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  letter-spacing: -0.025em;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-confirm::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.btn-confirm:hover::before {
-  left: 100%;
-}
-
-.btn-confirm:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 12px 35px rgba(144, 238, 144, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, #7ed321 0%, #6bcf00 100%);
-}
-
-.btn-icon {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2.5;
-}
-
-/* Estados de botones */
-.btn-disabled {
-  background: linear-gradient(135deg, #6c757d, #495057) !important;
-  color: #adb5bd !important;
-  cursor: not-allowed !important;
-  opacity: 0.6;
-}
-
-.btn-disabled:hover {
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.btn-success {
-  background: linear-gradient(135deg, #28a745, #20c997) !important;
-  color: white !important;
-}
-
-.btn-success:hover {
-  background: linear-gradient(135deg, #218838, #1e7e34) !important;
-}
-
-.btn-loading {
-  background: linear-gradient(135deg, #ffc107, #ff9800) !important;
-  cursor: not-allowed !important;
-}
-
-.btn-loading:hover {
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* Animación para el spinner */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.btn-icon.spinner {
-  animation: spin 1s linear infinite;
-}
-
-/* Footer - Matching TreeHome style */
-.qrcode-display-footer {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 30px;
-  padding: 20px;
-  font-size: 14px;
-}
-
-/* Loading and Error States */
-.loading,
-.error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 18px;
-  color: white;
-  text-align: center;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-}
-
-.error {
-  color: #ff6b6b;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Credit Options Selector */
-.credit-options-selector {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  width: 100%;
-}
-
-.options-label {
-  display: block;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1b4d4d;
-  margin-bottom: 16px;
-  text-align: left;
-}
-
-.credit-options-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  width: 100%;
-}
-
-.credit-option-btn {
-  background: #f8f9fa;
-  border: 2px solid #e0e0e0;
+  width: 220px;
+  height: 220px;
   border-radius: 12px;
-  padding: 16px 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.credit-option-btn:hover {
-  border-color: #096c6c;
-  background: #f0f8f8;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(9, 108, 108, 0.15);
-}
-
-.credit-option-btn.selected {
-  background: linear-gradient(135deg, #096c6c, #0a5c5c);
-  border-color: #096c6c;
-  color: white;
-  box-shadow: 0 8px 25px rgba(9, 108, 108, 0.3);
-}
-
-.option-credits {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1b4d4d;
-}
-
-.credit-option-btn.selected .option-credits {
-  color: #ffd700;
-}
-
-.option-price {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #666;
-}
-
-.credit-option-btn.selected .option-price {
-  color: #ffed4e;
-}
-
-.option-bonus {
-  font-size: 0.85rem;
-  color: #28a745;
-  font-weight: 600;
-}
-
-.credit-option-btn.selected .option-bonus {
-  color: #90ee90;
-}
-
-.option-indicator {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  background: #28a745;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-}
-
-/* Proof Preview Section */
-.proof-preview-container {
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  margin: 20px 0;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 100%;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.proof-preview-label {
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1b4d4d;
-  margin-bottom: 12px;
-}
-
-.proof-preview-image {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 12px;
-  border: 2px solid #096c6c;
-  box-shadow: 0 4px 15px rgba(9, 108, 108, 0.2);
   object-fit: contain;
 }
 
-/* Responsive Design - Matching TreeHome */
+/* Credits Display */
+.qr-credits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.credits-amount {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1b4d4d;
+}
+
+.credits-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Action Buttons */
+.qr-action-buttons {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-qr-action {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+  flex: 1;
+  min-width: 150px;
+  max-width: 200px;
+  text-align: center;
+}
+
+.btn-qr-action:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+  background: linear-gradient(135deg, #27ae60, #229954);
+}
+
+.btn-qr-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-qr-action.btn-success {
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+}
+
+/* Proof Preview */
+.proof-preview-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 15px 0;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.proof-preview-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 15px;
+}
+
+/* Confirm Button */
+.btn-confirm-purchase {
+  background: linear-gradient(135deg, #1b4d4d, #0f3c3c);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(27, 77, 77, 0.3);
+  width: 100%;
+  max-width: 400px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-confirm-purchase:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(27, 77, 77, 0.4);
+  background: linear-gradient(135deg, #0f3c3c, #082e2e);
+}
+
+.btn-confirm-purchase:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-confirm-purchase.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading and Error Messages */
+.loading-message,
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+}
+
+.error-message {
+  color: #ff6b6b;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .qrcode-display-container {
-    padding: 10px;
+  .qr-display-main {
+    min-height: calc(100vh - 66px);
+    padding: 18px 10px;
   }
 
-  .qrcode-display-header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
+  .qr-display-content {
+    padding: 20px 15px;
+    gap: 20px;
   }
 
-  .main-content {
-    padding: 20px;
-    gap: 25px;
+  .qr-display-title {
+    font-size: 16px;
+  }
+
+  .qr-display-content .steps-indicator {
+    --step-size: 34px;
+    width: min(230px, 100%);
+  }
+
+  .qr-display-content .step {
+    font-size: 12px;
   }
 
   .qr-code-image {
@@ -525,32 +259,83 @@
     height: 180px;
   }
 
-  .credits-text {
-    font-size: 1.3rem;
+  .credits-amount {
+    font-size: 28px;
   }
 
-  .action-buttons {
-    max-width: 100%;
+  .qr-action-buttons {
+    gap: 10px;
   }
 
-  .credit-options-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  .btn-qr-action {
+    padding: 12px 18px;
+    font-size: 13px;
+    min-width: 140px;
+    max-width: none;
+    flex: 1;
   }
 
-  .credit-option-btn {
-    padding: 12px 8px;
+  .btn-confirm-purchase {
+    padding: 14px 30px;
+    font-size: 15px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-display-main {
+    min-height: calc(100vh - 62px);
+    padding: 14px 8px;
   }
 
-  .option-credits {
-    font-size: 1.2rem;
+  .qr-display-content {
+    padding: 15px 10px;
+    gap: 18px;
   }
 
-  .option-price {
-    font-size: 0.9rem;
+  .qr-display-title {
+    font-size: 14px;
+    line-height: 1.3;
   }
 
-  .proof-preview-image {
-    max-height: 250px;
+  .qr-display-content .steps-indicator {
+    --step-size: 30px;
+    width: min(205px, 100%);
+  }
+
+  .qr-display-content .step {
+    font-size: 11px;
+  }
+
+  .qr-container {
+    padding: 15px;
+  }
+
+  .qr-code-image {
+    width: 160px;
+    height: 160px;
+  }
+
+  .credits-amount {
+    font-size: 24px;
+  }
+
+  .credits-label {
+    font-size: 12px;
+  }
+
+  .qr-action-buttons {
+    flex-direction: column;
+  }
+
+  .btn-qr-action {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .btn-confirm-purchase {
+    width: 100%;
+    max-width: none;
   }
 }
 
