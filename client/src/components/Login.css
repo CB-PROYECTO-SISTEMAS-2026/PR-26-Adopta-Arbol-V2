@@ -1,19 +1,19 @@
 /* Login.css - Pixie Fairy Core con colores naturales */
 
 :root {
-  --accent-mint: #a8e6cf;
-  --accent-forest: #2d6a4f;
-  --accent-gold: #d4a574;
-  --accent-lavender: #cdbaea;
-  --accent-rose: #f1c8d8;
-  --gradient-fairy: linear-gradient(135deg, #a8e6cf 0%, #cdbaea 50%, #f1c8d8 100%);
-  --gradient-forest: linear-gradient(135deg, #2d6a4f, #4a9b6f);
+  --accent-mint: #7BA995;
+  --accent-forest: #2D5F3F;
+  --accent-gold: #D4A574;
+  --accent-lavender: #A8A8C8;
+  --accent-rose: #C8A8B8;
+  --gradient-fairy: linear-gradient(135deg, #7BA995 0%, #A8A8C8 50%, #D4A574 100%);
+  --gradient-forest: linear-gradient(135deg, #2D5F3F, #4A5C4C);
   --transition-magic: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Contenedor principal con degradado mágico */
 .login-container {
-  background: linear-gradient(135deg, #1f5847 0%, #2d6a4f 30%, #488b6f 70%, #a8e6cf 100%);
+  background: linear-gradient(135deg, #1A3A28 0%, #2D5F3F 30%, #4A5C4C 70%, #7BA995 100%);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -26,13 +26,13 @@
 
 @keyframes magicBgShift {
   0% {
-    background: linear-gradient(135deg, #1f5847 0%, #2d6a4f 30%, #488b6f 70%, #a8e6cf 100%);
+    background: linear-gradient(135deg, #1A3A28 0%, #2D5F3F 30%, #4A5C4C 70%, #7BA995 100%);
   }
   50% {
-    background: linear-gradient(225deg, #2d6a4f 0%, #4a9b6f 30%, #a8e6cf 70%, #f1c8d8 100%);
+    background: linear-gradient(225deg, #2D5F3F 0%, #4A5C4C 30%, #7BA995 70%, #D4A574 100%);
   }
   100% {
-    background: linear-gradient(315deg, #1f5847 0%, #2d6a4f 30%, #488b6f 70%, #d4a574 100%);
+    background: linear-gradient(315deg, #1A3A28 0%, #2D5F3F 30%, #4A5C4C 70%, #D4A574 100%);
   }
 }
 
@@ -49,7 +49,7 @@
 .login-container::before {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(168, 230, 207, 0.3), transparent);
+  background: radial-gradient(circle, rgba(123, 169, 149, 0.3), transparent);
   top: -100px;
   left: -100px;
   animation: floatMagic1 25s ease-in-out infinite;
@@ -58,7 +58,7 @@
 .login-container::after {
   width: 350px;
   height: 350px;
-  background: radial-gradient(circle, rgba(241, 200, 216, 0.3), transparent);
+  background: radial-gradient(circle, rgba(212, 165, 116, 0.3), transparent);
   bottom: -120px;
   right: -120px;
   animation: floatMagic2 30s ease-in-out infinite;
@@ -80,11 +80,11 @@
 
 /* Caja de login con diseño pixie fairy core */
 .login-box {
-  background: linear-gradient(135deg, #f9fffb 0%, #f5f9f7 50%, #fffaf8 100%);
+  background: linear-gradient(135deg, #F9FFFB 0%, #F5F9F7 50%, #FFFAF8 100%);
   border-radius: 32px;
   box-shadow: 
-    0 30px 60px rgba(45, 106, 79, 0.15),
-    0 0 0 1px rgba(168, 230, 207, 0.3),
+    0 30px 60px rgba(45, 95, 63, 0.15),
+    0 0 0 1px rgba(123, 169, 149, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   padding: 55px 45px;
   width: 380px;
@@ -94,7 +94,7 @@
   animation: slideUpMagic 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
   transition: var(--transition-magic);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(168, 230, 207, 0.4);
+  border: 2px solid rgba(123, 169, 149, 0.4);
 }
 
 .login-box::before {
@@ -104,16 +104,16 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(168, 230, 207, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(123, 169, 149, 0.5), transparent);
   z-index: 1;
 }
 
 .login-box:hover {
   transform: translateY(-12px) scale(1.02);
   box-shadow: 
-    0 40px 80px rgba(45, 106, 79, 0.2),
-    0 0 0 1px rgba(168, 230, 207, 0.5),
-    0 0 30px rgba(168, 230, 207, 0.2);
+    0 40px 80px rgba(45, 95, 63, 0.2),
+    0 0 0 1px rgba(123, 169, 149, 0.5),
+    0 0 30px rgba(123, 169, 149, 0.2);
 }
 
 /* Logo con animación de brillo */
@@ -126,11 +126,11 @@
   width: 105px;
   animation: floatLogoMagic 5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
   transition: var(--transition-magic);
-  filter: drop-shadow(0 6px 16px rgba(45, 106, 79, 0.2));
+  filter: drop-shadow(0 6px 16px rgba(45, 95, 63, 0.2));
 }
 
 .login-box:hover .logo img {
-  filter: drop-shadow(0 10px 25px rgba(168, 230, 207, 0.4));
+  filter: drop-shadow(0 10px 25px rgba(123, 169, 149, 0.4));
   animation: floatLogoMagic 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
@@ -145,7 +145,7 @@
 
 /* Título con gradiente mágico */
 h2 {
-  color: #2d6a4f;
+  color: #2D5F3F;
   margin-bottom: 28px;
   font-size: 1.9rem;
   letter-spacing: 1px;

@@ -1,7 +1,7 @@
 /* Contenedor principal con fondo aesthetic de hojas */
 .irrigator-confirm-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a7373, #0d5858);
+  background: linear-gradient(135deg, #2D5F3F, #1A3A28);
   display: flex;
   flex-direction: column;
   font-family: "Poppins", sans-serif;
@@ -33,12 +33,12 @@
 /* Barra superior */
 .top-bar {
   width: 100%;
-  background: #0a7373;
+  background: #2D5F3F;
   padding: 15px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 15px rgba(45, 95, 63, 0.25);
   position: relative;
   z-index: 1;
   border-bottom-left-radius: 20px;
@@ -46,7 +46,7 @@
 }
 
 .btn-back {
-  background: rgba(255,255,255,0.2);
+  background: rgba(123, 169, 149, 0.2);
   color: #fff;
   border: none;
   font-size: 16px;
@@ -58,7 +58,7 @@
 }
 
 .btn-back:hover {
-  background: rgba(255,255,255,0.35);
+  background: rgba(123, 169, 149, 0.35);
   transform: translateY(-2px);
 }
 
@@ -89,7 +89,7 @@
 
 .btn-canjear-header {
   background: #fff;
-  color: #0a5c5c;
+  color: #2D5F3F;
 }
 
 .btn-canjear-header:hover {
@@ -98,8 +98,8 @@
 }
 
 .btn-ranking {
-  background: #ffd700;
-  color: #0a5c5c;
+  background: #D4A574;
+  color: #2D5F3F;
 }
 
 .btn-ranking:hover {

@@ -1,12 +1,12 @@
-/* App.css - layout principal con diseño moderno y dinámico */
+/* App.css - layout principal con diseño moderno y dinámico - PIXELFAIRY CORE THEME */
 :root {
   --sidebar-width: 220px;
   --sidebar-gap: 16px;
-  --gradient-primary: linear-gradient(135deg, #0a5c5c, #2e8a8a);
-  --gradient-secondary: linear-gradient(135deg, #16c78d, #0f9f6f);
-  --shadow-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-elevation-2: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-elevation-3: 0 16px 40px rgba(0, 0, 0, 0.16);
+  --gradient-primary: linear-gradient(135deg, #2D5F3F, #4A5C4C);
+  --gradient-secondary: linear-gradient(135deg, #3D8B40, #2D7A4C);
+  --shadow-elevation-1: 0 2px 8px rgba(45, 95, 63, 0.06);
+  --shadow-elevation-2: 0 8px 24px rgba(45, 95, 63, 0.12);
+  --shadow-elevation-3: 0 16px 40px rgba(45, 95, 63, 0.16);
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -14,7 +14,7 @@
 .app-layout {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e9f0f5 100%);
+  background: linear-gradient(135deg, #E8F3E8 0%, #F5EEEB 100%);
   box-sizing: border-box;
 }
 

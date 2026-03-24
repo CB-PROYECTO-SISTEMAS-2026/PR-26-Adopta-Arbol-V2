@@ -1,7 +1,9 @@
+@import './AdminGlobal.css';
+
 /* Contenedor principal */
 .dashboard-container {
   width: 100%;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #E8F3E8 0%, #F5EEEB 100%);
   min-height: 100vh;
   padding: 0;
   box-sizing: border-box;
@@ -12,10 +14,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  padding: 15px 25px;
-  border-bottom: 1px solid #e9ecef;
+  background: linear-gradient(135deg, #2D5F3F 0%, #4A5C4C 100%);
+  padding: 20px 30px;
+  border-bottom: 3px solid #3D8B40;
   margin-bottom: 0;
+  box-shadow: 0 4px 12px rgba(45, 95, 63, 0.12);
 }
 
 .search-section {
@@ -31,17 +34,24 @@
 .search-input {
   width: 100%;
   padding: 12px 45px 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  background: #f8f9fa;
+  border: 2px solid #7BA995;
+  border-radius: 25px;
+  font-size: 15px;
+  background: #F5EEEB;
   box-sizing: border-box;
+  color: #2C3E37;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-input::placeholder {
+  color: #8A9A8F;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #007bff;
-  background: white;
+  border-color: #3D8B40;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(61, 139, 64, 0.1);
 }
 
 .search-icon {
@@ -62,34 +72,43 @@
 
 .admin-text {
   font-size: 16px;
-  font-weight: 600;
-  color: #2c5aa0;
+  font-weight: 500;
+  color: #E8F3E8;
+  letter-spacing: 0.3px;
 }
 
 .admin-avatar {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: #2c5aa0;
+  background: linear-gradient(135deg, #3D8B40 0%, #2D5F3F 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 3px solid #E8F3E8;
+  box-shadow: 0 4px 12px rgba(45, 95, 63, 0.12);
+  transition: transform 0.3s ease-in-out;
+}
+
+.admin-avatar:hover {
+  transform: scale(1.05);
 }
 
 .avatar-icon {
   color: white;
-  font-size: 18px;
+  font-size: 24px;
 }
 
 /* Filtros de fecha */
 .filters-section {
   display: flex;
   justify-content: space-between;
-  align-items: end;
-  background: white;
-  padding: 20px 25px;
-  border-bottom: 1px solid #e9ecef;
+  align-items: flex-end;
+  background: var(--color-white);
+  padding: 25px 30px;
+  border-bottom: 2px solid #E8F3E8;
   margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(45, 95, 63, 0.08);
 }
 
 .date-filters {
@@ -125,22 +144,27 @@
 }
 
 .btn-add-category {
-  background: #90ee90;
-  color: #2d5016;
+  background: linear-gradient(135deg, #3D8B40 0%, #2D5F3F 100%);
+  color: white;
   border: none;
   padding: 12px 20px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s ease-in-out;
   display: flex;
   align-items: center;
   gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(45, 95, 63, 0.08);
 }
 
 .btn-add-category:hover {
-  background: #7dd87d;
+  background: linear-gradient(135deg, #4CAF50 0%, #3D8B40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 95, 63, 0.12);
 }
 
 
@@ -158,7 +182,8 @@
 }
 
 .categories-table thead {
-  background: #6c7b7f;
+  background: linear-gradient(135deg, #4A5C4C 0%, #2D5F3F 100%);
+  border-bottom: 3px solid #3D8B40;
 }
 
 .categories-table thead th {
@@ -171,20 +196,20 @@
 }
 
 .categories-table tbody tr {
-  border-bottom: 1px solid #e9ecef;
-  transition: background 0.2s;
+  border-bottom: 1px solid #E8F3E8;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .categories-table tbody tr:hover {
-  background: #f8f9fa;
+  background-color: #F5EEEB;
 }
 
 .categories-table tbody tr:nth-child(even) {
-  background: #f8f9fa;
+  background-color: #FFF9F6;
 }
 
 .categories-table tbody tr:nth-child(even):hover {
-  background: #e9ecef;
+  background-color: #F5EEEB;
 }
 
 .categories-table tbody td {
@@ -234,13 +259,25 @@
 }
 
 .view-btn {
-  background: #6c757d;
+  background: #7BA995;
   color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.view-btn:hover {
+  background: #8BBD9F;
+  transform: scale(1.1);
 }
 
 .delete-btn {
-  background: #dc3545;
+  background: linear-gradient(135deg, #AC5E5E 0%, #8B4A4A 100%);
   color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #C47070 0%, #AC5E5E 100%);
+  transform: scale(1.1);
 }
 
 /* Paginación */
