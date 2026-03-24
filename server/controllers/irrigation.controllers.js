@@ -48,21 +48,15 @@ export const createIrrigation = async (req, res) => {
       return res.status(403).json({ message: "No tienes permisos para regar este árbol" });
     }
 
-    // Calcular recompensa: 15% del precio del árbol, redondeado
-    const treePrice = parseFloat(ownershipCheck[0].price);
-    const reward = Math.round(treePrice * 0.15 * 100) / 100; // Redondear a 2 decimales
-
-    // Insertar riego con status = 4, evidence = null, observations = null
+    // Insertar riego con status = 4
     const [result] = await pool.query(`
-      INSERT INTO irrigation (userId, treeId, reward, evidence, observations, status)
-      VALUES (?, ?, ?, NULL, NULL, 4)
-    `, [userId, treeId, reward]);
+      INSERT INTO irrigation (userId, treeId, status)
+      VALUES (?, ?, 4)
+    `, [userId, treeId]);
 
     res.status(201).json({
       message: "Riego registrado exitosamente",
-      irrigationId: result.insertId,
-      reward: reward,
-      treePrice: treePrice
+      irrigationId: result.insertId
     });
   } catch (error) {
     console.error("Error al crear riego:", error);
@@ -76,9 +70,6 @@ export const getIrrigations = async (req, res) => {
     const [result] = await pool.query(`
       SELECT 
         irrigation.id, 
-        irrigation.reward, 
-        irrigation.evidence, 
-        irrigation.observations, 
         irrigation.registerDate, 
         irrigation.status,
         user.name AS userName, 
@@ -106,9 +97,9 @@ export const approveIrrigation = async (req, res) => {
   try {
     await connection.beginTransaction();
 
-    // Obtener datos del riego para calcular puntos
+    // Obtener datos del riego
     const [irrigationData] = await connection.query(`
-      SELECT i.userId, i.reward, t.name as treeName 
+      SELECT i.userId, t.name as treeName 
       FROM irrigation i
       JOIN tree t ON i.treeId = t.id
       WHERE i.id = ? AND i.status = 2
@@ -119,7 +110,7 @@ export const approveIrrigation = async (req, res) => {
       return res.status(404).json({ message: "Riego no encontrado o ya procesado" });
     }
 
-    const { userId, reward, treeName } = irrigationData[0];
+    const { userId, treeName } = irrigationData[0];
 
     // Actualizar estado del riego
     const [result] = await connection.query(
@@ -132,11 +123,7 @@ export const approveIrrigation = async (req, res) => {
       return res.status(404).json({ message: "Riego no encontrado" });
     }
 
-    // Convertir recompensa en puntos para el usuario
-    await connection.query(
-      "UPDATE user SET point = point + ? WHERE id = ?",
-      [reward, userId]
-    );
+    // Note: Reward system would require additional database columns
 
     await connection.commit();
     
@@ -146,7 +133,7 @@ export const approveIrrigation = async (req, res) => {
         userId,
         "tree_irrigated",
         "¡Riego Aprobado!",
-        `Tu riego del árbol "${treeName}" ha sido aprobado. Has ganado ${reward} puntos.`,
+        `Tu riego del árbol "${treeName}" ha sido aprobado.`,
         id
       );
     } catch (notifError) {
@@ -193,9 +180,6 @@ export const getIrrigation = async (req, res) => {
     const [result] = await pool.query(`
       SELECT 
         irrigation.id, 
-        irrigation.reward, 
-        irrigation.evidence, 
-        irrigation.observations, 
         irrigation.registerDate, 
         irrigation.status,
         user.name AS userName, 
@@ -228,7 +212,6 @@ export const getPendingIrrigations = async (req, res) => {
       SELECT 
         irrigation.id AS irrigationId,
         irrigation.treeId,
-        irrigation.reward,
         irrigation.registerDate,
         tree.name AS treeName,
         tree.latitude,
@@ -258,7 +241,6 @@ export const getAssignedIrrigation = async (req, res) => {
       SELECT 
         irrigation.id AS irrigationId,
         irrigation.treeId,
-        irrigation.reward,
         irrigation.registerDate,
         tree.name AS treeName,
         tree.latitude,
@@ -290,7 +272,7 @@ export const assignTreeToIrrigator = async (req, res) => {
   try {
     // Verificar que el irrigation esté disponible (status = 4)
     const [irrigationCheck] = await pool.query(
-      "SELECT id, treeId, reward FROM irrigation WHERE id = ? AND status = 4",
+      "SELECT id, treeId FROM irrigation WHERE id = ? AND status = 4",
       [irrigationId]
     );
 
@@ -323,8 +305,7 @@ export const assignTreeToIrrigator = async (req, res) => {
       res.json({
         message: "Riego asignado exitosamente",
         irrigationId: irrigationId,
-        treeId: irrigationCheck[0].treeId,
-        reward: irrigationCheck[0].reward
+        treeId: irrigationCheck[0].treeId
       });
     } catch (error) {
       await pool.query("ROLLBACK");
@@ -339,7 +320,6 @@ export const assignTreeToIrrigator = async (req, res) => {
 // Confirmar riego con evidencia (regador)
 export const confirmIrrigation = async (req, res) => {
   const { id } = req.params;
-  const { observations } = req.body;
   
   try {
     // Verificar que el riego existe y está en status 3
@@ -356,16 +336,10 @@ export const confirmIrrigation = async (req, res) => {
       return res.status(400).json({ message: "El riego no está disponible para confirmar" });
     }
 
-    // Si hay imagen, guardar solo el nombre del archivo
-    let evidencePath = null;
-    if (req.file) {
-      evidencePath = req.file.filename; // Solo el nombre: 4.jpg, 4.png, etc.
-    }
-
-    // Actualizar el riego con evidencia, observaciones y status = 2
+    // Actualizar el riego con status = 2
     const [result] = await pool.query(
-      "UPDATE irrigation SET evidence = ?, observations = ?, status = 2 WHERE id = ?",
-      [evidencePath, observations || null, id]
+      "UPDATE irrigation SET status = 2 WHERE id = ?",
+      [id]
     );
 
     if (result.affectedRows === 0) {
@@ -373,9 +347,7 @@ export const confirmIrrigation = async (req, res) => {
     }
 
     res.json({ 
-      message: "Riego confirmado exitosamente",
-      evidence: evidencePath,
-      observations: observations || null
+      message: "Riego confirmado exitosamente"
     });
   } catch (error) {
     console.error("Error al confirmar riego:", error.message);

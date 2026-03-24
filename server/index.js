@@ -23,7 +23,16 @@ const app = express();
 // Configurar CORS
 app.use(
   cors({
-    origin: NODE_ENV === "production" ? FRONTEND_URL : "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Permite localhost en cualquier puerto durante desarrollo
+      if (NODE_ENV === "development" && origin?.includes("localhost")) {
+        callback(null, true);
+      } else if (NODE_ENV === "production") {
+        callback(null, FRONTEND_URL);
+      } else {
+        callback(null, origin);
+      }
+    },
     credentials: true,
   }),
 );
