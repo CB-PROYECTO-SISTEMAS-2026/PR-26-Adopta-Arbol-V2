@@ -218,6 +218,83 @@ export const getPurchaseDetails = async (req, res) => {
 // FUNCIONES PARA TABLA DE OPCIONES: credit
 // ========================================
 
+const validateCreditDecimal = (value, fieldName, { allowZero = true } = {}) => {
+  if (value === undefined || value === null || value === "") {
+    return { isValid: false, message: `El campo ${fieldName} es requerido` };
+  }
+
+  const numericValue = Number(value);
+  if (Number.isNaN(numericValue)) {
+    return {
+      isValid: false,
+      message: `El campo ${fieldName} debe ser numérico`,
+    };
+  }
+
+  if (allowZero ? numericValue < 0 : numericValue <= 0) {
+    return {
+      isValid: false,
+      message: `El campo ${fieldName} debe ser ${allowZero ? "mayor o igual a 0" : "mayor a 0"}`,
+    };
+  }
+
+  if (numericValue > 999.99) {
+    return {
+      isValid: false,
+      message: `El campo ${fieldName} excede el máximo permitido (999.99)`,
+    };
+  }
+
+  return { isValid: true, value: Number(numericValue.toFixed(2)) };
+};
+
+const getValidatedAdminId = async (userId) => {
+  if (!userId) {
+    return { isValid: false, message: "El userId es requerido" };
+  }
+
+  const [adminRows] = await pool.query(
+    "SELECT id FROM user WHERE id = ? AND role = 'admin' AND status = 1",
+    [userId],
+  );
+
+  if (adminRows.length === 0) {
+    return {
+      isValid: false,
+      message: "El usuario logueado no tiene permisos de administrador",
+    };
+  }
+
+  return { isValid: true, value: Number(userId) };
+};
+
+// Obtener todas las opciones de crédito para administración (incluye activas e inactivas)
+export const getAllCreditOptionsAdmin = async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT
+        c.id,
+        c.price,
+        c.purchased,
+        c.bonus,
+        c.status,
+        c.registerDate,
+        c.lastUpdate,
+        c.userId,
+        u.name AS userName,
+        u.lastName AS userLastName
+      FROM credit c
+      LEFT JOIN user u ON c.userId = u.id
+      ORDER BY c.registerDate DESC
+    `);
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error in getAllCreditOptionsAdmin:", error);
+    res.status(500).json({ message: "Error al obtener pagos" });
+  }
+};
+
 // Obtener todas las opciones de crédito activas
 export const getAllCreditOptions = async (req, res) => {
   try {
@@ -257,7 +334,7 @@ export const getCreditOptionById = async (req, res) => {
         registerDate, 
         lastUpdate
       FROM credit
-      WHERE id = ? AND status = 1
+      WHERE id = ?
     `,
       [id],
     );
@@ -277,30 +354,56 @@ export const getCreditOptionById = async (req, res) => {
 
 // Crear nueva opción de crédito (Admin only)
 export const createCreditOption = async (req, res) => {
-  const { price, purchased, bonus = 0 } = req.body;
+  const { price, purchased, bonus, userId } = req.body;
 
   try {
-    // Validar datos requeridos
-    if (!price || !purchased) {
-      return res
-        .status(400)
-        .json({ message: "Faltan datos requeridos: price y purchased" });
+    const adminValidation = await getValidatedAdminId(userId);
+    if (!adminValidation.isValid) {
+      return res.status(403).json({ message: adminValidation.message });
+    }
+
+    const priceValidation = validateCreditDecimal(price, "price", {
+      allowZero: false,
+    });
+    const purchasedValidation = validateCreditDecimal(purchased, "purchased", {
+      allowZero: false,
+    });
+    const bonusValidation = validateCreditDecimal(bonus, "bonus", {
+      allowZero: true,
+    });
+
+    if (!priceValidation.isValid) {
+      return res.status(400).json({ message: priceValidation.message });
+    }
+
+    if (!purchasedValidation.isValid) {
+      return res.status(400).json({ message: purchasedValidation.message });
+    }
+
+    if (!bonusValidation.isValid) {
+      return res.status(400).json({ message: bonusValidation.message });
     }
 
     const [result] = await pool.query(
       `
-      INSERT INTO credit (price, purchased, bonus, status)
-      VALUES (?, ?, ?, 1)
+      INSERT INTO credit (price, purchased, bonus, status, userId)
+      VALUES (?, ?, ?, 1, ?)
     `,
-      [price, purchased, bonus],
+      [
+        priceValidation.value,
+        purchasedValidation.value,
+        bonusValidation.value,
+        adminValidation.value,
+      ],
     );
 
     res.json({
       id: result.insertId,
-      price,
-      purchased,
-      bonus,
+      price: priceValidation.value,
+      purchased: purchasedValidation.value,
+      bonus: bonusValidation.value,
       status: 1,
+      userId: adminValidation.value,
       message: "Opción de crédito creada exitosamente",
     });
   } catch (error) {
@@ -312,9 +415,59 @@ export const createCreditOption = async (req, res) => {
 // Actualizar opción de crédito (Admin only)
 export const updateCreditOption = async (req, res) => {
   const { id } = req.params;
-  const { price, purchased, bonus } = req.body;
+  const { price, purchased, bonus, userId } = req.body;
 
   try {
+    const adminValidation = await getValidatedAdminId(userId);
+    if (!adminValidation.isValid) {
+      return res.status(403).json({ message: adminValidation.message });
+    }
+
+    if (price === undefined && purchased === undefined && bonus === undefined) {
+      return res.status(400).json({
+        message:
+          "Debes enviar al menos uno de los campos: price, purchased o bonus",
+      });
+    }
+
+    let parsedPrice = null;
+    let parsedPurchased = null;
+    let parsedBonus = null;
+
+    if (price !== undefined) {
+      const priceValidation = validateCreditDecimal(price, "price", {
+        allowZero: false,
+      });
+      if (!priceValidation.isValid) {
+        return res.status(400).json({ message: priceValidation.message });
+      }
+      parsedPrice = priceValidation.value;
+    }
+
+    if (purchased !== undefined) {
+      const purchasedValidation = validateCreditDecimal(
+        purchased,
+        "purchased",
+        {
+          allowZero: false,
+        },
+      );
+      if (!purchasedValidation.isValid) {
+        return res.status(400).json({ message: purchasedValidation.message });
+      }
+      parsedPurchased = purchasedValidation.value;
+    }
+
+    if (bonus !== undefined) {
+      const bonusValidation = validateCreditDecimal(bonus, "bonus", {
+        allowZero: true,
+      });
+      if (!bonusValidation.isValid) {
+        return res.status(400).json({ message: bonusValidation.message });
+      }
+      parsedBonus = bonusValidation.value;
+    }
+
     const [result] = await pool.query(
       `
       UPDATE credit
@@ -322,10 +475,11 @@ export const updateCreditOption = async (req, res) => {
         price = COALESCE(?, price),
         purchased = COALESCE(?, purchased),
         bonus = COALESCE(?, bonus),
+        userId = ?,
         lastUpdate = CURRENT_TIMESTAMP
       WHERE id = ?
     `,
-      [price, purchased, bonus, id],
+      [parsedPrice, parsedPurchased, parsedBonus, adminValidation.value, id],
     );
 
     if (result.affectedRows === 0) {
@@ -344,15 +498,21 @@ export const updateCreditOption = async (req, res) => {
 // Eliminar (delete lógico) opción de crédito (Admin only)
 export const deleteCreditOption = async (req, res) => {
   const { id } = req.params;
+  const { userId } = req.body;
 
   try {
+    const adminValidation = await getValidatedAdminId(userId);
+    if (!adminValidation.isValid) {
+      return res.status(403).json({ message: adminValidation.message });
+    }
+
     const [result] = await pool.query(
       `
       UPDATE credit
-      SET status = 0, lastUpdate = CURRENT_TIMESTAMP
+      SET status = 0, userId = ?, lastUpdate = CURRENT_TIMESTAMP
       WHERE id = ?
     `,
-      [id],
+      [adminValidation.value, id],
     );
 
     if (result.affectedRows === 0) {

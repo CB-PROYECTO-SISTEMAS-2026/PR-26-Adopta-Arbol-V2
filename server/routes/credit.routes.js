@@ -5,6 +5,7 @@ import {
   approvePurchase,
   rejectPurchase,
   getPurchaseDetails,
+  getAllCreditOptionsAdmin,
   getAllCreditOptions,
   getCreditOptionById,
   createCreditOption,
@@ -17,6 +18,9 @@ const router = Router();
 // ========================================
 // Rutas para gestión de OPCIONES DE CRÉDITO
 // ========================================
+
+// Obtener todas las opciones de crédito (admin)
+router.get("/credit-options/admin", getAllCreditOptionsAdmin);
 
 // Obtener todas las opciones de crédito activas
 router.get("/credit-options", getAllCreditOptions);

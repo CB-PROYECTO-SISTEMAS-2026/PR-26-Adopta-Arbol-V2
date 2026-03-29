@@ -41,6 +41,12 @@ function SideNavbar() {
               </Link>
             </li>
             <li>
+              <Link to="/admin/payments">
+                <i className="bi bi-cash-coin"></i>
+                <span>Pagos</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/admin/tree">
                 <i className="bi bi-tree-fill"></i>
                 <span>Árboles</span>

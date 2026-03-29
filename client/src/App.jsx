@@ -26,6 +26,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AdminAdoption from "./components/AdminAdoption";
 import AdminQrCode from "./components/AdminQrCode";
 import AdminCategory from "./components/AdminCategory";
+import AdminPayments from "./components/AdminPayments";
 import MyTrees from "./components/MyTrees";
 import LandPage from "./components/LandPage";
 
@@ -270,6 +271,19 @@ function App() {
                     <SideNavbar />
                     <div className="app-content">
                       <AdminCategory />
+                    </div>
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/payments"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <div className="app-layout">
+                    <SideNavbar />
+                    <div className="app-content">
+                      <AdminPayments />
                     </div>
                   </div>
                 </ProtectedRoute>

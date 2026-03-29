@@ -87,13 +87,16 @@ export default function AdminCategory() {
 
       console.log("Creando categoría:", categoryData);
       await axios.post(`${API_URL}/categories`, categoryData);
-      
+
       showSuccess("Categoría creada exitosamente");
       closeCreateModal();
       loadCategories();
     } catch (error) {
       console.error("Error al crear categoría:", error);
-      showError("Error al crear la categoría: " + (error.response?.data?.message || error.message));
+      showError(
+        "Error al crear la categoría: " +
+          (error.response?.data?.message || error.message),
+      );
     }
   };
 
@@ -110,16 +113,19 @@ export default function AdminCategory() {
         try {
           console.log("Eliminando categoría:", id);
           await axios.delete(`${API_URL}/categories/${id}`, {
-            data: { userId: loggedUser.id }
+            data: { userId: loggedUser.id },
           });
-          
+
           showSuccess("Categoría eliminada exitosamente");
           loadCategories();
         } catch (error) {
           console.error("Error al eliminar categoría:", error);
-          showError("Error al eliminar la categoría: " + (error.response?.data?.message || error.message));
+          showError(
+            "Error al eliminar la categoría: " +
+              (error.response?.data?.message || error.message),
+          );
         }
-      }
+      },
     );
   };
 
@@ -176,9 +182,9 @@ export default function AdminCategory() {
           <table className="categories-table">
             <thead>
               <tr>
-                <th>Categoría</th>
-            
-                <th>Acciones</th>
+                <th>CATEGORIA</th>
+
+                <th>ACCIONES</th>
               </tr>
             </thead>
             <tbody>
@@ -186,13 +192,10 @@ export default function AdminCategory() {
                 filteredCategories.map((category) => (
                   <tr key={category.id}>
                     <td>
-                      <div className="category-name">
-                        {category.name}
-                      </div>
+                      <div className="category-name">{category.name}</div>
                     </td>
-                    
+
                     <td className="actions-cell">
-                     
                       <button
                         className="action-btn delete-btn"
                         onClick={() => deleteCategory(category.id)}
@@ -206,7 +209,9 @@ export default function AdminCategory() {
               ) : (
                 <tr>
                   <td colSpan="4" className="text-center">
-                    {search ? "No se encontraron categorías con ese filtro" : "No hay categorías disponibles"}
+                    {search
+                      ? "No se encontraron categorías con ese filtro"
+                      : "No hay categorías disponibles"}
                   </td>
                 </tr>
               )}
@@ -218,11 +223,25 @@ export default function AdminCategory() {
       {/* Modal para crear categoría */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeCreateModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-header">
-              <h3>Crear Nueva Categoría</h3>
-              <button className="modal-close" onClick={closeCreateModal}>
-                <i className="bi bi-x-lg"></i>
+              <h3 id="modal-title" className="modal-title">
+                Crear Nueva Categoría
+              </h3>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={closeCreateModal}
+                aria-label="Cerrar"
+                title="Cerrar"
+              >
+                <i className="bi bi-x-lg" aria-hidden="true"></i>
               </button>
             </div>
             <form onSubmit={createCategory}>
@@ -242,13 +261,6 @@ export default function AdminCategory() {
                 </div>
               </div>
               <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn-cancel"
-                  onClick={closeCreateModal}
-                >
-                  Cancelar
-                </button>
                 <button type="submit" className="btn-save">
                   Crear Categoría
                 </button>
