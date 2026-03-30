@@ -343,32 +343,29 @@ export default function MyTrees() {
             </div>
           ) : (
             filteredTrees.map((tree) => {
-              const pricing = getIrrigationPricing(tree.price);
-              const hasPrice = pricing.original > 0;
-
               return (
                 <div key={tree.id} className="tree-card">
                   {/* Tree Image */}
                   <div className="tree-image">
-                    {treeIrrigationEvidence[tree.id]?.evidence ? (
-                      // Mostrar foto de riego si está disponible
+                    {tree.imagePath ? (
                       <img
-                        src={getStaticUrl(
-                          `/evidence/${treeIrrigationEvidence[tree.id].evidence}`,
-                        )}
-                        alt={`Evidencia de riego - ${tree.name}`}
+                        src={getStaticUrl(tree.imagePath)}
+                        alt={`Imagen de ${tree.name}`}
                         onError={(e) => {
-                          // Si la foto de riego falla, intentar mostrar la imagen del árbol
-                          if (tree.imagePath) {
-                            e.target.src = getStaticUrl(tree.imagePath);
+                          if (treeIrrigationEvidence[tree.id]?.evidence) {
+                            e.target.src = getStaticUrl(
+                              `/evidence/${treeIrrigationEvidence[tree.id].evidence}`,
+                            );
                           } else {
                             e.target.style.display = "none";
                           }
                         }}
                       />
-                    ) : tree.imagePath ? (
+                    ) : treeIrrigationEvidence[tree.id]?.evidence ? (
                       <img
-                        src={getStaticUrl(tree.imagePath)}
+                        src={getStaticUrl(
+                          `/evidence/${treeIrrigationEvidence[tree.id].evidence}`,
+                        )}
                         alt={tree.name}
                         onError={(e) => {
                           e.target.src = "/default-tree.svg";
@@ -381,8 +378,8 @@ export default function MyTrees() {
                     )}
                   </div>
 
-                  {/* Tree Name */}
-                  <div className="tree-name">
+                  {/* Card Content */}
+                  <div className="tree-card-content">
                     {editingTree?.id === tree.id ? (
                       <div className="rename-container">
                         <input
@@ -398,85 +395,59 @@ export default function MyTrees() {
                             onClick={handleSaveRename}
                             disabled={!newTreeName.trim()}
                           >
-                            ✓
+                            Guardar
                           </button>
                           <button
                             className="cancel-btn"
                             onClick={handleCancelRename}
                           >
-                            ✗
+                            Cancelar
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="name-container">
-                        <div className="name-and-status">
-                          <h3>{tree.name}</h3>
-                          <span
-                            className={`status-indicator ${tree.adoptionStatus === 1 ? "approved" : "pending"}`}
-                          >
-                            {tree.adoptionStatus === 1
-                              ? "✅ Aprobado"
-                              : "⏳ Pendiente"}
-                          </span>
-                        </div>
-                        {tree.adoptionStatus === 1 && (
-                          <button
-                            className="edit-name-btn"
-                            onClick={() => handleRenameTree(tree)}
-                            title="Cambiar nombre"
-                          >
-                            ✏️
-                          </button>
-                        )}
+                      <div className="tree-card-header">
+                        <h3 className="tree-card-title">{tree.name}</h3>
+                        <p
+                          className={`tree-card-subtitle ${tree.adoptionStatus === 1 ? "approved" : "pending"}`}
+                        >
+                          {tree.adoptionStatus === 1 ? "Aprobado" : "Pendiente"}
+                        </p>
+                        <p className="tree-card-address">
+                          {tree.address || "Sin dirección registrada."}
+                        </p>
                       </div>
                     )}
-                  </div>
 
-                  {/* Action Buttons */}
-                  <div className="action-buttons">
-                    {tree.adoptionStatus === 1 ? (
-                      // Adopción aprobada - mostrar todas las acciones
-                      <>
-                        <button
-                          className="btn-water"
-                          onClick={() => handleWaterTree(tree.id)}
-                        >
-                          REGAR
-                        </button>
-                        <button
-                          className="btn-details"
-                          onClick={() => handleViewDetails(tree.id)}
-                        >
-                          DETALLES
-                        </button>
-                        <button
-                          className="btn-delete"
-                          onClick={() => handleDeleteTree(tree.id)}
-                        >
-                          ELIMINAR
-                        </button>
-                      </>
-                    ) : (
-                      // Adopción pendiente - mostrar solo detalles
-                      <>
-                        <button className="btn-pending" disabled>
-                          PENDIENTE
-                        </button>
-                        <button
-                          className="btn-details"
-                          onClick={() => handleViewDetails(tree.id)}
-                        >
-                          DETALLES
-                        </button>
-                        <button
-                          className="btn-delete"
-                          onClick={() => handleDeleteTree(tree.id)}
-                        >
-                          CANCELAR
-                        </button>
-                      </>
-                    )}
+                    {/* Action Buttons */}
+                    <div className="action-buttons">
+                      <button
+                        className="btn-update"
+                        onClick={() => handleRenameTree(tree)}
+                        disabled={tree.adoptionStatus !== 1}
+                      >
+                        Actualizar
+                      </button>
+                      <button
+                        className="btn-water"
+                        onClick={() => handleWaterTree(tree.id)}
+                        disabled={tree.adoptionStatus !== 1}
+                      >
+                        Regar
+                      </button>
+                      <button
+                        className="btn-details"
+                        onClick={() => handleViewDetails(tree.id)}
+                      >
+                        Detalles
+                      </button>
+                      <button
+                        className="btn-delete"
+                        onClick={() => handleDeleteTree(tree.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
                 </div>
               );

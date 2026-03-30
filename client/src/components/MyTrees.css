@@ -125,21 +125,21 @@
 .trees-grid {
   padding: 0 20px 40px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 26px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .tree-card {
-  background: white;
-  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfc 100%);
+  border-radius: 22px;
   padding: 0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 14px 34px rgba(10, 92, 92, 0.14);
   transition: var(--transition-smooth);
   display: flex;
   flex-direction: column;
-  border: none;
+  border: 1px solid #d9e8ea;
   overflow: hidden;
   position: relative;
   height: 100%;
@@ -172,13 +172,13 @@
 }
 
 .tree-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 20px 50px rgba(10, 92, 92, 0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 22px 48px rgba(10, 92, 92, 0.2);
 }
 
 .tree-image {
   width: 100%;
-  height: 200px;
+  height: 210px;
   border-radius: 0;
   overflow: hidden;
   margin-bottom: 0;
@@ -211,10 +211,54 @@
   opacity: 0.6;
 }
 
-.tree-name {
-  margin-bottom: 12px;
-  padding: 15px 16px 0;
-  width: 100%;
+.tree-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  padding: 18px 18px 16px;
+}
+
+.tree-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tree-card-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a2b2b;
+}
+
+.tree-card-subtitle {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.tree-card-subtitle.approved {
+  color: #1f6f3f;
+  background: #e8f6ed;
+}
+
+.tree-card-subtitle.pending {
+  color: #ad5f00;
+  background: #fff3df;
+}
+
+.tree-card-address {
+  margin: 0;
+  color: #445e61;
+  font-size: 0.96rem;
+  line-height: 1.45;
+  min-height: 48px;
 }
 
 .irrigation-pricing {
@@ -421,36 +465,44 @@
 }
 /* === Botones de acción dentro del card === */
 .action-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   margin-top: auto;
   width: 100%;
-  padding: 12px 16px 16px;
+  padding: 0;
   box-sizing: border-box;
 }
 
 .action-buttons button {
   width: 100%;
-  padding: 12px 14px;
+  padding: 11px 14px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   text-align: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  text-transform: none;
+  letter-spacing: 0.2px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
 }
 
 .action-buttons button:active {
   transform: scale(0.98);
+}
+
+.btn-update {
+  background: linear-gradient(135deg, #d9f5f1, #c8ece7);
+  color: #0c5e5e;
+  border: 1px solid #9cd3cc;
+  box-shadow: 0 4px 14px rgba(12, 94, 94, 0.12);
+}
+
+.btn-update:hover {
+  background: linear-gradient(135deg, #c8ece7, #b3e5de);
+  transform: translateY(-1px);
 }
 
 /* Botón: Regar */
@@ -463,12 +515,15 @@
 .btn-water:hover {
   background: linear-gradient(135deg, #43b76a, #2d8c51);
   box-shadow: 0 6px 20px rgba(81, 200, 120, 0.4);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
-.btn-water::before {
-  content: "💧";
-  font-size: 16px;
+.btn-water:disabled,
+.btn-update:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Botón: Detalles */
@@ -481,12 +536,7 @@
 .btn-details:hover {
   background: linear-gradient(135deg, #085f8a, #04476b);
   box-shadow: 0 6px 20px rgba(10, 127, 168, 0.4);
-  transform: translateY(-2px);
-}
-
-.btn-details::before {
-  content: "ℹ️";
-  font-size: 16px;
+  transform: translateY(-1px);
 }
 
 /* Botón: Eliminar / Cancelar */
@@ -499,26 +549,7 @@
 .btn-delete:hover {
   background: linear-gradient(135deg, #e53935, #b71c1c);
   box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
-  transform: translateY(-2px);
-}
-
-.btn-delete::before {
-  content: "🗑️";
-  font-size: 16px;
-}
-
-/* Botón: Pendiente */
-.btn-pending {
-  background: linear-gradient(135deg, #ffa726, #fb8c00);
-  color: white;
-  cursor: not-allowed;
-  opacity: 0.7;
-  box-shadow: 0 4px 15px rgba(255, 167, 38, 0.2);
-}
-
-.btn-pending::before {
-  content: "⏳";
-  font-size: 16px;
+  transform: translateY(-1px);
 }
 
 /* No Trees State */
@@ -592,17 +623,13 @@
   }
 
   .action-buttons {
-    gap: 6px;
-    padding: 10px 12px 12px;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .action-buttons button {
-    padding: 10px 10px;
+    padding: 10px 8px;
     font-size: 12px;
-  }
-
-  .action-buttons button::before {
-    display: none;
   }
 
   .search-container input {
@@ -658,18 +685,15 @@
   }
 
   .action-buttons {
-    flex-direction: row;
     gap: 4px;
-    padding: 8px 10px 10px;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .action-buttons button {
-    flex: 0 1 calc(50% - 2px);
     padding: 8px 6px;
     font-size: 11px;
     letter-spacing: 0;
-    text-transform: capitalize;
+    text-transform: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 

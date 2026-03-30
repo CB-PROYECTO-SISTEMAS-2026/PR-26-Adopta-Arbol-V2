@@ -9,7 +9,7 @@ import "./TreeHome.css";
 
 export default function UserBuyCredits() {
   const navigate = useNavigate();
-  const { loggedUser, logout } = useUsers();
+  const { loggedUser, logout, refreshUserData } = useUsers();
   const { showError, showWarning, showConfirm } = useNotification();
   const [selectedOption, setSelectedOption] = useState(null);
   const [creditOptions, setCreditOptions] = useState([]);
@@ -21,6 +21,17 @@ export default function UserBuyCredits() {
   useEffect(() => {
     loadCreditOptions();
   }, []);
+
+  useEffect(() => {
+    if (
+      loggedUser?.id &&
+      (!loggedUser?.registerDate || loggedUser.registerDate === "null")
+    ) {
+      refreshUserData().catch((error) => {
+        console.warn("No se pudo refrescar registerDate del usuario:", error);
+      });
+    }
+  }, [loggedUser?.id, loggedUser?.registerDate]);
 
   const loadCreditOptions = async () => {
     try {
@@ -60,16 +71,17 @@ export default function UserBuyCredits() {
     setSelectedOption(option);
   };
 
-  const getCardColor = (index) => {
-    const colors = [
-      "card-color-dark", // Índice 0: muy oscuro
-      "card-color-purple1", // Índice 1: púrpura oscuro
-      "card-color-purple2", // Índice 2: púrpura medio
-      "card-color-purple3", // Índice 3: púrpura claro
-      "card-color-orange", // Índice 4: naranja
-      "card-color-coral", // Índice 5: coral
-    ];
-    return colors[index % colors.length];
+  const getCardColor = (index, total) => {
+    if (total === 0) return "card-color-green";
+    if (total === 1) return "card-color-green";
+
+    // Calcular porcentaje: qué tan lejos está en la lista (0% al inicio, 100% al final)
+    const percentage = (index / (total - 1)) * 100;
+
+    if (percentage < 25) return "card-color-green";
+    if (percentage < 50) return "card-color-blue";
+    if (percentage < 75) return "card-color-purple";
+    return "card-color-orange";
   };
 
   const handleGenerateQR = () => {
@@ -88,6 +100,54 @@ export default function UserBuyCredits() {
       },
     });
   };
+
+  const formatCredits = (value) => {
+    const numericCredits = Number(value);
+    return Number.isFinite(numericCredits) ? numericCredits.toFixed(2) : "0.00";
+  };
+
+  const formatMemberSince = (value) => {
+    if (!value) return "N/D";
+
+    // Soporta formato MySQL: YYYY-MM-DD HH:mm:ss
+    if (typeof value === "string") {
+      const [datePart] = value.split(" ");
+      const mysqlDateMatch = datePart.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+      if (mysqlDateMatch) {
+        const [, year, month] = mysqlDateMatch;
+        return `${month}/${year.slice(-2)}`;
+      }
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "N/D";
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${month}/${year}`;
+  };
+
+  const cardHolderName =
+    `${loggedUser?.name || ""} ${loggedUser?.lastName || ""}`
+      .trim()
+      .toUpperCase();
+  const creditsDisplay = formatCredits(loggedUser?.credits);
+  const normalizedRegisterDate =
+    loggedUser?.registerDate &&
+    loggedUser.registerDate !== "null" &&
+    loggedUser.registerDate !== "undefined"
+      ? loggedUser.registerDate
+      : null;
+  const normalizedRegisterDateFormatted =
+    loggedUser?.registerDateFormatted &&
+    loggedUser.registerDateFormatted !== "null" &&
+    loggedUser.registerDateFormatted !== "undefined"
+      ? loggedUser.registerDateFormatted
+      : null;
+  const memberSinceDisplay =
+    normalizedRegisterDateFormatted ||
+    formatMemberSince(normalizedRegisterDate);
 
   if (loading) {
     return (
@@ -196,42 +256,58 @@ export default function UserBuyCredits() {
         <div className="credit-card-section">
           <div className="credit-card">
             {/* Card Top - Chip and Contactless */}
+            <div className="card-title">
+              <h1>Tarjeta Adopta un Árbol</h1>
+            </div>
             <div className="card-top">
-              <div className="card-chip-container">
-                <img src="/cardChip.jpg" alt="Chip" className="chip-image" />
-              </div>
-              <div className="card-contactless-icon">
-                <i className="bi bi-wifi"></i>
-              </div>
-            </div>
-
-            {/* Card Middle - Balance Info */}
-            <div className="card-middle-info">
-              <div className="balance-item">
-                <span className="balance-label">Saldo</span>
-                <span className="balance-value">
-                  Bs. {loggedUser?.balance || "0.00"}
-                </span>
-              </div>
-              <div className="credits-item">
-                <span className="credits-label">Créditos</span>
-                <span className="credits-value">
-                  $ {loggedUser?.credits || "0"}
-                </span>
+              <div className="card-tech-icons">
+                <div className="card-chip-container">
+                  <img
+                    src="/SimCardChip.svg"
+                    alt="SIM Chip"
+                    className="chip-image"
+                  />
+                </div>
+                <div className="card-contactless-icon">
+                  <img
+                    src="/Wifi.svg"
+                    alt="Contactless"
+                    className="contactless-image"
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Card Bottom - Cardholder Name */}
-            <div className="card-bottom">
-              <span className="cardholder-name">
-                {loggedUser?.name || "CARD HOLDER NAME"}
-              </span>
+            <div className="card-main">
+              {/* Card Middle - Balance Info */}
+              <div className="card-middle-info">
+                <div className="card-info-item">
+                  <span className="card-info-label">Créditos:</span>
+                  <span className="card-info-value">$ {creditsDisplay}</span>
+                </div>
+                <div className="card-info-item">
+                  <span className="card-info-label">Miembro desde:</span>
+                  <span className="card-info-value">{memberSinceDisplay}</span>
+                </div>
+              </div>
+
+              {/* Card Bottom - Cardholder Name */}
+              <div className="card-bottom">
+                <span className="cardholder-name">
+                  {cardHolderName || "CARD HOLDER NAME"}
+                </span>
+                <img
+                  src="/VisaLogo.svg"
+                  alt="Visa"
+                  className="visa-logo-image"
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Title */}
-        <h2 className="section-title">Seleccione una opción a canjear</h2>
+        <h3 className="section-title">SELECCIONE UNA OPCIÓN PARA CANJEAR</h3>
 
         {/* Step Indicator */}
         <div className="steps-indicator">
@@ -253,7 +329,7 @@ export default function UserBuyCredits() {
               const totalCredits =
                 parseFloat(option.purchased) + parseFloat(option.bonus);
               const isSelected = selectedOption?.id === option.id;
-              const cardColor = getCardColor(index);
+              const cardColor = getCardColor(index, creditOptions.length);
 
               return (
                 <div
@@ -262,21 +338,30 @@ export default function UserBuyCredits() {
                   onClick={() => handleOptionSelect(option)}
                 >
                   <div className="card-icon">
-                    <i className="bi bi-coin"></i>
+                    <img
+                      src="/DollarCoin.svg"
+                      alt="Moneda"
+                      className="coin-icon-image"
+                    />
+                  </div>
+
+                  <div className="card-credits-number">{totalCredits}</div>
+                  {parseFloat(option.bonus) > 0 && (
+                    <div className="card-offer-section">
+                      <div className="card-bonus">
+                        +{parseFloat(option.bonus).toFixed(0)}
+                      </div>
+                    </div>
+                  )}
+                  <div className="card-credits-text">
+                    <h6>{totalCredits} Créditos</h6>
+                    {parseFloat(option.bonus) > 0 && (
+                      <h6>+{parseFloat(option.bonus).toFixed(0)} de regalo</h6>
+                    )}
                   </div>
                   <div className="card-price">
                     {parseFloat(option.price).toFixed(0)} Bs.
                   </div>
-                  <div className="card-credits-number">{totalCredits}</div>
-                  <div className="card-credits-text">Créditos</div>
-                  {parseFloat(option.bonus) > 0 && (
-                    <div className="card-offer-section">
-                      <div className="card-offer">Oferta</div>
-                      <div className="card-bonus">
-                        + {parseFloat(option.bonus).toFixed(0)} Créditos
-                      </div>
-                    </div>
-                  )}
                 </div>
               );
             })

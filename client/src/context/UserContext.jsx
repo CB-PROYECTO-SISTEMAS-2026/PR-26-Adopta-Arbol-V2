@@ -25,14 +25,14 @@ export const useUsers = () => {
 export const UserContextProvider = ({ children }) => {
   // Estado de usuarios
   const [users, setUsers] = useState([]);
-  
+
   // Estado de autenticación
   const [loggedUser, setLoggedUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Verificar si hay un usuario logueado al cargar la aplicación
   useEffect(() => {
-    const savedUser = localStorage.getItem('loggedUser');
+    const savedUser = localStorage.getItem("loggedUser");
     if (savedUser) {
       const user = JSON.parse(savedUser);
       console.log("=== CARGA DESDE LOCALSTORAGE ===");
@@ -41,15 +41,36 @@ export const UserContextProvider = ({ children }) => {
       console.log("Tipo del ID:", typeof user.id);
       console.log("ID es undefined:", user.id === undefined);
       console.log("ID es null:", user.id === null);
-      console.log("ID es 'undefined':", user.id === 'undefined');
-      
+      console.log("ID es 'undefined':", user.id === "undefined");
+
       // Validar que el ID sea válido
-      if (user.id && user.id !== undefined && user.id !== null && user.id !== 'undefined') {
+      if (
+        user.id &&
+        user.id !== undefined &&
+        user.id !== null &&
+        user.id !== "undefined"
+      ) {
+        // Formatear registerDate para facilitar uso en UI
+        const formatMemberSince = (value) => {
+          if (!value) return null;
+          const d = new Date(value);
+          if (Number.isNaN(d.getTime())) return null;
+          const month = d.getMonth() + 1;
+          const year = String(d.getFullYear()).slice(-2);
+          return `${month}/${year}`;
+        };
+
+        if (!user.registerDateFormatted) {
+          user.registerDateFormatted = formatMemberSince(user.registerDate);
+        }
+
         setLoggedUser(user);
         setIsAuthenticated(true);
       } else {
-        console.error("ID de usuario inválido en localStorage, limpiando datos");
-        localStorage.removeItem('loggedUser');
+        console.error(
+          "ID de usuario inválido en localStorage, limpiando datos",
+        );
+        localStorage.removeItem("loggedUser");
       }
     }
   }, []);
@@ -59,34 +80,46 @@ export const UserContextProvider = ({ children }) => {
     try {
       const response = await loginRequest(credentials);
       const user = response.data.user;
-      
+
       console.log("=== LOGIN EXITOSO ===");
       console.log("Usuario recibido del login:", user);
       console.log("ID del usuario en login:", user.id);
       console.log("Tipo del ID:", typeof user.id);
-      
+
       // Validar que el usuario tenga un ID válido
       if (!user.id || user.id === undefined || user.id === null) {
         console.error("Error: Usuario sin ID válido recibido del login");
-        return { 
-          success: false, 
-          message: "Error: Datos de usuario incompletos" 
+        return {
+          success: false,
+          message: "Error: Datos de usuario incompletos",
         };
       }
-      
+
+      // Formatear registerDate para uso inmediato en UI
+      const formatMemberSince = (value) => {
+        if (!value) return null;
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return null;
+        const month = d.getMonth() + 1;
+        const year = String(d.getFullYear()).slice(-2);
+        return `${month}/${year}`;
+      };
+
+      user.registerDateFormatted = formatMemberSince(user.registerDate);
+
       setLoggedUser(user);
       setIsAuthenticated(true);
-      
+
       // Guardar en localStorage para persistencia
-      localStorage.setItem('loggedUser', JSON.stringify(user));
+      localStorage.setItem("loggedUser", JSON.stringify(user));
       console.log("Usuario guardado en localStorage:", user);
-      
+
       return { success: true, user, message: response.data.message };
     } catch (error) {
       console.error("Error en login:", error);
-      return { 
-        success: false, 
-        message: error.response?.data?.message || "Error de conexión" 
+      return {
+        success: false,
+        message: error.response?.data?.message || "Error de conexión",
       };
     }
   };
@@ -94,30 +127,30 @@ export const UserContextProvider = ({ children }) => {
   // Logout de usuario
   const logout = () => {
     console.log("=== INICIANDO LOGOUT ===");
-    
+
     // Limpiar estado del contexto
     setLoggedUser(null);
     setIsAuthenticated(false);
-    
+
     // Limpiar localStorage completamente
-    localStorage.removeItem('loggedUser');
+    localStorage.removeItem("loggedUser");
     localStorage.clear(); // Limpiar todo el localStorage por seguridad
-    
+
     // Limpiar sessionStorage también
     sessionStorage.clear();
-    
+
     // Limpiar cookies si las hay (opcional)
     document.cookie.split(";").forEach((c) => {
       document.cookie = c
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toISOString() + ";path=/");
     });
-    
+
     console.log("=== LOGOUT COMPLETADO ===");
     console.log("Estado limpiado, localStorage y sessionStorage vaciados");
-    
+
     // Forzar recarga de la página para limpiar completamente el estado
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   // Cargar Usuarios
@@ -133,7 +166,7 @@ export const UserContextProvider = ({ children }) => {
       if (!loggedUser) {
         throw new Error("Debes estar logueado para eliminar usuarios");
       }
-      
+
       const deletedBy = loggedUser.id; // Usar ID del usuario logueado
       console.log("Eliminando usuario con deletedBy:", deletedBy);
       const response = await deleteUserRequest(id, deletedBy);
@@ -150,16 +183,16 @@ export const UserContextProvider = ({ children }) => {
       if (!loggedUser) {
         throw new Error("Debes estar logueado para crear usuarios");
       }
-      
+
       // Agregar el ID del usuario logueado para auditoría
       const userDataWithAudit = {
         ...userData,
-        userId: loggedUser.id // Usar ID del usuario logueado
+        userId: loggedUser.id, // Usar ID del usuario logueado
       };
-      
+
       const response = await createUserRequest(userDataWithAudit);
       // Agregar el nuevo usuario al estado local
-      setUsers(prevUsers => [...prevUsers, response.data]);
+      setUsers((prevUsers) => [...prevUsers, response.data]);
       return response.data;
     } catch (error) {
       console.error("Error en contexto:", error);
@@ -184,20 +217,25 @@ export const UserContextProvider = ({ children }) => {
       if (!loggedUser) {
         throw new Error("Debes estar logueado para aceptar usuarios");
       }
-      
+
       const acceptedBy = loggedUser.id; // Usar ID del usuario logueado
       console.log("Aceptando usuario con acceptedBy:", acceptedBy);
       const response = await acceptUserRequest(id, acceptedBy);
-      
+
       // Actualizar el usuario en el estado local
-      setUsers(prevUsers => 
-        prevUsers.map(user => 
-          user.id === id 
-            ? { ...user, status: 1, userId: acceptedBy, lastUpdate: new Date().toISOString() }
-            : user
-        )
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === id
+            ? {
+                ...user,
+                status: 1,
+                userId: acceptedBy,
+                lastUpdate: new Date().toISOString(),
+              }
+            : user,
+        ),
       );
-      
+
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -211,7 +249,7 @@ export const UserContextProvider = ({ children }) => {
     if (loggedUser) {
       const updatedUser = { ...loggedUser, credits: newCredits };
       setLoggedUser(updatedUser);
-      localStorage.setItem('loggedUser', JSON.stringify(updatedUser));
+      localStorage.setItem("loggedUser", JSON.stringify(updatedUser));
     }
   };
 
@@ -220,21 +258,38 @@ export const UserContextProvider = ({ children }) => {
     console.log("=== REFRESCAR DATOS DE USUARIO ===");
     console.log("loggedUser:", loggedUser);
     console.log("loggedUser?.id:", loggedUser?.id);
-    
+
     if (loggedUser?.id) {
       try {
-        console.log("Solicitando datos actualizados para usuario ID:", loggedUser.id);
+        console.log(
+          "Solicitando datos actualizados para usuario ID:",
+          loggedUser.id,
+        );
         const response = await refreshUserDataRequest(loggedUser.id);
         const updatedUser = response.data;
-        
+
         console.log("Datos actualizados recibidos:", updatedUser);
         console.log("ID del usuario actualizado:", updatedUser.id);
         console.log("Tipo del ID:", typeof updatedUser.id);
-        
+
+        // Formatear registerDate para UI antes de setear
+        const formatMemberSince = (value) => {
+          if (!value) return null;
+          const d = new Date(value);
+          if (Number.isNaN(d.getTime())) return null;
+          const month = d.getMonth() + 1;
+          const year = String(d.getFullYear()).slice(-2);
+          return `${month}/${year}`;
+        };
+
+        updatedUser.registerDateFormatted = formatMemberSince(
+          updatedUser.registerDate,
+        );
+
         setLoggedUser(updatedUser);
-        localStorage.setItem('loggedUser', JSON.stringify(updatedUser));
+        localStorage.setItem("loggedUser", JSON.stringify(updatedUser));
         console.log("Usuario actualizado en contexto y localStorage");
-        
+
         return updatedUser;
       } catch (error) {
         console.error("Error al refrescar datos del usuario:", error);
@@ -246,22 +301,24 @@ export const UserContextProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ 
-      // Estados de usuarios
-      users, 
-      loadUsers, 
-      deleteUser, 
-      createUser,
-      registerUser,
-      acceptUser,
-      // Estados de autenticación
-      loggedUser,
-      isAuthenticated,
-      login,
-      logout,
-      updateUserCredits,
-      refreshUserData
-    }}>
+    <UserContext.Provider
+      value={{
+        // Estados de usuarios
+        users,
+        loadUsers,
+        deleteUser,
+        createUser,
+        registerUser,
+        acceptUser,
+        // Estados de autenticación
+        loggedUser,
+        isAuthenticated,
+        login,
+        logout,
+        updateUserCredits,
+        refreshUserData,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
