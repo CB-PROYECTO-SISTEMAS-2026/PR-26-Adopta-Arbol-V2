@@ -254,9 +254,9 @@ export default function BuyCredits() {
   const getStatusClass = (status) => {
     switch (parseInt(status)) {
       case 0:
-        return "status-rejected";
+        return "status-inactive";
       case 1:
-        return "status-approved";
+        return "status-active";
       case 2:
         return "status-pending";
       default:
@@ -352,7 +352,9 @@ export default function BuyCredits() {
                   {p.price ? `${parseFloat(p.price).toFixed(2)} Bs` : "N/A"}
                 </td>
                 <td>
-                  <span className={`status-badge ${getStatusClass(p.status)}`}>
+                  <span
+                    className={`payment-status ${getStatusClass(p.status)}`}
+                  >
                     {getStatusText(p.status)}
                   </span>
                 </td>

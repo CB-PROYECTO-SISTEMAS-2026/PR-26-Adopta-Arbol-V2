@@ -23,7 +23,6 @@
   align-items: center;
   background: linear-gradient(135deg, #ffffff, #f9fffe);
   padding: 18px 30px;
-  border-bottom: 1px solid #e0e8ef;
   margin-bottom: 0;
   box-shadow: var(--shadow-elevation-1);
   position: sticky;
@@ -90,11 +89,7 @@
 .admin-text {
   font-size: 15px;
   font-weight: 600;
-  color: #0a5c5c;
-  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: white;
 }
 
 .admin-avatar {
@@ -246,7 +241,11 @@
 }
 
 .users-table tbody tr:nth-child(even):hover {
-  background: linear-gradient(90deg, rgba(22, 199, 141, 0.08), rgba(248, 250, 251, 1));
+  background: linear-gradient(
+    90deg,
+    rgba(22, 199, 141, 0.08),
+    rgba(248, 250, 251, 1)
+  );
 }
 
 .users-table tbody td {

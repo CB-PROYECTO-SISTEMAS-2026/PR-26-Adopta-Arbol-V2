@@ -464,7 +464,7 @@ export default function RedemptionAdmin() {
       </div>
 
       {/* Sección: Todos los Códigos QR */}
-      <section className="table-section" style={{ marginTop: "60px" }}>
+      <section className="table-section">
         <table className="users-table">
           <thead>
             <tr>
@@ -491,17 +491,11 @@ export default function RedemptionAdmin() {
                   </td>
                   <td>
                     <span
-                      style={{
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        fontSize: "0.85rem",
-                        fontWeight: "bold",
-                        backgroundColor:
-                          qr.status === 1 ? "#d4edda" : "#f8d7da",
-                        color: qr.status === 1 ? "#155724" : "#721c24",
-                      }}
+                      className={`payment-status ${
+                        qr.status === 1 ? "status-active" : "status-inactive"
+                      }`}
                     >
-                      {qr.status === 1 ? "✅ Activo" : "❌ Inactivo"}
+                      {qr.status === 1 ? "Activo" : "Inactivo"}
                     </span>
                   </td>
                   <td>{new Date(qr.registerDate).toLocaleDateString()}</td>

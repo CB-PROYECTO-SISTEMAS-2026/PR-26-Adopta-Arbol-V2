@@ -10,24 +10,37 @@ export const getAllCreditOptions = async () => {
   return await axios.get(`${API_URL}/credit-options`);
 };
 
+// Obtener todas las opciones de crédito para administración (incluye status 0 y 1)
+export const getAllCreditOptionsAdmin = async () => {
+  return await axios.get(`${API_URL}/credit-options/admin`);
+};
+
 // Obtener opción de crédito específica
 export const getCreditOptionById = async (id) => {
   return await axios.get(`${API_URL}/credit-options/${id}`);
 };
 
 // Crear opción de crédito (Admin)
-export const createCreditOption = async (creditData) => {
-  return await axios.post(`${API_URL}/credit-options`, creditData);
+export const createCreditOption = async (creditData, userId) => {
+  return await axios.post(`${API_URL}/credit-options`, {
+    ...creditData,
+    userId,
+  });
 };
 
 // Actualizar opción de crédito (Admin)
-export const updateCreditOption = async (id, creditData) => {
-  return await axios.put(`${API_URL}/credit-options/${id}`, creditData);
+export const updateCreditOption = async (id, creditData, userId) => {
+  return await axios.put(`${API_URL}/credit-options/${id}`, {
+    ...creditData,
+    userId,
+  });
 };
 
 // Eliminar opción de crédito (Admin)
-export const deleteCreditOption = async (id) => {
-  return await axios.delete(`${API_URL}/credit-options/${id}`);
+export const deleteCreditOption = async (id, userId) => {
+  return await axios.delete(`${API_URL}/credit-options/${id}`, {
+    data: { userId },
+  });
 };
 
 // ========================================

@@ -14,7 +14,6 @@
   align-items: center;
   background: white;
   padding: 15px 25px;
-  border-bottom: 1px solid #e9ecef;
   margin-bottom: 0;
 }
 
@@ -63,7 +62,7 @@
 .admin-text {
   font-size: 16px;
   font-weight: 600;
-  color: #2c5aa0;
+  color: white;
 }
 
 .admin-avatar {
@@ -439,8 +438,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive design */
@@ -450,34 +453,34 @@
     gap: 15px;
     padding: 15px;
   }
-  
+
   .search-section {
     max-width: 100%;
   }
-  
+
   .date-filters {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .users-table {
     font-size: 14px;
   }
-  
+
   .users-table thead th,
   .users-table tbody td {
     padding: 10px 15px;
   }
-  
+
   .qr-modal {
     width: 95%;
     margin: 20px;
   }
-  
+
   .qr-body {
     padding: 20px;
   }
-  
+
   .qr-image {
     max-width: 200px;
     max-height: 200px;
