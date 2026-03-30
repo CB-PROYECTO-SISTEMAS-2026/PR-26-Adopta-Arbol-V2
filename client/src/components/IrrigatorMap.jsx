@@ -101,7 +101,8 @@ export default function IrrigatorMap() {
 
     try {
       const response = await getUnreadNotificationsRequest(loggedUser.id);
-      setUnreadNotificationsCount(response.count || 0);
+      // response ahora es directamente el objeto con la información
+      setUnreadNotificationsCount(response?.count || 0);
     } catch (error) {
       console.error("Error al cargar notificaciones no leídas:", error);
     }
@@ -116,14 +117,16 @@ export default function IrrigatorMap() {
         const assignedResponse = await getAssignedIrrigationRequest(
           loggedUser.id
         );
-        if (assignedResponse.data.length > 0) {
+        // assignedResponse ahora ya es el array directamente
+        if (Array.isArray(assignedResponse) && assignedResponse.length > 0) {
           // Si tiene irrigation asignado, mostrar solo ese
-          setIrrigations(assignedResponse.data);
+          setIrrigations(assignedResponse);
           setHasAssignedIrrigation(true);
         } else {
           // Si no tiene irrigation asignado, mostrar los pendientes
           const pendingResponse = await getPendingIrrigationsRequest();
-          setIrrigations(pendingResponse.data);
+          // pendingResponse ahora ya es el array directamente
+          setIrrigations(Array.isArray(pendingResponse) ? pendingResponse : []);
           setHasAssignedIrrigation(false);
         }
       }

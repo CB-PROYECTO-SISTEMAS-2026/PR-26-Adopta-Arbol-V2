@@ -30,9 +30,10 @@ export const IrrigationContextProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await getIrrigationsRequest();
-      setIrrigations(response.data);
-      console.log("Riegos cargados:", response.data);
+      const data = await getIrrigationsRequest();
+      // getIrrigationsRequest ya retorna el data directamente (response.data)
+      setIrrigations(Array.isArray(data) ? data : []);
+      console.log("Riegos cargados:", data);
     } catch (error) {
       setError(error.message);
       console.error("Error loading irrigations:", error);
@@ -45,8 +46,9 @@ export const IrrigationContextProvider = ({ children }) => {
   const getIrrigation = async (id) => {
     try {
       setError(null);
-      const response = await getIrrigationRequest(id);
-      return response.data;
+      const data = await getIrrigationRequest(id);
+      // getIrrigationRequest ya retorna el data directamente (response.data)
+      return data;
     } catch (error) {
       setError(error.message);
       console.error("Error getting irrigation:", error);
@@ -58,11 +60,12 @@ export const IrrigationContextProvider = ({ children }) => {
   const approveIrrigation = async (id) => {
     try {
       setError(null);
-      const response = await approveIrrigationRequest(id);
+      const data = await approveIrrigationRequest(id);
+      // approveIrrigationRequest ya retorna el data directamente (response.data)
       // Remover el riego de la lista ya que ya no está pendiente
       setIrrigations(irrigations.filter((irrigation) => irrigation.id !== id));
-      console.log("Riego aprobado:", response.data);
-      return response.data;
+      console.log("Riego aprobado:", data);
+      return data;
     } catch (error) {
       setError(error.message);
       console.error("Error approving irrigation:", error);
@@ -74,11 +77,12 @@ export const IrrigationContextProvider = ({ children }) => {
   const rejectIrrigation = async (id) => {
     try {
       setError(null);
-      const response = await rejectIrrigationRequest(id);
+      const data = await rejectIrrigationRequest(id);
+      // rejectIrrigationRequest ya retorna el data directamente (response.data)
       // Remover el riego de la lista ya que ya no está pendiente
       setIrrigations(irrigations.filter((irrigation) => irrigation.id !== id));
-      console.log("Riego rechazado:", response.data);
-      return response.data;
+      console.log("Riego rechazado:", data);
+      return data;
     } catch (error) {
       setError(error.message);
       console.error("Error rejecting irrigation:", error);

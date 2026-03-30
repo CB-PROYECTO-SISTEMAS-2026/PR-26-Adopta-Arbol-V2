@@ -71,9 +71,10 @@ export default function IrrigateTree() {
 
           console.log("Datos de riego a enviar:", irrigationData);
 
-          const response = await createIrrigationRequest(irrigationData);
+          const data = await createIrrigationRequest(irrigationData);
           
-          showSuccess(`¡Riego registrado exitosamente!\n\nHas ganado ${response.data.reward} puntos por regar este árbol.`);
+          // createIrrigationRequest ya retorna response.data directamente
+          showSuccess(`¡Riego registrado exitosamente!\n\nHas ganado ${data?.reward || reward} puntos por regar este árbol.`);
           navigate("/my-trees");
         } catch (error) {
           console.error("Error al enviar riego:", error);

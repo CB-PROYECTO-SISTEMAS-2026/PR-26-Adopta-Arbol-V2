@@ -24,6 +24,10 @@ export const getUserNotifications = async (req, res) => {
     const { userId } = req.params;
     const { limit = 50 } = req.query;
     
+    if (!userId) {
+      return res.status(400).json({ message: "userId es requerido" });
+    }
+    
     const [rows] = await pool.query(
       `SELECT id, type, title, message, isRead, status, createdAt, readAt, relatedId
        FROM notification 
@@ -33,10 +37,10 @@ export const getUserNotifications = async (req, res) => {
       [userId, parseInt(limit)]
     );
     
-    res.json(rows);
+    res.json(rows || []);
   } catch (error) {
-    console.error("Error al obtener notificaciones:", error.message);
-    res.status(500).json({ message: error.message });
+    console.error("Error al obtener notificaciones:", error);
+    res.status(500).json({ message: error.message, details: error.code });
   }
 };
 
@@ -52,10 +56,10 @@ export const getUnreadNotifications = async (req, res) => {
       [userId]
     );
     
-    res.json({ count: rows[0].count || 0 });
+    res.json({ count: (rows && rows.length > 0 && rows[0].count) || 0 });
   } catch (error) {
-    console.error("Error al obtener notificaciones no leídas:", error.message);
-    res.status(500).json({ message: error.message });
+    console.error("Error al obtener notificaciones no leídas:", error);
+    res.status(500).json({ message: error.message, details: error.code, count: 0 });
   }
 };
 

@@ -61,7 +61,7 @@
 
 /* Header del diálogo */
 .confirm-header {
-  background: linear-gradient(135deg, #2c5aa0, #1e3f73);
+  background: linear-gradient(135deg, #3D8B40, #2D5F3F);
   padding: 22px 26px;
   display: flex;
   align-items: center;
@@ -71,7 +71,7 @@
   font-size: 18px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 4px 12px rgba(44, 90, 160, 0.2);
+  box-shadow: 0 4px 12px rgba(61, 139, 64, 0.2);
 }
 
 .confirm-icon {
@@ -231,12 +231,12 @@
 }
 
 .confirm-btn-confirm {
-  background: #2c5aa0;
+  background: #3D8B40;
   color: white;
 }
 
 .confirm-btn-confirm:hover {
-  background: #1e3f73;
+  background: #2D5F3F;
 }
 
 @media (max-width: 768px) {

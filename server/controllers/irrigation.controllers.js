@@ -236,7 +236,7 @@ export const getPendingIrrigations = async (req, res) => {
       WHERE irrigation.status = 4
       ORDER BY irrigation.registerDate ASC
     `);
-    res.json(result);
+    res.json(result || []);
   } catch (error) {
     console.error("Error al obtener irrigation pendientes:", error.message);
     res.status(500).json({ message: error.message });
@@ -248,6 +248,10 @@ export const getAssignedIrrigation = async (req, res) => {
   const { irrigatorId } = req.params;
 
   try {
+    if (!irrigatorId) {
+      return res.status(400).json({ message: "irrigatorId es requerido" });
+    }
+
     const [result] = await pool.query(
       `
       SELECT 
@@ -268,10 +272,10 @@ export const getAssignedIrrigation = async (req, res) => {
     `,
       [irrigatorId],
     );
-    res.json(result);
+    res.json(result || []);
   } catch (error) {
-    console.error("Error al obtener irrigation asignado:", error.message);
-    res.status(500).json({ message: error.message });
+    console.error("Error al obtener irrigation asignado:", error);
+    res.status(500).json({ message: error.message, details: error.code });
   }
 };
 

@@ -679,12 +679,12 @@
 }
 
 .qr5-notification-info {
-  border-left-color: #17a2b8;
-  background: linear-gradient(to right, #d1ecf1 0%, white 5%);
+  border-left-color: #3D8B40;
+  background: linear-gradient(to right, #E8F5E9 0%, white 5%);
 }
 
 .qr5-notification-info .qr5-notification-content i {
-  color: #17a2b8;
+  color: #3D8B40;
 }
 
 /* Responsive */

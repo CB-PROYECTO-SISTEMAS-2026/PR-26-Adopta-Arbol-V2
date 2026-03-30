@@ -5,7 +5,7 @@ import { API_URL } from "../config/api.config.js";
 export const getIrrigationsRequest = async () => {
   try {
     const response = await axios.get(`${API_URL}/irrigations`);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al obtener los riegos:", error);
     throw error;
@@ -16,7 +16,7 @@ export const getIrrigationsRequest = async () => {
 export const getIrrigationRequest = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/irrigations/${id}`);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al obtener el riego:", error);
     throw error;
@@ -27,7 +27,7 @@ export const getIrrigationRequest = async (id) => {
 export const approveIrrigationRequest = async (id) => {
   try {
     const response = await axios.put(`${API_URL}/irrigations/${id}/approve`);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al aprobar el riego:", error);
     throw error;
@@ -38,7 +38,7 @@ export const approveIrrigationRequest = async (id) => {
 export const rejectIrrigationRequest = async (id) => {
   try {
     const response = await axios.put(`${API_URL}/irrigations/${id}/reject`);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al rechazar el riego:", error);
     throw error;
@@ -52,7 +52,7 @@ export const createIrrigationRequest = async (irrigationData) => {
       userId: irrigationData.userId,
       treeId: irrigationData.treeId,
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al crear riego:", error);
     throw error;
@@ -63,7 +63,7 @@ export const createIrrigationRequest = async (irrigationData) => {
 export const getPendingIrrigationsRequest = async () => {
   try {
     const response = await axios.get(`${API_URL}/irrigations/pending/map`);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al obtener irrigation pendientes:", error);
     throw error;
@@ -76,7 +76,7 @@ export const getAssignedIrrigationRequest = async (irrigatorId) => {
     const response = await axios.get(
       `${API_URL}/irrigations/assigned/${irrigatorId}`,
     );
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al obtener irrigation asignado:", error);
     throw error;
@@ -87,7 +87,7 @@ export const getAssignedIrrigationRequest = async (irrigatorId) => {
 export const getTreeIrrigationEvidenceRequest = async (treeId) => {
   try {
     const response = await axios.get(`${API_URL}/irrigations/tree/${treeId}`);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al obtener evidencia de riego:", error);
     throw error;
@@ -104,7 +104,7 @@ export const assignTreeToIrrigatorRequest = async (
       irrigationId: irrigationId,
       irrigatorId: irrigatorId,
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al asignar irrigation:", error);
     throw error;
@@ -123,7 +123,7 @@ export const confirmIrrigationRequest = async (id, formData) => {
         },
       },
     );
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error al confirmar riego:", error);
     throw error;

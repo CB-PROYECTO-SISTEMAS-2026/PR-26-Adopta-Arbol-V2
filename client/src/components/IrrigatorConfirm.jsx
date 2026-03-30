@@ -21,8 +21,9 @@ export default function IrrigatorConfirm() {
   useEffect(() => {
     const loadIrrigationInfo = async () => {
       try {
-        const response = await getIrrigationRequest(id);
-        setTreeName(response.data.treeName || "Árbol");
+        const data = await getIrrigationRequest(id);
+        // getIrrigationRequest ya retorna response.data directamente
+        setTreeName(data?.treeName || "Árbol");
       } catch (error) {
         console.error("Error al cargar información del riego:", error);
         showError("Error al cargar la información del riego");
