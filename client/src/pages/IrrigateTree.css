@@ -1,6 +1,6 @@
 .irrigate-tree-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a5c5c 0%, #2e8a8a 100%);
+  background: linear-gradient(135deg, #2D5F3F 0%, #3D8B40 100%);
   padding: 20px;
   color: #333;
 }
@@ -127,7 +127,7 @@
 }
 
 .irrigation-info-card {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
   border-radius: 15px;
   padding: 25px;
   margin-bottom: 25px;
@@ -139,18 +139,18 @@
 
 .irrigation-icon {
   font-size: 3rem;
-  color: #1976d2;
+  color: #3D8B40;
 }
 
 .irrigation-text h3 {
   margin: 0 0 10px 0;
-  color: #1976d2;
+  color: #3D8B40;
   font-size: 1.3rem;
 }
 
 .irrigation-text p {
   margin: 0;
-  color: #1565c0;
+  color: #2D5F3F;
   font-size: 1rem;
   line-height: 1.5;
 }

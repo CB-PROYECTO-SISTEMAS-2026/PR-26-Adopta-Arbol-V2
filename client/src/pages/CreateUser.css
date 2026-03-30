@@ -25,7 +25,7 @@
   overflow: hidden;
   width: 100%;
   max-width: 480px;
-  border: 3px solid #4a90e2;
+  border: 3px solid #3D8B40;
   position: relative;
   animation: slideIn 0.3s ease-out;
   max-height: 90vh;
@@ -205,7 +205,7 @@ select.form-input {
   
   .create-user-card {
     max-width: 100%;
-    border: 2px solid #4a90e2;
+    border: 2px solid #3D8B40;
   }
   
   .form-body {
