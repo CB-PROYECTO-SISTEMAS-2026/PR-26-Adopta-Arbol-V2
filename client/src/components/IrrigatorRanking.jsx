@@ -23,7 +23,7 @@ export default function IrrigatorRanking() {
         const response = await getUsersRequest();
         // Filtrar usuarios por rol "regador" y ordenar por puntos de forma descendente
         const regadorUsers = response.data.filter(
-          (user) => user.role === "regador"
+          (user) => user.role === "regador",
         );
         const sortedUsers = regadorUsers.sort((a, b) => b.point - a.point);
         setUsers(sortedUsers);
@@ -127,6 +127,17 @@ export default function IrrigatorRanking() {
               {unreadNotificationsCount > 0 && (
                 <span className="menu-badge">{unreadNotificationsCount}</span>
               )}
+            </button>
+
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/regador/map");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-droplet-fill"></i>
+              <span>Riegos</span>
             </button>
 
             <button

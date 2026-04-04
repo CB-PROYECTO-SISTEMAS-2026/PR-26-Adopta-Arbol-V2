@@ -144,16 +144,21 @@
   background: rgba(0, 0, 0, 0.45);
   z-index: 2000;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 0px;
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-content {
   width: min(520px, 100%);
   border-radius: 14px;
   background: white;
-  overflow: hidden;
+  max-height: calc(100vh - 40px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0 auto;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
   padding: 0;
 }

@@ -83,13 +83,13 @@ export default function IrrigatorCredits() {
       const response = await createIrrigatorRedemption(
         loggedUser.id,
         amount,
-        qrImage
+        qrImage,
       );
 
       console.log("Respuesta del servidor:", response.data);
 
       alert(
-        "¡Solicitud de redención creada exitosamente! Tu solicitud será procesada pronto."
+        "¡Solicitud de redención creada exitosamente! Tu solicitud será procesada pronto.",
       );
 
       // Limpiar formulario
@@ -104,7 +104,7 @@ export default function IrrigatorCredits() {
       alert(
         `Error al crear la solicitud: ${
           error.response?.data?.message || error.message
-        }`
+        }`,
       );
     } finally {
       setSubmitting(false);
@@ -182,6 +182,16 @@ export default function IrrigatorCredits() {
                 <span className="menu-badge">{unreadNotificationsCount}</span>
               )}
             </button>
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/regador/map");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-droplet-fill"></i>
+              <span>Riegos</span>
+            </button>
 
             <button
               className="navbar-menu-item"
@@ -241,7 +251,7 @@ export default function IrrigatorCredits() {
 
         {/* Amount Input */}
         <div className="amount-section">
-          <label className="amount-label">
+          <label className="amount-label text-light">
             Ingresar la cantidad que desea retirar:
           </label>
           <input

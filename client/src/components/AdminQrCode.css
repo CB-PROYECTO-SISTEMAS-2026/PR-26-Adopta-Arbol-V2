@@ -220,8 +220,11 @@
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   animation: fadeIn 0.3s forwards;
 }
 
@@ -238,6 +241,9 @@
   border-radius: 15px;
   width: 400px;
   max-width: 90%;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  margin: 0 auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 

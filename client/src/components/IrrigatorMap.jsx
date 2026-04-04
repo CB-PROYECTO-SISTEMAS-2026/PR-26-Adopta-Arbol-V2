@@ -43,8 +43,21 @@ const formatPoints = (value) => {
 };
 
 // Ícono para árboles que necesitan riego
-const waterDropIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/512/2917/2917995.png", // 🌳 Árbol/Gota de agua
+const waterDropIcon = L.divIcon({
+  html: `<div style="
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #1f9d55;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  ">
+    <i class="bi bi-tree-fill" style="color: #16a34a; font-size: 20px;"></i>
+  </div>`,
+  className: "custom-tree-marker",
   iconSize: [40, 40],
   iconAnchor: [20, 40],
   popupAnchor: [0, -40],
@@ -114,7 +127,7 @@ export default function IrrigatorMap() {
       // Primero verificar si el regador tiene un irrigation asignado
       if (loggedUser?.id) {
         const assignedResponse = await getAssignedIrrigationRequest(
-          loggedUser.id
+          loggedUser.id,
         );
         if (assignedResponse.data.length > 0) {
           // Si tiene irrigation asignado, mostrar solo ese
@@ -146,10 +159,10 @@ export default function IrrigatorMap() {
     try {
       const response = await assignTreeToIrrigatorRequest(
         selectedIrrigation.irrigationId,
-        loggedUser.id
+        loggedUser.id,
       );
       showSuccess(
-        "✅ Árbol asignado exitosamente! Ahora puedes verlo en el mapa."
+        "✅ Árbol asignado exitosamente! Ahora puedes verlo en el mapa.",
       );
       // Recargar para mostrar solo el irrigation asignado
       loadIrrigations();
@@ -158,7 +171,7 @@ export default function IrrigatorMap() {
       showError(
         error.response?.data?.message ||
           error.message ||
-          "Error al asignar el riego"
+          "Error al asignar el riego",
       );
     } finally {
       setAssigning(false);
@@ -254,6 +267,16 @@ export default function IrrigatorMap() {
             <button
               className="navbar-menu-item"
               onClick={() => {
+                navigate("/regador/map");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-droplet-fill"></i>
+              <span>Riegos</span>
+            </button>
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
                 navigate("/regador/ranking");
                 setShowNavMenu(false);
               }}
@@ -321,30 +344,33 @@ export default function IrrigatorMap() {
                 const hasPrice = priceValue > 0;
 
                 return (
-                <Marker
-                  key={irrigation.irrigationId}
-                  position={[irrigation.latitude, irrigation.longitude]}
-                  icon={waterDropIcon}
-                  eventHandlers={{
-                    click: () => handleMarkerClick(irrigation),
-                  }}
-                >
-                  <Popup>
-                    <div className="popup-content">
-                      <h3>{irrigation.treeName}</h3>
-                      <p>
-                        <strong>Código:</strong> {irrigation.treeCode}
-                      </p>
-                      <p>
-                        <strong>Dirección:</strong>{" "}
-                        {irrigation.treeAddress || "No especificada"}
-                      </p>
-                      <p>
-                        <strong>Precio:</strong> {hasPrice ? `${formatPoints(priceValue)} pts` : "No disponible"}
-                      </p>
-                    </div>
-                  </Popup>
-                </Marker>
+                  <Marker
+                    key={irrigation.irrigationId}
+                    position={[irrigation.latitude, irrigation.longitude]}
+                    icon={waterDropIcon}
+                    eventHandlers={{
+                      click: () => handleMarkerClick(irrigation),
+                    }}
+                  >
+                    <Popup>
+                      <div className="popup-content">
+                        <h3>{irrigation.treeName}</h3>
+                        <p>
+                          <strong>Código:</strong> {irrigation.treeCode}
+                        </p>
+                        <p>
+                          <strong>Dirección:</strong>{" "}
+                          {irrigation.treeAddress || "No especificada"}
+                        </p>
+                        <p>
+                          <strong>Precio:</strong>{" "}
+                          {hasPrice
+                            ? `${formatPoints(priceValue)} pts`
+                            : "No disponible"}
+                        </p>
+                      </div>
+                    </Popup>
+                  </Marker>
                 );
               })}
             </MapContainer>
@@ -369,7 +395,11 @@ export default function IrrigatorMap() {
                 </div>
                 <div className="detail-row">
                   <span className="label">Precio:</span>
-                  <span>{hasSelectedPrice ? `${formatPoints(selectedPriceValue)} pts` : "No disponible"}</span>
+                  <span>
+                    {hasSelectedPrice
+                      ? `${formatPoints(selectedPriceValue)} pts`
+                      : "No disponible"}
+                  </span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Dirección:</span>

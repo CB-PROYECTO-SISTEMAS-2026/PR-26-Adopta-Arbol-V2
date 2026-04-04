@@ -34,41 +34,32 @@ L.Icon.Default.mergeOptions({
 
 // Iconos personalizados para árboles
 const createTreeIcon = (isAdopted) => {
-  let color, icon, statusText;
+  let markerClass, statusText;
 
   if (isAdopted === 1) {
     // Adoptado
-    color = "#ff4444";
-    icon = "🌳";
+    markerClass = "is-adopted";
     statusText = "Adoptado";
   } else if (isAdopted === 2) {
     // Pendiente de confirmación
-    color = "#ffaa00";
-    icon = "🌲";
+    markerClass = "is-pending";
     statusText = "Pendiente";
   } else {
     // Disponible
-    color = "#44ff44";
-    icon = "🍃";
+    markerClass = "is-available";
     statusText = "Disponible";
   }
 
   return L.divIcon({
-    html: `<div style="
-      background-color: ${color};
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 3px solid white;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      font-size: 16px;
-    " title="${statusText}">${icon}</div>`,
+    html: `<div class="treehome-marker ${markerClass}" title="${statusText}">
+      <div class="treehome-marker-core">
+        <i class="bi bi-tree-fill" aria-hidden="true"></i>
+      </div>
+    </div>`,
     className: "custom-tree-icon",
-    iconSize: [30, 30],
-    iconAnchor: [15, 15],
+    iconSize: [34, 44],
+    iconAnchor: [17, 40],
+    popupAnchor: [0, -34],
   });
 };
 
@@ -319,7 +310,7 @@ export default function TreeHome() {
       details.push({
         label: "Coordenadas",
         value: `${Number(treeHistory.tree.latitude).toFixed(4)}, ${Number(
-          treeHistory.tree.longitude
+          treeHistory.tree.longitude,
         ).toFixed(4)}`,
       });
     }
@@ -341,7 +332,7 @@ export default function TreeHome() {
 
     const interval = setInterval(() => {
       setHistoryImageIndex((prev) =>
-        prev === historyImages.length - 1 ? 0 : prev + 1
+        prev === historyImages.length - 1 ? 0 : prev + 1,
       );
     }, 4000);
 
@@ -351,14 +342,14 @@ export default function TreeHome() {
   const handlePrevHistoryImage = () => {
     if (historyImages.length <= 1) return;
     setHistoryImageIndex((prev) =>
-      prev === 0 ? historyImages.length - 1 : prev - 1
+      prev === 0 ? historyImages.length - 1 : prev - 1,
     );
   };
 
   const handleNextHistoryImage = () => {
     if (historyImages.length <= 1) return;
     setHistoryImageIndex((prev) =>
-      prev === historyImages.length - 1 ? 0 : prev + 1
+      prev === historyImages.length - 1 ? 0 : prev + 1,
     );
   };
 
@@ -385,7 +376,7 @@ export default function TreeHome() {
         !isNaN(parseFloat(tree.latitude)) &&
         !isNaN(parseFloat(tree.longitude)) &&
         isFinite(tree.latitude) &&
-        isFinite(tree.longitude)
+        isFinite(tree.longitude),
     );
 
     if (validTrees.length === 0) {
@@ -526,7 +517,7 @@ export default function TreeHome() {
               !isNaN(parseFloat(tree.latitude)) &&
               !isNaN(parseFloat(tree.longitude)) &&
               isFinite(tree.latitude) &&
-              isFinite(tree.longitude)
+              isFinite(tree.longitude),
           );
 
           if (validTrees.length === 0 && trees.length > 0) {
@@ -560,7 +551,7 @@ export default function TreeHome() {
                       !isNaN(parseFloat(tree.latitude)) &&
                       !isNaN(parseFloat(tree.longitude)) &&
                       isFinite(tree.latitude) &&
-                      isFinite(tree.longitude)
+                      isFinite(tree.longitude),
                   )
                   .map((tree) => (
                     <Marker
@@ -582,8 +573,8 @@ export default function TreeHome() {
                             {tree.isAdopted === 1
                               ? "Adoptado"
                               : tree.isAdopted === 2
-                              ? "Pendiente de confirmación"
-                              : "Disponible"}
+                                ? "Pendiente de confirmación"
+                                : "Disponible"}
                           </p>
                           <p>
                             <strong>Precio:</strong> {tree.price} créditos
@@ -626,36 +617,40 @@ export default function TreeHome() {
           <section className="tree-details">
             <div className="tree-info-content">
               <h2>Detalles del árbol seleccionado</h2>
-              <div>
-                <div className="detail-row">
-                  <span className="label">Árbol:</span>
-                  <span className="value">{selectedTree.name}</span>
+              <div className="treehome-tree-details-info">
+                <div className="treehome-detail-item">
+                  <span className="treehome-label">Árbol</span>
+                  <span className="treehome-text">{selectedTree.name}</span>
                 </div>
-                <div className="detail-row">
-                  <span className="label">Estado:</span>
-                  <span className="value">
+                <div className="treehome-detail-item">
+                  <span className="treehome-label">Estado</span>
+                  <span className="treehome-text">
                     {selectedTree.isAdopted === 1
                       ? "Adoptado"
                       : selectedTree.isAdopted === 2
-                      ? "Pendiente de confirmación"
-                      : "Disponible"}
+                        ? "Pendiente de confirmación"
+                        : "Disponible"}
                   </span>
                 </div>
-                <div className="detail-row">
-                  <span className="label">Dueño:</span>
-                  <span className="value">
+                <div className="treehome-detail-item">
+                  <span className="treehome-label">Dueño</span>
+                  <span className="treehome-text">
                     {selectedTree.isAdopted
                       ? `${selectedTree.currentOwner || "Desconocido"}`
                       : "Sin dueño"}
                   </span>
                 </div>
-                <div className="detail-row">
-                  <span className="label">Precio:</span>
-                  <span className="value">{selectedTree.price} créditos</span>
+                <div className="treehome-detail-item">
+                  <span className="treehome-label">Precio</span>
+                  <span className="treehome-text">
+                    {selectedTree.price} créditos
+                  </span>
                 </div>
-                <div className="detail-row">
-                  <span className="label">Ubicación:</span>
-                  <span className="value">{selectedTree.address}</span>
+                <div className="treehome-detail-item treehome-detail-item--full">
+                  <span className="treehome-label">Ubicación</span>
+                  <span className="treehome-text">
+                    {selectedTree.address || "Sin ubicación"}
+                  </span>
                 </div>
               </div>
 
@@ -689,9 +684,15 @@ export default function TreeHome() {
 
       {/* Modal de Historial */}
       {showHistoryModal && treeHistory && (
-        <div className="modal-overlay" onClick={closeHistoryModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeHistoryModal}>
+        <div className="treehome-history-overlay" onClick={closeHistoryModal}>
+          <div
+            className="treehome-history-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="treehome-history-close"
+              onClick={closeHistoryModal}
+            >
               ×
             </button>
 
@@ -733,7 +734,7 @@ export default function TreeHome() {
                     <div className="history-gallery-main">
                       <img
                         src={buildHistoryImageUrl(
-                          historyImages[historyImageIndex]
+                          historyImages[historyImageIndex],
                         )}
                         alt={`Imagen ${historyImageIndex + 1} del árbol ${
                           treeHistory.tree?.name || ""
@@ -741,7 +742,7 @@ export default function TreeHome() {
                         onError={(e) => {
                           console.error(
                             "Error al cargar imagen:",
-                            e.target.src
+                            e.target.src,
                           );
                           e.target.style.display = "none";
                           const container = e.target.parentElement;
@@ -764,7 +765,10 @@ export default function TreeHome() {
                             onClick={handlePrevHistoryImage}
                             aria-label="Imagen anterior"
                           >
-                            <i className="bi bi-chevron-left" aria-hidden="true"></i>
+                            <i
+                              className="bi bi-chevron-left"
+                              aria-hidden="true"
+                            ></i>
                           </button>
                           <button
                             type="button"
@@ -772,7 +776,10 @@ export default function TreeHome() {
                             onClick={handleNextHistoryImage}
                             aria-label="Imagen siguiente"
                           >
-                            <i className="bi bi-chevron-right" aria-hidden="true"></i>
+                            <i
+                              className="bi bi-chevron-right"
+                              aria-hidden="true"
+                            ></i>
                           </button>
                         </div>
                       )}
@@ -877,7 +884,8 @@ export default function TreeHome() {
                             <div className="history-timeline-card">
                               <div className="history-timeline-header">
                                 <span className="history-timeline-user">
-                                  {irrigation.userName} {irrigation.userLastName}
+                                  {irrigation.userName}{" "}
+                                  {irrigation.userLastName}
                                 </span>
                                 <span
                                   className={`history-status-pill status-${irrigation.status}`}
@@ -885,19 +893,20 @@ export default function TreeHome() {
                                   {irrigation.status === 1
                                     ? "Aprobado"
                                     : irrigation.status === 2
-                                    ? "Pendiente"
-                                    : irrigation.status === 0
-                                    ? "Rechazado"
-                                    : "Desconocido"}
+                                      ? "Pendiente"
+                                      : irrigation.status === 0
+                                        ? "Rechazado"
+                                        : "Desconocido"}
                                 </span>
                               </div>
                               <div className="history-timeline-meta">
                                 {new Date(
-                                  irrigation.registerDate
+                                  irrigation.registerDate,
                                 ).toLocaleDateString()}
                               </div>
                               <p className="history-timeline-notes">
-                                {irrigation.observations || "Sin observaciones."}
+                                {irrigation.observations ||
+                                  "Sin observaciones."}
                               </p>
                             </div>
                           </div>
@@ -940,14 +949,14 @@ export default function TreeHome() {
                                 <span>
                                   Adopción:{" "}
                                   {new Date(
-                                    owner.adoptionDate
+                                    owner.adoptionDate,
                                   ).toLocaleDateString()}
                                 </span>
                                 <span>
                                   Finalización:{" "}
                                   {owner.abandonmentDate
                                     ? new Date(
-                                        owner.abandonmentDate
+                                        owner.abandonmentDate,
                                       ).toLocaleDateString()
                                     : "Activo"}
                                 </span>
@@ -968,8 +977,6 @@ export default function TreeHome() {
           </div>
         </div>
       )}
-
-      <footer>© 2025 Adopta, todos los derechos reservados.</footer>
 
       {/* Panel de Notificaciones */}
       <NotificationsPanel

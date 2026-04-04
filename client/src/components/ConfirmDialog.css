@@ -35,7 +35,9 @@
 .confirm-dialog {
   background: linear-gradient(135deg, #ffffff, #f9fffe);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 1px rgba(0, 0, 0, 0.1);
   max-width: 450px;
   width: 90%;
   animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -45,7 +47,9 @@
 }
 
 .confirm-dialog:hover {
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4), inset 0 0 1px rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.4),
+    inset 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
 @keyframes slideUp {
@@ -61,7 +65,7 @@
 
 /* Header del diálogo */
 .confirm-header {
-  background: linear-gradient(135deg, #2c5aa0, #1e3f73);
+  background: linear-gradient(135deg, #3d8b40, #3d8b40);
   padding: 22px 26px;
   display: flex;
   align-items: center;
@@ -81,7 +85,8 @@
 }
 
 @keyframes floatIcon {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -115,7 +120,11 @@
 /* Acciones */
 .confirm-actions {
   padding: 18px 26px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(245, 250, 250, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(245, 250, 250, 0.8)
+  );
   display: flex;
   justify-content: flex-end;
   gap: 14px;
@@ -143,7 +152,7 @@
 }
 
 .confirm-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -219,7 +228,6 @@
     flex: 1;
   }
 }
-}
 
 .confirm-btn-cancel {
   background: #6c757d;
@@ -231,12 +239,12 @@
 }
 
 .confirm-btn-confirm {
-  background: #2c5aa0;
+  background: #3d8b40;
   color: white;
 }
 
 .confirm-btn-confirm:hover {
-  background: #1e3f73;
+  background: #58b85b;
 }
 
 @media (max-width: 768px) {

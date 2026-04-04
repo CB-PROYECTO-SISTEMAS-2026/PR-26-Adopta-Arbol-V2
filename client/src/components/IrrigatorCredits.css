@@ -1,7 +1,7 @@
 /* Contenedor principal */
 .irrigator-confirm-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #2D5F3F, #1A3A28);
+  background: linear-gradient(135deg, #2d5f3f, #1a3a28);
   display: flex;
   flex-direction: column;
   font-family: "Poppins", sans-serif;
@@ -66,7 +66,7 @@
 
 .btn-canjear-header {
   background: #fff;
-  color: #2D5F3F;
+  color: #2d5f3f;
 }
 
 .btn-canjear-header:hover {
@@ -75,8 +75,8 @@
 }
 
 .btn-ranking {
-  background: #D4A574;
-  color: #2D5F3F;
+  background: #d4a574;
+  color: #2d5f3f;
 }
 
 .btn-ranking:hover {
@@ -131,7 +131,9 @@
   overflow: hidden;
   margin-bottom: 20px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .image-preview-section:hover {
@@ -236,7 +238,7 @@
 .irrigator-redemption-container {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(135deg, #2c5f5f, #1a4a4a);
+  background: linear-gradient(135deg, #1f5f3a, #0f3f29);
   display: flex;
   flex-direction: column;
   font-family: "Poppins", sans-serif;
@@ -290,7 +292,7 @@
 /* Contenido principal */
 .redemption-content {
   flex: 1;
-  background: #0d5858;
+  background: linear-gradient(135deg, #245f3f, #174732);
   /* quitar apariencia de card: sin margin, sin sombra; conservar fondo y contenido */
   margin: 0; /* ocupa espacio del layout sin estilo de tarjeta */
   padding: 35px 30px;
@@ -303,7 +305,7 @@
 .redemption-title {
   font-size: 30px;
   font-weight: 700;
-  color: #ffffff; /* títulos en blanco */
+  color: #e9fff1;
   margin-bottom: 25px;
   text-align: center;
 }
@@ -318,7 +320,9 @@
   gap: 18px;
   margin-bottom: 30px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .credits-display:hover {
@@ -351,15 +355,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: #f4fff8;
   border-radius: 8px;
-  border: none; /* asegurar que no aparezcan bordes grises */
-  box-shadow: none; /* eliminar sombras internas */
+  border: 2px dashed #9cd4ae;
+  box-shadow: inset 0 0 0 1px rgba(70, 130, 90, 0.08);
 }
 
 .placeholder-icon {
   font-size: 48px;
-  color: #6d7175;
+  color: #2f8f55;
 }
 
 .qr-preview-image {
@@ -373,19 +377,20 @@
 .btn-upload-image {
   width: 90%;
   max-width: 360px;
-  background: #d9d9d9; /* botón gris claro */
-  color: #ffffff; /* texto en blanco según requerimiento */
+  background: linear-gradient(135deg, #3abf6b, #23904d);
+  color: #ffffff;
   border: none;
   padding: 14px 18px;
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 18px rgba(10, 64, 34, 0.35);
   margin-bottom: 18px;
 }
 
 .btn-upload-image:hover {
   transform: translateY(-2px);
+  background: linear-gradient(135deg, #46cc78, #2ea75d);
 }
 
 /* Input de cantidad */
@@ -405,24 +410,33 @@
 .amount-input {
   width: 100%;
   padding: 10px 12px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  background: transparent;
+  border: 2px solid rgba(154, 220, 177, 0.7);
+  background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
   border-radius: 8px;
   outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.amount-input::-webkit-outer-spin-button,
+.amount-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  background: transparent;
 }
 
 .amount-input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: #d9f5e4;
 }
 
 /* Mantener el mismo aspecto al hacer focus/click */
 .amount-input:focus,
 .amount-input:active {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: #9ee0b8;
   box-shadow: none;
   outline: none;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
 
@@ -434,9 +448,12 @@
   padding: 14px 20px;
   font-size: 16px;
   letter-spacing: 1px;
-  box-shadow: 0 8px 22px rgba(3, 54, 52, 0.25);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.12s ease;
-  background: linear-gradient(135deg, #0f6b67, #0b5b56);
+  box-shadow: 0 8px 22px rgba(16, 71, 38, 0.34);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    opacity 0.12s ease;
+  background: linear-gradient(135deg, #2fbf6d, #1e8a4c);
   color: #ffffff;
   border: none;
   font-weight: 700;
@@ -447,7 +464,7 @@
 
 .btn-confirm-redemption:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(3, 54, 52, 0.32);
+  box-shadow: 0 12px 32px rgba(16, 71, 38, 0.4);
 }
 
 .btn-confirm-redemption:active:not(:disabled) {
