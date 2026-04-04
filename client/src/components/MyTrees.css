@@ -189,6 +189,67 @@
   justify-content: center;
 }
 
+.tree-card-top-actions {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+
+.btn-details-top,
+.btn-edit-top {
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-details-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(4, 54, 73, 0.86);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(4, 54, 73, 0.25);
+}
+
+.btn-details-top:hover {
+  transform: translateY(-1px);
+  background: rgba(3, 44, 60, 0.92);
+}
+
+.btn-edit-top {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(250, 252, 255, 0.96);
+  color: #0a5c5c;
+  box-shadow: 0 4px 14px rgba(10, 92, 92, 0.22);
+  font-size: 0.95rem;
+}
+
+.btn-edit-top:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-edit-top:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(10, 92, 92, 0.12);
+}
+
 .tree-image img {
   width: 100%;
   height: 100%;
@@ -211,12 +272,17 @@
   opacity: 0.6;
 }
 
-.tree-card-content {
+.my-tree-card-content {
   display: flex;
   flex-direction: column;
   gap: 14px;
   flex: 1;
   padding: 18px 18px 16px;
+  width: 100%;
+  align-self: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .tree-card-header {
@@ -489,6 +555,14 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.action-buttons .btn-delete {
+  order: 1;
+}
+
+.action-buttons .btn-water {
+  order: 2;
+}
+
 .action-buttons button:active {
   transform: scale(0.98);
 }
@@ -550,6 +624,207 @@
   background: linear-gradient(135deg, #e53935, #b71c1c);
   box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
   transform: translateY(-1px);
+}
+
+/* Modal de detalles exclusivo de MyTrees para evitar conflictos con estilos globales */
+.mytrees-details-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px;
+}
+
+.mytrees-details-modal {
+  width: min(960px, 100%);
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-height: none;
+  margin: auto 0;
+}
+
+.mytrees-image-large {
+  width: 100%;
+  height: clamp(220px, 34vh, 320px);
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #eef8f4, #d8ece6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mytrees-image-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mytrees-no-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #5d7777;
+  height: 100%;
+}
+
+.mytrees-tree-icon-large {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.mytrees-details-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2d4444;
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.mytrees-details-close:hover {
+  color: #132121;
+  background: #ffffff;
+}
+
+.mytrees-details-header {
+  padding: 20px 24px 8px;
+}
+
+.mytrees-details-header h2 {
+  margin: 0;
+  color: #153d3d;
+  font-size: 1.35rem;
+}
+
+.mytrees-details-content {
+  padding: 0 24px 24px;
+}
+
+.mytrees-tree-details-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 22px;
+  row-gap: 12px;
+  margin-bottom: 24px;
+}
+
+.mytrees-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-bottom: 1px solid #e5efef;
+  padding-bottom: 10px;
+}
+
+.mytrees-label {
+  color: #236060;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.mytrees-text {
+  color: #1f2f2f;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.mytrees-map-section {
+  margin-bottom: 24px;
+}
+
+.mytrees-map-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: #1b4d4d;
+  font-size: 1.15rem;
+}
+
+.mytrees-map-title i {
+  font-size: 1.2rem;
+  color: #1fa75c;
+}
+
+.mytrees-tree-map {
+  border: 2px solid #d7e7e0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(13, 71, 50, 0.12);
+}
+
+.mytrees-no-coordinates {
+  background: #f9fff7;
+  border: 1px solid #c8e6c9;
+  border-radius: 12px;
+  padding: 16px;
+  color: #2e5a34;
+}
+
+.mytrees-no-coordinates p {
+  margin: 0;
+}
+
+.mytrees-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.mytrees-btn-visit,
+.mytrees-btn-close {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mytrees-btn-visit {
+  background: linear-gradient(135deg, #2fb96a, #1f9a55);
+  color: #ffffff;
+}
+
+.mytrees-btn-visit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(31, 154, 85, 0.3);
+}
+
+.mytrees-btn-close {
+  background: #edf2f2;
+  color: #294040;
+}
+
+.mytrees-btn-close:hover {
+  background: #dfe8e8;
 }
 
 /* No Trees State */
@@ -636,6 +911,23 @@
     font-size: 14px;
     padding: 10px;
   }
+
+  .mytrees-details-overlay {
+    padding: 12px;
+  }
+
+  .mytrees-details-modal {
+    border-radius: 14px;
+  }
+
+  .mytrees-image-large {
+    border-radius: 14px 14px 0 0;
+    height: 220px;
+  }
+
+  .mytrees-tree-details-info {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Mobile (480px and below) */
@@ -685,6 +977,7 @@
   }
 
   .action-buttons {
+    margin-top: 12px;
     gap: 4px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -708,5 +1001,27 @@
 
   .no-trees p {
     font-size: 14px;
+  }
+
+  .mytrees-details-content {
+    padding: 0 14px 16px;
+  }
+
+  .mytrees-details-header {
+    padding: 16px 14px 8px;
+  }
+
+  .mytrees-map-title {
+    font-size: 1rem;
+  }
+
+  .mytrees-modal-actions {
+    justify-content: stretch;
+  }
+
+  .mytrees-btn-visit,
+  .mytrees-btn-close {
+    width: 100%;
+    justify-content: center;
   }
 }

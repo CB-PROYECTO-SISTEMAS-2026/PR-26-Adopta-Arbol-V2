@@ -36,7 +36,10 @@ export const getTrees = async (req, res) => {
 
     const trees = result.map((tree) => {
       const paths = tree.imagePaths
-        ? tree.imagePaths.split(",").map((path) => path.trim()).filter(Boolean)
+        ? tree.imagePaths
+            .split(",")
+            .map((path) => path.trim())
+            .filter(Boolean)
         : [];
 
       return {
@@ -60,7 +63,7 @@ export const setTreeStateToActive = async (req, res) => {
   try {
     const [result] = await pool.query(
       "UPDATE tree SET status = 1 WHERE id = ?",
-      [id]
+      [id],
     );
 
     if (result.affectedRows === 0) {
@@ -81,7 +84,7 @@ export const setTreeStateToInactive = async (req, res) => {
   try {
     const [result] = await pool.query(
       "UPDATE tree SET status = 0 WHERE id = ?",
-      [id]
+      [id],
     );
 
     if (result.affectedRows === 0) {
@@ -134,7 +137,7 @@ export const getAllTreesWithAdoptionStatus = async (req, res) => {
   } catch (error) {
     console.error(
       "Error al obtener árboles con estado de adopción:",
-      error.message
+      error.message,
     );
     res.status(500).json({ message: error.message });
   }
@@ -160,7 +163,7 @@ export const getTreeHistory = async (req, res) => {
       WHERE t.id = ?
       LIMIT 1
     `,
-      [treeId]
+      [treeId],
     );
 
     const [imageRows] = await pool.query(
@@ -170,7 +173,7 @@ export const getTreeHistory = async (req, res) => {
       WHERE treeId = ? AND status = 2
       ORDER BY id
     `,
-      [treeId]
+      [treeId],
     );
 
     // Obtener historial de riegos
@@ -182,7 +185,7 @@ export const getTreeHistory = async (req, res) => {
       WHERE i.treeId = ? AND i.status = 1
       ORDER BY i.registerDate DESC
     `,
-      [treeId]
+      [treeId],
     );
 
     // Obtener dueños anteriores
@@ -199,7 +202,7 @@ export const getTreeHistory = async (req, res) => {
       WHERE a.treeId = ?
       ORDER BY a.registerDate DESC
     `,
-      [treeId]
+      [treeId],
     );
 
     // Log para depuración
@@ -264,14 +267,19 @@ export const getMyTrees = async (req, res) => {
       SELECT t.id, t.name, t.description, t.code, t.price, t.address, 
              t.latitude, t.longitude, t.registerDate, t.status,
              a.registerDate as adoptionDate, a.status as adoptionStatus,
-             m.path as imagePath
+             (
+               SELECT m.path
+               FROM multimedia m
+               WHERE m.treeId = t.id AND m.status = 2
+               ORDER BY m.id ASC
+               LIMIT 1
+             ) as imagePath
       FROM tree t
       JOIN adoption a ON t.id = a.treeId
-      LEFT JOIN multimedia m ON t.id = m.treeId AND m.status = 2
       WHERE a.userId = ? AND a.status IN (1, 2)
       ORDER BY a.registerDate DESC
     `,
-      [userId]
+      [userId],
     );
 
     res.json(result);
@@ -304,7 +312,7 @@ export const renameTree = async (req, res) => {
       SELECT a.id FROM adoption a 
       WHERE a.treeId = ? AND a.userId = ? AND a.status = 1
     `,
-      [id, userId]
+      [id, userId],
     );
 
     if (ownershipCheck.length === 0) {
@@ -346,7 +354,7 @@ export const abandonTree = async (req, res) => {
       SELECT a.id FROM adoption a 
       WHERE a.treeId = ? AND a.userId = ? AND a.status = 1
     `,
-      [id, userId]
+      [id, userId],
     );
 
     if (ownershipCheck.length === 0) {
@@ -358,7 +366,7 @@ export const abandonTree = async (req, res) => {
     // Actualizar el estado de adopción a abandonado (status = 0)
     const [result] = await pool.query(
       "UPDATE adoption SET status = 0, lastUpdate = NOW() WHERE treeId = ? AND userId = ? AND status = 1",
-      [id, userId]
+      [id, userId],
     );
 
     if (result.affectedRows === 0) {

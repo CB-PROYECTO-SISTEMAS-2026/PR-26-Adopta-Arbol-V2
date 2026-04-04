@@ -54,14 +54,17 @@ export const createIrrigation = async (req, res) => {
     }
 
     // Insertar riego con status = 4
-    const [result] = await pool.query(`
+    const [result] = await pool.query(
+      `
       INSERT INTO irrigation (userId, treeId, status)
       VALUES (?, ?, 4)
-    `, [userId, treeId]);
+    `,
+      [userId, treeId],
+    );
 
     res.status(201).json({
       message: "Riego registrado exitosamente",
-      irrigationId: result.insertId
+      irrigationId: result.insertId,
     });
   } catch (error) {
     console.error("Error al crear riego:", error);
@@ -103,7 +106,8 @@ export const approveIrrigation = async (req, res) => {
     await connection.beginTransaction();
 
     // Obtener datos del riego
-    const [irrigationData] = await connection.query(`
+    const [irrigationData] = await connection.query(
+      `
       SELECT i.userId, t.name as treeName 
       FROM irrigation i
       JOIN tree t ON i.treeId = t.id
@@ -143,7 +147,7 @@ export const approveIrrigation = async (req, res) => {
         "tree_irrigated",
         "¡Riego Aprobado!",
         `Tu riego del árbol "${treeName}" ha sido aprobado.`,
-        id
+        id,
       );
     } catch (notifError) {
       console.error("Error al crear notificación:", notifError);
@@ -287,7 +291,7 @@ export const assignTreeToIrrigator = async (req, res) => {
     // Verificar que el irrigation esté disponible (status = 4)
     const [irrigationCheck] = await pool.query(
       "SELECT id, treeId FROM irrigation WHERE id = ? AND status = 4",
-      [irrigationId]
+      [irrigationId],
     );
 
     if (irrigationCheck.length === 0) {
@@ -321,7 +325,7 @@ export const assignTreeToIrrigator = async (req, res) => {
       res.json({
         message: "Riego asignado exitosamente",
         irrigationId: irrigationId,
-        treeId: irrigationCheck[0].treeId
+        treeId: irrigationCheck[0].treeId,
       });
     } catch (error) {
       await pool.query("ROLLBACK");
@@ -336,7 +340,7 @@ export const assignTreeToIrrigator = async (req, res) => {
 // Confirmar riego con evidencia (regador)
 export const confirmIrrigation = async (req, res) => {
   const { id } = req.params;
-  
+
   try {
     // Verificar que el riego existe y está en status 3
     const [irrigationData] = await pool.query(
@@ -357,15 +361,15 @@ export const confirmIrrigation = async (req, res) => {
     // Actualizar el riego con status = 2
     const [result] = await pool.query(
       "UPDATE irrigation SET status = 2 WHERE id = ?",
-      [id]
+      [id],
     );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Error al actualizar el riego" });
     }
 
-    res.json({ 
-      message: "Riego confirmado exitosamente"
+    res.json({
+      message: "Riego confirmado exitosamente",
     });
   } catch (error) {
     console.error("Error al confirmar riego:", error.message);
@@ -388,7 +392,6 @@ export const getTreeIrrigationEvidence = async (req, res) => {
         irrigation.id AS irrigationId,
         irrigation.evidence,
         irrigation.registerDate,
-        irrigation.observations,
         irrigation.status
       FROM irrigation
       WHERE irrigation.treeId = ? AND irrigation.status IN (1, 2) AND irrigation.evidence IS NOT NULL

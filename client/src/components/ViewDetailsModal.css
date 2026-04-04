@@ -7,11 +7,13 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
   backdrop-filter: blur(5px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-content {
@@ -25,6 +27,7 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0;
+  margin: auto 0;
 }
 
 /* Ocultar scrollbar pero mantener funcionalidad de scroll */

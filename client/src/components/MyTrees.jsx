@@ -10,7 +10,6 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import Card from "./Card";
 import "./MyTrees.css";
-import "./ViewDetailsModal.css";
 import "./IrrigatorMap.css";
 import "./TreeHome.css";
 
@@ -347,6 +346,26 @@ export default function MyTrees() {
                 <div key={tree.id} className="tree-card">
                   {/* Tree Image */}
                   <div className="tree-image">
+                    <div className="tree-card-top-actions">
+                      <button
+                        className="btn-details-top"
+                        onClick={() => handleViewDetails(tree.id)}
+                        aria-label={`Ver detalles de ${tree.name}`}
+                      >
+                        <i className="bi bi-eye-fill"></i>
+                        <span>Detalles</span>
+                      </button>
+                      <button
+                        className="btn-edit-top"
+                        onClick={() => handleRenameTree(tree)}
+                        disabled={tree.adoptionStatus !== 1}
+                        aria-label={`Editar nombre de ${tree.name}`}
+                        title="Cambiar nombre"
+                      >
+                        <i className="bi bi-pencil-fill"></i>
+                      </button>
+                    </div>
+
                     {tree.imagePath ? (
                       <img
                         src={getStaticUrl(tree.imagePath)}
@@ -379,7 +398,7 @@ export default function MyTrees() {
                   </div>
 
                   {/* Card Content */}
-                  <div className="tree-card-content">
+                  <div className="my-tree-card-content">
                     {editingTree?.id === tree.id ? (
                       <div className="rename-container">
                         <input
@@ -422,24 +441,11 @@ export default function MyTrees() {
                     {/* Action Buttons */}
                     <div className="action-buttons">
                       <button
-                        className="btn-update"
-                        onClick={() => handleRenameTree(tree)}
-                        disabled={tree.adoptionStatus !== 1}
-                      >
-                        Actualizar
-                      </button>
-                      <button
                         className="btn-water"
                         onClick={() => handleWaterTree(tree.id)}
                         disabled={tree.adoptionStatus !== 1}
                       >
                         Regar
-                      </button>
-                      <button
-                        className="btn-details"
-                        onClick={() => handleViewDetails(tree.id)}
-                      >
-                        Detalles
                       </button>
                       <button
                         className="btn-delete"
@@ -457,105 +463,96 @@ export default function MyTrees() {
 
         {/* Modal de Detalles */}
         {showDetailsModal && selectedTree && (
-          <div className="modal-overlay" onClick={closeDetailsModal}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="modal-close" onClick={closeDetailsModal}>
+          <div className="mytrees-details-overlay" onClick={closeDetailsModal}>
+            <div
+              className="mytrees-details-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="mytrees-details-close"
+                onClick={closeDetailsModal}
+              >
                 ×
               </button>
 
-              <div className="details-header">
+              <div className="mytrees-image-large">
+                {selectedTree.imagePath ? (
+                  <img
+                    src={getStaticUrl(selectedTree.imagePath)}
+                    alt={`Imagen del árbol ${selectedTree.name}`}
+                    onError={(e) => {
+                      console.error("Error al cargar imagen:", e.target.src);
+                      e.target.src = "/default-tree.svg";
+                      e.target.alt = "Imagen por defecto del árbol";
+                    }}
+                  />
+                ) : (
+                  <div className="mytrees-no-image-placeholder">
+                    <div className="mytrees-tree-icon-large">🌳</div>
+                    <p>Sin imagen disponible</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mytrees-details-header">
                 <h2>Detalles del Árbol</h2>
               </div>
 
-              <div className="details-content">
-                {/* Información del árbol */}
-                <div className="tree-info-section">
-                  <div className="tree-image-large">
-                    {selectedTree.imagePath ? (
-                      <img
-                        src={getStaticUrl(selectedTree.imagePath)}
-                        alt={`Imagen del árbol ${selectedTree.name}`}
-                        onError={(e) => {
-                          console.error(
-                            "Error al cargar imagen:",
-                            e.target.src,
-                          );
-                          e.target.src = "/default-tree.svg";
-                          e.target.alt = "Imagen por defecto del árbol";
-                        }}
-                      />
-                    ) : (
-                      <div className="no-image-placeholder">
-                        <div className="tree-icon-large">🌳</div>
-                        <p>Sin imagen disponible</p>
-                      </div>
-                    )}
+              <div className="mytrees-details-content">
+                <div className="mytrees-tree-details-info">
+                  <div className="mytrees-detail-item">
+                    <span className="mytrees-label">Nombre</span>
+                    <span className="mytrees-text">{selectedTree.name}</span>
                   </div>
-
-                  <div className="tree-details-info">
-                    <div className="detail-item">
-                      <span className="label">Nombre:</span>
-                      <span className="value">{selectedTree.name}</span>
-                    </div>
-                    <div className="detail-item">
-                      <span className="label">Descripción:</span>
-                      <span className="value">
-                        {selectedTree.description || "Sin descripción"}
+                  <div className="mytrees-detail-item">
+                    <span className="mytrees-label">Descripción</span>
+                    <span className="mytrees-text">
+                      {selectedTree.description || "Sin descripción"}
+                    </span>
+                  </div>
+                  <div className="mytrees-detail-item">
+                    <span className="mytrees-label">Dirección</span>
+                    <span className="mytrees-text">
+                      {selectedTree.address || "Sin dirección"}
+                    </span>
+                  </div>
+                  <div className="mytrees-detail-item">
+                    <span className="mytrees-label">Precio</span>
+                    <span className="mytrees-text">
+                      {formatPoints(
+                        selectedTreePricing?.original ?? selectedTree.price,
+                      )}{" "}
+                      pts
+                    </span>
+                  </div>
+                  {selectedTreePricing && selectedTreePricing.original > 0 && (
+                    <div className="mytrees-detail-item">
+                      <span className="mytrees-label">
+                        Costo para regador (-20%)
+                      </span>
+                      <span className="mytrees-text">
+                        {formatPoints(selectedTreePricing.discounted)} pts
                       </span>
                     </div>
-                    <div className="detail-item">
-                      <span className="label">Dirección:</span>
-                      <span className="value">
-                        {selectedTree.address || "Sin dirección"}
-                      </span>
-                    </div>
-                    <div className="detail-item">
-                      <span className="label">Precio:</span>
-                      <span className="value">
-                        <span className="price-original-inline">
-                          {formatPoints(
-                            selectedTreePricing?.original ?? selectedTree.price,
-                          )}{" "}
-                          pts
-                        </span>
-                      </span>
-                    </div>
-                    {selectedTreePricing &&
-                      selectedTreePricing.original > 0 && (
-                        <div className="detail-item">
-                          <span className="label">
-                            Costo para regador (-20%):
-                          </span>
-                          <span className="value value--discount">
-                            <span className="price-discounted">
-                              {formatPoints(selectedTreePricing.discounted)} pts
-                            </span>
-                            <span className="price-saving">
-                              Ahorro de{" "}
-                              {formatPoints(selectedTreePricing.discountAmount)}{" "}
-                              pts frente al costo base.
-                            </span>
-                          </span>
-                        </div>
-                      )}
-                    <div className="detail-item">
-                      <span className="label">Estado:</span>
-                      <span
-                        className={`status-badge status-${selectedTree.adoptionStatus}`}
-                      >
-                        {selectedTree.adoptionStatus === 1
-                          ? "✅ Aprobado"
-                          : "⏳ Pendiente"}
-                      </span>
-                    </div>
+                  )}
+                  <div className="mytrees-detail-item">
+                    <span className="mytrees-label">Estado</span>
+                    <span className="mytrees-text">
+                      {selectedTree.adoptionStatus === 1
+                        ? "Aprobado"
+                        : "Pendiente"}
+                    </span>
                   </div>
                 </div>
 
                 {/* Mapa */}
-                <div className="map-section">
-                  <h3>Ubicación</h3>
+                <div className="mytrees-map-section">
+                  <h3 className="mytrees-map-title">
+                    <i className="bi bi-geo-alt-fill"></i>
+                    <span>Ubicación</span>
+                  </h3>
                   {selectedTree.latitude && selectedTree.longitude ? (
-                    <div className="tree-map">
+                    <div className="mytrees-tree-map">
                       <MapContainer
                         center={[
                           parseFloat(selectedTree.latitude),
@@ -609,18 +606,25 @@ export default function MyTrees() {
                       </MapContainer>
                     </div>
                   ) : (
-                    <div className="no-coordinates">
+                    <div className="mytrees-no-coordinates">
                       <p>⚠️ No se encontraron coordenadas para este árbol</p>
                     </div>
                   )}
                 </div>
 
                 {/* Botones de acción */}
-                <div className="modal-actions">
-                  <button className="btn-visit" onClick={handleVisitTree}>
-                    🗺️ Visitar en Google Maps
+                <div className="mytrees-modal-actions">
+                  <button
+                    className="mytrees-btn-visit"
+                    onClick={handleVisitTree}
+                  >
+                    <i className="bi bi-geo-alt"></i>
+                    <span>Visitar en Google Maps</span>
                   </button>
-                  <button className="btn-close" onClick={closeDetailsModal}>
+                  <button
+                    className="mytrees-btn-close"
+                    onClick={closeDetailsModal}
+                  >
                     Cerrar
                   </button>
                 </div>
@@ -633,11 +637,6 @@ export default function MyTrees() {
         {showBuyCreditsModal && (
           <Card onClose={() => setShowBuyCreditsModal(false)} />
         )}
-
-        {/* Footer */}
-        <footer className="mytrees-footer">
-          <p>© 2025 Adopta, todos los derechos reservados.</p>
-        </footer>
       </div>
     </div>
   );
