@@ -30,6 +30,7 @@ export default function RedemptionAdmin() {
   const [qrFile, setQrFile] = useState(null);
   const [expiryDate, setExpiryDate] = useState(""); // fecha de vencimiento
   const [searchTerm, setSearchTerm] = useState("");
+  const [qrTypeFilter, setQrTypeFilter] = useState("cobro");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [qr5Notification, setQr5Notification] = useState(null); // Estado para notificación permanente del QR 5
@@ -357,6 +358,10 @@ export default function RedemptionAdmin() {
       r.lastName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  const filteredQRCodes = allQRCodes.filter(
+    (qr) => (qr.type || "").toLowerCase() === qrTypeFilter,
+  );
+
   // Cálculos de paginación
   const totalPages = Math.ceil(filteredRedemptions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -455,6 +460,34 @@ export default function RedemptionAdmin() {
 
       {/* Botón Añadir QR */}
       <div className="filters-section">
+        <div
+          className="qr-type-filters"
+          role="radiogroup"
+          aria-label="Filtrar por tipo de QR"
+        >
+          <label className="qr-type-radio">
+            <input
+              type="radio"
+              name="qrTypeFilter"
+              value="cobro"
+              checked={qrTypeFilter === "cobro"}
+              onChange={(e) => setQrTypeFilter(e.target.value)}
+            />
+            <span>Cobro</span>
+          </label>
+
+          <label className="qr-type-radio">
+            <input
+              type="radio"
+              name="qrTypeFilter"
+              value="retiro"
+              checked={qrTypeFilter === "retiro"}
+              onChange={(e) => setQrTypeFilter(e.target.value)}
+            />
+            <span>Retiro</span>
+          </label>
+        </div>
+
         <button
           className="add-user-btn"
           onClick={() => setShowUploadModal(true)}
@@ -475,8 +508,8 @@ export default function RedemptionAdmin() {
             </tr>
           </thead>
           <tbody>
-            {allQRCodes && allQRCodes.length > 0 ? (
-              allQRCodes.map((qr) => (
+            {filteredQRCodes && filteredQRCodes.length > 0 ? (
+              filteredQRCodes.map((qr) => (
                 <tr key={qr.id}>
                   <td>
                     {qr.url ? (
@@ -507,15 +540,16 @@ export default function RedemptionAdmin() {
                     >
                       <i className="bi bi-eye-fill"></i>
                     </button>
-                    {qr.status !== 0 && (
-                      <button
-                        className="action-btn reject-btn"
-                        onClick={() => handleDeactivateQRCode(qr.id)}
-                        title="Dar de baja"
-                      >
-                        <i className="bi bi-x-lg"></i>
-                      </button>
-                    )}
+                    {qr.status !== 0 &&
+                      (qr.type || "").toLowerCase() !== "retiro" && (
+                        <button
+                          className="action-btn reject-btn"
+                          onClick={() => handleDeactivateQRCode(qr.id)}
+                          title="Dar de baja"
+                        >
+                          <i className="bi bi-x-lg"></i>
+                        </button>
+                      )}
                   </td>
                 </tr>
               ))
@@ -533,7 +567,7 @@ export default function RedemptionAdmin() {
                     className="bi bi-inbox"
                     style={{ fontSize: "24px", marginRight: "10px" }}
                   ></i>
-                  No hay códigos QR registrados aún
+                  No hay códigos QR de tipo {qrTypeFilter} registrados aún
                 </td>
               </tr>
             )}
@@ -565,7 +599,6 @@ export default function RedemptionAdmin() {
               <div className="qr-modal-icon">
                 <i className="bi bi-qr-code-scan"></i>
               </div>
-              <h2>Subir Nuevo Código QR</h2>
               <button
                 className="qr-modal-close"
                 onClick={() => setShowUploadModal(false)}
@@ -576,6 +609,7 @@ export default function RedemptionAdmin() {
 
             {/* Contenido del modal */}
             <div className="qr-modal-body">
+              <h2 className="qr-modal-title">Subir Nuevo Código QR</h2>
               <form onSubmit={handleUploadQr} className="qr-upload-form">
                 {/* Campo de fecha */}
                 <div className="qr-form-group">

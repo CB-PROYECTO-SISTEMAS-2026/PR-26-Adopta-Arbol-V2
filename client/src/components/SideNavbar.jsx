@@ -41,6 +41,12 @@ function SideNavbar() {
               </Link>
             </li>
             <li>
+              <Link to="/admin/redemptions">
+                <i className="bi bi-cash-stack"></i>
+                <span>Retiros</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/admin/payments">
                 <i className="bi bi-cash-coin"></i>
                 <span>Pagos</span>

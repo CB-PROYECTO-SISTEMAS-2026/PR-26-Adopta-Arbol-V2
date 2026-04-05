@@ -1,5 +1,5 @@
 /* Modal de Detalles */
-.modal-overlay {
+.details-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -7,7 +7,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
@@ -16,7 +16,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.modal-content {
+.details-modal-overlay .modal-content {
   background: white;
   border-radius: 20px;
   max-width: 600px;
@@ -27,15 +27,15 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0;
-  margin: auto 0;
+  margin: auto;
 }
 
 /* Ocultar scrollbar pero mantener funcionalidad de scroll */
-.modal-content::-webkit-scrollbar {
+.details-modal-overlay .modal-content::-webkit-scrollbar {
   display: none;
 }
 
-.modal-content {
+.details-modal-overlay .modal-content {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -1251,10 +1251,11 @@
   position: relative;
 }
 
-.redemption-header {
+.modal-content.modal-redemption .redemption-header {
   background: #096c6c;
   color: white;
   padding: 30px;
+  border-radius: 15px 15px 0 0;
   text-align: center;
   position: relative;
   min-height: 140px;
@@ -1263,7 +1264,7 @@
   justify-content: center;
 }
 
-.redemption-header-icon {
+.modal-content.modal-redemption .redemption-header-icon {
   font-size: 4rem;
   opacity: 0.95;
   background: rgba(255, 255, 255, 0.25);
@@ -1274,7 +1275,6 @@
   align-items: center;
   justify-content: center;
   color: white;
-  margin: 0 auto;
 }
 
 .redemption-body {
@@ -1546,12 +1546,12 @@
     max-width: 350px;
   }
 
-  .redemption-header {
+  .modal-content.modal-redemption .redemption-header {
     padding: 25px 20px;
     min-height: 120px;
   }
 
-  .redemption-header-icon {
+  .modal-content.modal-redemption .redemption-header-icon {
     width: 80px;
     height: 80px;
     font-size: 3rem;

@@ -202,9 +202,12 @@ function ViewDetailsModal({
   if (!isOpen || !data) return null;
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
+    <div
+      className="modal-overlay details-modal-overlay"
+      onClick={handleOverlayClick}
+    >
       <div
-        className={`modal-content ${
+        className={`modal-content details-modal-content ${
           type === "user"
             ? "modal-user"
             : type === "adoption"
@@ -618,7 +621,13 @@ function ViewDetailsModal({
 
                 <div className="redemption-info-item">
                   <label className="redemption-info-label">Estado</label>
-                  <span className="redemption-info-value">Aprobado</span>
+                  <span className="redemption-info-value">
+                    {parseInt(data.status, 10) === 1
+                      ? "Aprobado"
+                      : parseInt(data.status, 10) === 0
+                        ? "Rechazado"
+                        : "Pendiente"}
+                  </span>
                 </div>
 
                 <div className="redemption-info-item">

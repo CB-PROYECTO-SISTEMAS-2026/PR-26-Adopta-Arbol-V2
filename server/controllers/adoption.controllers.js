@@ -17,7 +17,6 @@ export const getAdoptions = async (req, res) => {
       FROM adoption a
       INNER JOIN user u ON a.userId = u.id
       INNER JOIN tree t ON a.treeId = t.id
-      WHERE a.status = 2
       ORDER BY a.registerDate DESC
     `);
     res.json(result);
@@ -321,11 +320,9 @@ export const createAdoption = async (req, res) => {
         difference: userCreditsNum - treePriceNum,
       });
       await connection.rollback();
-      return res
-        .status(400)
-        .json({
-          message: "No tienes suficientes créditos para adoptar este árbol",
-        });
+      return res.status(400).json({
+        message: "No tienes suficientes créditos para adoptar este árbol",
+      });
     }
 
     // Crear la adopción (sin descontar créditos por ahora para debug)

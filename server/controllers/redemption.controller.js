@@ -94,7 +94,7 @@ export const uploadQrForUser = async (req, res) => {
       // Actualizar QR existente
       await pool.query(
         `UPDATE qrcode 
-         SET url = ?, expirationDate = ?, status = 1
+         SET url = ?, expirationDate = ?, status = 1, type = 'cobro'
          WHERE userId = ?`,
         [qrUrl, expirationDate, userId],
       );
@@ -102,8 +102,8 @@ export const uploadQrForUser = async (req, res) => {
     } else {
       // Crear nuevo QR
       await pool.query(
-        `INSERT INTO qrcode (url, expirationDate, userId, status, registerDate)
-         VALUES (?, ?, ?, 1, NOW())`,
+        `INSERT INTO qrcode (url, expirationDate, userId, status, registerDate, type)
+         VALUES (?, ?, ?, 1, NOW(), 'cobro')`,
         [qrUrl, expirationDate, userId],
       );
       console.log("Nuevo QR creado para usuario:", userId);
@@ -129,8 +129,7 @@ export const getPendingRedemptions = async (req, res) => {
       SELECT r.id, r.amount, r.registerDate, r.status, u.id as userId, u.name, u.lastName, u.email, q.id as qrCodeId, q.url as qrUrl, q.expirationDate
       FROM redemption r
       JOIN user u ON r.userId = u.id
-      LEFT JOIN qrcode q ON u.id = q.userId
-      WHERE r.status = 2
+      LEFT JOIN qrcode q ON r.qrCodeId = q.id
       ORDER BY r.registerDate DESC
     `);
     res.json(rows);
@@ -227,10 +226,10 @@ export const getRedemptionDetails = async (req, res) => {
   try {
     const [rows] = await pool.query(
       `
-      SELECT r.id, r.amount, r.registerDate, u.id as userId, u.name, u.lastName, u.email, q.url as qrUrl
+      SELECT r.id, r.amount, r.registerDate, r.status, r.adminId, r.lastUpdate, u.id as userId, u.name, u.lastName, u.email, q.url as qrUrl
       FROM redemption r
       JOIN user u ON r.userId = u.id
-      LEFT JOIN qrcode q ON u.id = q.userId
+      LEFT JOIN qrcode q ON r.qrCodeId = q.id
       WHERE r.id = ?
     `,
       [id],
@@ -277,7 +276,7 @@ export const getQRCodeById = async (req, res) => {
     const { qrId } = req.params;
 
     const [result] = await pool.query(
-      "SELECT id, url, expirationDate, status, userId FROM qrcode WHERE id = ?",
+      "SELECT id, url, expirationDate, status, userId, type FROM qrcode WHERE id = ?",
       [qrId],
     );
 
@@ -296,7 +295,7 @@ export const getQRCodeById = async (req, res) => {
 export const getAllQRCodes = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT qr.id, qr.url, qr.expirationDate, qr.status, qr.userId, qr.registerDate, u.name as userName, u.lastName as userLastName FROM qrcode qr LEFT JOIN user u ON qr.userId = u.id ORDER BY qr.registerDate DESC",
+      "SELECT qr.id, qr.url, qr.expirationDate, qr.status, qr.userId, qr.registerDate, qr.type, u.name as userName, u.lastName as userLastName FROM qrcode qr LEFT JOIN user u ON qr.userId = u.id ORDER BY qr.registerDate DESC",
     );
     res.json(rows);
   } catch (error) {
@@ -313,6 +312,25 @@ export const updateQRCodeStatus = async (req, res) => {
 
     if (status === undefined || status === null) {
       return res.status(400).json({ message: "Estado requerido" });
+    }
+
+    // Verificar tipo del QR: si es 'retiro' no se permite cambiar su estado
+    const [qrRows] = await pool.query("SELECT type FROM qrcode WHERE id = ?", [
+      qrId,
+    ]);
+
+    if (qrRows.length === 0) {
+      return res.status(404).json({ message: "QR code no encontrado" });
+    }
+
+    const qrType = (qrRows[0].type || "").toLowerCase();
+    if (qrType === "retiro") {
+      return res
+        .status(403)
+        .json({
+          message:
+            "No está permitido modificar el estado de QR de tipo 'retiro'",
+        });
     }
 
     const [result] = await pool.query(
@@ -555,6 +573,9 @@ export const confirmRedemptionRequest = async (req, res) => {
 
 // Crear redención del regador con QR
 export const createIrrigatorRedemption = async (req, res) => {
+  let connection = null;
+  let movedQrFilePath = null;
+
   try {
     console.log("=== INICIO createIrrigatorRedemption ===");
     console.log("Body:", req.body);
@@ -584,29 +605,25 @@ export const createIrrigatorRedemption = async (req, res) => {
       fs.mkdirSync(qrFolder, { recursive: true });
     }
 
-    // Obtener el próximo ID de qrcode
-    const [maxIdResult] = await pool.query(
-      "SELECT MAX(id) as maxId FROM qrcode",
-    );
-    const nextId = (maxIdResult[0].maxId || 0) + 1;
-    console.log("Próximo ID de QR:", nextId);
-
     // Obtener extensión del archivo
-    const fileExtension = path.extname(file.originalname);
-    const fileName = `${nextId}${fileExtension}`;
-    const filePath = path.join(qrFolder, fileName);
+    const fileExtension = path.extname(file.originalname).toLowerCase();
+    const fileName = `retiro-${userId}-${Date.now()}${fileExtension}`;
+    movedQrFilePath = path.join(qrFolder, fileName);
 
     console.log("Guardando archivo como:", fileName);
 
     // Mover el archivo
-    fs.renameSync(file.path, filePath);
+    fs.renameSync(file.path, movedQrFilePath);
 
     // URL del QR
     const qrUrl = `/qrcodes/${fileName}`;
 
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
     // Insertar en qrcode
-    const [qrResult] = await pool.query(
-      "INSERT INTO qrcode (url, expirationDate, userId) VALUES (?, NULL, ?)",
+    const [qrResult] = await connection.query(
+      "INSERT INTO qrcode (url, expirationDate, userId, type) VALUES (?, NULL, ?, 'retiro')",
       [qrUrl, userId],
     );
 
@@ -614,13 +631,15 @@ export const createIrrigatorRedemption = async (req, res) => {
     console.log("QR Code creado con ID:", qrCodeId);
 
     // Insertar en redemption
-    const [redemptionResult] = await pool.query(
+    const [redemptionResult] = await connection.query(
       "INSERT INTO redemption (amount, userId, qrCodeId) VALUES (?, ?, ?)",
       [amount, userId, qrCodeId],
     );
 
     const redemptionId = redemptionResult.insertId;
     console.log("Redemption creada con ID:", redemptionId);
+
+    await connection.commit();
 
     console.log("=== ÉXITO createIrrigatorRedemption ===");
     res.json({
@@ -630,11 +649,31 @@ export const createIrrigatorRedemption = async (req, res) => {
       qrUrl: qrUrl,
     });
   } catch (error) {
+    if (connection) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error("Error al hacer rollback:", rollbackError);
+      }
+    }
+
+    if (movedQrFilePath && fs.existsSync(movedQrFilePath)) {
+      try {
+        fs.unlinkSync(movedQrFilePath);
+      } catch (fileError) {
+        console.error("Error al limpiar archivo QR tras fallo:", fileError);
+      }
+    }
+
     console.error("=== ERROR createIrrigatorRedemption ===");
     console.error("Error completo:", error);
     res.status(500).json({
       message: "Error al crear solicitud de redención",
       error: error.message,
     });
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 };
