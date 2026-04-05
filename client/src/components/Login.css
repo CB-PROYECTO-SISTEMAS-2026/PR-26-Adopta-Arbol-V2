@@ -8,6 +8,7 @@
 
 /* Contenedor principal - Fondo limpio y elegante */
 .login-container {
+  color: #ffffff;
   background: linear-gradient(135deg, #0F4C3A 0%, #2D5F3F 50%, #164D3D 100%);
   height: 100vh;
   display: flex;
@@ -15,11 +16,12 @@
   align-items: center;
   font-family: 'Poppins', 'Segoe UI', sans-serif;
   overflow: hidden;
-  position: relative;
+  position: relative;  
 }
 
 /* Caja de login - Diseño integrado sin doble contenedor */
 .login-box {
+  color: #ffffff;
   background: transparent;
   backdrop-filter: none;
   border: none;
@@ -92,19 +94,18 @@
   content: url('/quirquincho.png');
 }
 
-/* Título simple y blanco */
 h2 {
-  color: #ffffff;
+  color: white;
   margin-bottom: 28px;
   margin-top: 0;
-  font-size: 2rem;
+  font-size: 2.1;
   letter-spacing: 0.5px;
   font-weight: 700;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  /* text-shadow: 0 2px 8px rgba(148, 148, 148, 0.897); */
   transition: var(--transition-magic);
+  
 }
 
-/* Inputs elegantes y coherentes */
 .input-group {
   text-align: left;
   margin-bottom: 18px;
@@ -119,6 +120,17 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: 0.85;
+}
+
+h1{
+  color: #ffffff;
+  margin-bottom: 28px;
+  margin-top: 0;
+  font-size: 2.1;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+
 }
 
 .input-group input {
@@ -155,7 +167,6 @@ h2 {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Botón de login elegante */
 .btn-login {
   width: 100%;
   background: linear-gradient(135deg, #4a9b6f 0%, #2d6a4f 100%);
@@ -200,7 +211,6 @@ h2 {
   transform: translateY(-1px);
 }
 
-/* Texto de registro */
 .register-text {
   margin-top: 20px;
   font-size: 13px;
@@ -209,7 +219,7 @@ h2 {
 }
 
 .register-text a {
-  color: #a8e6cf;
+  color: #ffffff;
   font-weight: 700;
   text-decoration: none;
   transition: var(--transition-magic);
@@ -221,7 +231,6 @@ h2 {
   text-decoration: underline;
 }
 
-/* Animaciones */
 @keyframes slideUpMagic {
   from {
     opacity: 0;
@@ -241,9 +250,6 @@ h2 {
     border-radius: 24px;
   }
 
-  h2 {
-    font-size: 1.6rem;
-  }
 
   .logo {
     margin-bottom: 24px;
@@ -274,10 +280,6 @@ h2 {
     padding: 35px 20px;
   }
 
-  h2 {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-  }
 
   .logo img {
     height: 70px;

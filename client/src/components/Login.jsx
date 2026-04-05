@@ -77,7 +77,7 @@ export default function Login() {
           <img src="/logo.png" alt="Logo" />
         </div>
 
-        <h2>Iniciar Sesión</h2>
+        <h1>Iniciar Sesión</h1>
 
         <form onSubmit={handleLogin}>
           <div className="input-group">
