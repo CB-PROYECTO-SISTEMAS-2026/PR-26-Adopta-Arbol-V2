@@ -1,19 +1,14 @@
-/* Login.css - Pixie Fairy Core con colores naturales */
 
 :root {
   --accent-mint: #7BA995;
   --accent-forest: #2D5F3F;
   --accent-gold: #D4A574;
-  --accent-lavender: #A8A8C8;
-  --accent-rose: #C8A8B8;
-  --gradient-fairy: linear-gradient(135deg, #7BA995 0%, #A8A8C8 50%, #D4A574 100%);
-  --gradient-forest: linear-gradient(135deg, #2D5F3F, #4A5C4C);
-  --transition-magic: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-magic: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Contenedor principal con degradado mágico */
+/* Contenedor principal - Fondo limpio y elegante */
 .login-container {
-  background: linear-gradient(135deg, #1A3A28 0%, #2D5F3F 30%, #4A5C4C 70%, #7BA995 100%);
+  background: linear-gradient(135deg, #0F4C3A 0%, #2D5F3F 50%, #164D3D 100%);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -21,80 +16,33 @@
   font-family: 'Poppins', 'Segoe UI', sans-serif;
   overflow: hidden;
   position: relative;
-  animation: magicBgShift 12s ease-in-out infinite;
 }
 
-@keyframes magicBgShift {
-  0% {
-    background: linear-gradient(135deg, #1A3A28 0%, #2D5F3F 30%, #4A5C4C 70%, #7BA995 100%);
-  }
-  50% {
-    background: linear-gradient(225deg, #2D5F3F 0%, #4A5C4C 30%, #7BA995 70%, #D4A574 100%);
-  }
-  100% {
-    background: linear-gradient(315deg, #1A3A28 0%, #2D5F3F 30%, #4A5C4C 70%, #D4A574 100%);
-  }
-}
-
-/* Decoraciones flotantes - Mariposas y flores */
-.login-container::before,
-.login-container::after {
-  content: '';
-  position: absolute;
-  opacity: 0.1;
-  z-index: 0;
-  animation: floatMagic 20s ease-in-out infinite;
-}
-
-.login-container::before {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(123, 169, 149, 0.3), transparent);
-  top: -100px;
-  left: -100px;
-  animation: floatMagic1 25s ease-in-out infinite;
-}
-
-.login-container::after {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(212, 165, 116, 0.3), transparent);
-  bottom: -120px;
-  right: -120px;
-  animation: floatMagic2 30s ease-in-out infinite;
-}
-
-@keyframes floatMagic1 {
-  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
-  25% { transform: translateY(-30px) translateX(15px) rotate(45deg); }
-  50% { transform: translateY(-50px) rotate(90deg); }
-  75% { transform: translateY(-30px) translateX(-15px) rotate(135deg); }
-}
-
-@keyframes floatMagic2 {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-40px) rotate(45deg); }
-  50% { transform: translateY(-60px) rotate(90deg); }
-  75% { transform: translateY(-40px) rotate(135deg); }
-}
-
-/* Caja de login con diseño pixie fairy core */
+/* Caja de login - Diseño integrado sin doble contenedor */
 .login-box {
-  background: linear-gradient(135deg, #F9FFFB 0%, #F5F9F7 50%, #FFFAF8 100%);
-  border-radius: 32px;
-  box-shadow: 
-    0 30px 60px rgba(45, 95, 63, 0.15),
-    0 0 0 1px rgba(123, 169, 149, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  padding: 55px 45px;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  border-radius: 28px;
+  box-shadow: none;
+  padding: 50px 40px;
   width: 380px;
   text-align: center;
   position: relative;
   z-index: 2;
-  animation: slideUpMagic 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideUpMagic 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
   transition: var(--transition-magic);
-  backdrop-filter: blur(20px);
-  border: 2px solid rgba(123, 169, 149, 0.4);
+}
+
+@keyframes slideUpMagic {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .login-box::before {
@@ -103,138 +51,126 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(123, 169, 149, 0.5), transparent);
+  height: 0;
+  display: none;
   z-index: 1;
 }
 
 .login-box:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 
-    0 40px 80px rgba(45, 95, 63, 0.2),
-    0 0 0 1px rgba(123, 169, 149, 0.5),
-    0 0 30px rgba(123, 169, 149, 0.2);
+  transform: translateY(-8px);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
-/* Logo con animación de brillo */
+/* Logo elegante y simple */
 .logo {
-  margin-bottom: 28px;
+  margin-bottom: 32px;
+  background: transparent;
+  padding: 18px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: none;
+  box-shadow: none;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo:hover {
+  background: transparent;
+  transform: scale(1.05);
+  box-shadow: none;
 }
 
 .logo img {
-  height: 95px;
-  width: 105px;
-  animation: floatLogoMagic 5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  height: 90px;
+  width: 100px;
   transition: var(--transition-magic);
-  filter: drop-shadow(0 6px 16px rgba(45, 95, 63, 0.2));
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+  content: url('/quirquincho.png');
 }
 
-.login-box:hover .logo img {
-  filter: drop-shadow(0 10px 25px rgba(123, 169, 149, 0.4));
-  animation: floatLogoMagic 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-}
-
-@keyframes floatLogoMagic {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-15px) scale(1.05);
-  }
-}
-
-/* Título con gradiente mágico */
+/* Título simple y blanco */
 h2 {
-  color: #2D5F3F;
+  color: #ffffff;
   margin-bottom: 28px;
-  font-size: 1.9rem;
-  letter-spacing: 1px;
+  margin-top: 0;
+  font-size: 2rem;
+  letter-spacing: 0.5px;
   font-weight: 700;
-  background: linear-gradient(135deg, #2d6a4f 0%, #4a9b6f 50%, #a8e6cf 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmerText 3s ease-in-out infinite;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: var(--transition-magic);
 }
 
-@keyframes shimmerText {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
-}
-
-/* Grupo de inputs */
+/* Inputs elegantes y coherentes */
 .input-group {
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .input-group label {
-  font-size: 12px;
-  color: #2d6a4f;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
-/* Inputs con efecto mágico */
 .input-group input {
   width: 100%;
-  padding: 14px 16px;
-  border: 2px solid #d4a574;
+  padding: 13px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 16px;
   outline: none;
-  font-size: 15px;
+  font-size: 14px;
   transition: var(--transition-magic);
-  background: linear-gradient(135deg, #f9fffb 0%, #ffffff 100%);
+  background: rgba(255, 255, 255, 0.08);
   box-sizing: border-box;
-  color: #2d6a4f;
+  color: #ffffff;
   font-weight: 500;
-  box-shadow: inset 0 2px 6px rgba(45, 106, 79, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .input-group input::placeholder {
-  color: #a8e6cf;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
 }
 
 .input-group input:focus {
-  border-color: #a8e6cf;
+  border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 
-    inset 0 2px 6px rgba(45, 106, 79, 0.08),
-    0 0 0 4px rgba(168, 230, 207, 0.2),
-    0 0 15px rgba(168, 230, 207, 0.3);
-  background: #ffffff;
-  transform: translateY(-2px);
+    inset 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 0 0 3px rgba(123, 169, 149, 0.2);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .input-group input:hover:not(:focus) {
-  border-color: #d4a574;
-  box-shadow: 
-    inset 0 2px 6px rgba(45, 106, 79, 0.08),
-    0 0 12px rgba(212, 165, 116, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Botón de login - Efecto de magia */
+/* Botón de login elegante */
 .btn-login {
   width: 100%;
-  background: linear-gradient(135deg, #a8e6cf 0%, #4a9b6f 50%, #2d6a4f 100%);
-  color: #fff;
-  border: none;
-  padding: 14px 20px;
+  background: linear-gradient(135deg, #4a9b6f 0%, #2d6a4f 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 13px 20px;
   border-radius: 16px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   transition: var(--transition-magic);
-  box-shadow: 
-    0 12px 28px rgba(45, 106, 79, 0.25),
-    0 0 0 0 rgba(168, 230, 207, 0.4);
+  box-shadow: 0 8px 20px rgba(45, 106, 79, 0.3);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-top: 10px;
+  margin-top: 20px;
   position: relative;
   overflow: hidden;
 }
@@ -246,16 +182,14 @@ h2 {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.4s;
 }
 
 .btn-login:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 
-    0 16px 36px rgba(45, 106, 79, 0.35),
-    0 0 20px rgba(168, 230, 207, 0.4);
-  animation: shimmerBtn 0.6s ease-in-out;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(45, 106, 79, 0.4);
+  background: linear-gradient(135deg, #5aabb7, #3d7a5f);
 }
 
 .btn-login:hover::before {
@@ -266,16 +200,11 @@ h2 {
   transform: translateY(-1px);
 }
 
-@keyframes shimmerBtn {
-  0%, 100% { box-shadow: 0 16px 36px rgba(45, 106, 79, 0.35), 0 0 20px rgba(168, 230, 207, 0.4); }
-  50% { box-shadow: 0 16px 36px rgba(45, 106, 79, 0.35), 0 0 30px rgba(168, 230, 207, 0.6); }
-}
-
 /* Texto de registro */
 .register-text {
-  margin-top: 24px;
+  margin-top: 20px;
   font-size: 13px;
-  color: #2d6a4f;
+  color: rgba(255, 255, 255, 0.85);
   transition: color 0.3s;
 }
 
@@ -283,35 +212,24 @@ h2 {
   color: #a8e6cf;
   font-weight: 700;
   text-decoration: none;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  transition: var(--transition-magic);
   position: relative;
 }
 
-.register-text a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #a8e6cf, #4a9b6f);
-  transition: width 0.3s ease;
-}
-
-.register-text a:hover::after {
-  width: 100%;
+.register-text a:hover {
+  color: #c5f0e0;
+  text-decoration: underline;
 }
 
 /* Animaciones */
 @keyframes slideUpMagic {
   from {
     opacity: 0;
-    transform: translateY(40px) scale(0.95);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -320,11 +238,16 @@ h2 {
   .login-box {
     padding: 40px 28px;
     width: 90%;
-    border-radius: 28px;
+    border-radius: 24px;
   }
 
   h2 {
     font-size: 1.6rem;
+  }
+
+  .logo {
+    margin-bottom: 24px;
+    padding: 14px;
   }
 
   .logo img {
@@ -335,13 +258,14 @@ h2 {
   .input-group input {
     padding: 12px 14px;
     font-size: 14px;
-    border-radius: 14px;
+    border-radius: 10px;
   }
 
   .btn-login {
     padding: 12px 16px;
-    font-size: 14px;
-    border-radius: 14px;
+    font-size: 13px;
+    border-radius: 10px;
+    margin-top: 18px;
   }
 }
 

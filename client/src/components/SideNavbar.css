@@ -43,7 +43,7 @@ body.modal-open .sidebar {
 
 /* Logo */
 .sidebar .logo {
-  padding: 16px 12px;
+  padding: 12px 12px;
   font-size: 22px;
   font-weight: 700;
   text-align: center;
@@ -59,6 +59,22 @@ body.modal-open .sidebar {
   letter-spacing: 0.5px;
   transition: var(--transition-smooth);
   animation: slideInLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+
+.sidebar .logo::before {
+  content: "";
+  width: 32px;
+  height: 32px;
+  background-image: url('/quirquincho.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
 }
 
 .sidebar .logo:hover {
@@ -67,6 +83,7 @@ body.modal-open .sidebar {
     rgba(255, 255, 255, 0.15),
     rgba(255, 255, 255, 0.08)
   );
+  transform: scale(1.05);
 }
 
 /* Navegación */
