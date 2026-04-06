@@ -1,12 +1,12 @@
 :root {
-  --color-primary-900: #0F2418;
-  --color-primary-700: #1A3A28;
-  --color-primary-500: #2D5F3F;
-  --color-primary-200: #B8D4C8;
-  --color-neutral-50: #F5F9F7;
-  --color-neutral-200: #D8E5E0;
-  --color-neutral-500: #6B7D6B;
-  --color-neutral-900: #2C3E37;
+  --color-primary-900: #0f2418;
+  --color-primary-700: #1a3a28;
+  --color-primary-500: #2d5f3f;
+  --color-primary-200: #b8d4c8;
+  --color-neutral-50: #f5f9f7;
+  --color-neutral-200: #d8e5e0;
+  --color-neutral-500: #6b7d6b;
+  --color-neutral-900: #2c3e37;
   --shadow-soft: 0 20px 40px rgba(45, 95, 63, 0.2);
   --shadow-card: 0 14px 32px rgba(26, 58, 40, 0.12);
   --radius-lg: 28px;
@@ -25,11 +25,12 @@
 
 .hero {
   position: relative;
-  min-height: 90vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   padding: 48px 70px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   color: #ffffff;
   background: url("/LandPageLeaf.jpg") center/cover no-repeat;
   overflow: hidden;
@@ -38,7 +39,11 @@
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(15, 36, 24, 0.88), rgba(26, 58, 40, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(15, 36, 24, 0.88),
+    rgba(26, 58, 40, 0.8)
+  );
   backdrop-filter: blur(4px);
   z-index: 0;
 }
@@ -80,7 +85,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url('/quirquincho.png');
+  background-image: url("/quirquincho.png");
   background-size: 70%;
   background-repeat: no-repeat;
   background-position: center;
@@ -117,12 +122,15 @@
   font-weight: 600;
   font-size: 0.98rem;
   padding: 12px 26px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .btn--primary,
 .btn {
-  background: linear-gradient(140deg, #3D8B40, #2D5F3F);
+  background: linear-gradient(140deg, #3d8b40, #2d5f3f);
   color: #ffffff;
   box-shadow: var(--shadow-soft);
 }
@@ -287,7 +295,11 @@
 }
 
 .impact {
-  background: linear-gradient(145deg, rgba(2, 40, 29, 0.96), rgba(4, 92, 66, 0.94));
+  background: linear-gradient(
+    145deg,
+    rgba(2, 40, 29, 0.96),
+    rgba(4, 92, 66, 0.94)
+  );
   color: #ffffff;
 }
 
@@ -408,7 +420,11 @@
 }
 
 .cta {
-  background: linear-gradient(140deg, rgba(17, 185, 130, 0.12), rgba(4, 92, 66, 0.06));
+  background: linear-gradient(
+    140deg,
+    rgba(17, 185, 130, 0.12),
+    rgba(4, 92, 66, 0.06)
+  );
   text-align: center;
   padding-bottom: 120px;
 }
@@ -507,4 +523,3 @@
     text-align: center;
   }
 }
-
