@@ -211,7 +211,8 @@ export default function CreateAccount() {
       const result = await registerUser(registrationData);
 
       setSuccess(
-        `¡Cuenta creada exitosamente! Tu nombre de usuario es: ${result.username}. Tu solicitud está pendiente de aprobación.`,
+        result.message ||
+          "Su cuenta ha sido creada exitosamente. Verifique sus credenciales de acceso en su correo electrónico.",
       );
       setFormData({
         name: "",

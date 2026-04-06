@@ -13,8 +13,8 @@ export const loginUser = async (req, res) => {
     }
 
     const [result] = await pool.query(
-      "SELECT id, name, lastName, role, username, email, photo, credits, point, status, registerDate FROM user WHERE username = ? AND password = ? AND status = 1",
-      [username, password],
+      "SELECT id, name, lastName, role, username, email, photo, credits, point, status, registerDate, password FROM user WHERE username = ? AND status = 1 AND (password = SHA2(?, 256) OR password = ?)",
+      [username, password, password],
     );
 
     if (result.length === 0) {
@@ -25,23 +25,42 @@ export const loginUser = async (req, res) => {
 
     const user = result[0];
 
+    // Migración transparente: si la contraseña estaba en texto plano, se actualiza a SHA-256.
+    if (user.password === password) {
+      await pool.query("UPDATE user SET password = SHA2(?, 256) WHERE id = ?", [
+        password,
+        user.id,
+      ]);
+      console.log(
+        "🔐 Contraseña migrada a SHA-256 para usuario:",
+        user.username,
+      );
+    }
+
+    const { password: _storedPassword, ...safeUser } = user;
+
     console.log("=== LOGIN USER DATA ===");
-    console.log("User from DB:", user);
-    console.log("User credits:", user.credits, "Type:", typeof user.credits);
+    console.log("User from DB:", safeUser);
+    console.log(
+      "User credits:",
+      safeUser.credits,
+      "Type:",
+      typeof safeUser.credits,
+    );
 
     res.json({
       message: "Inicio de Sesión exitoso",
       user: {
-        id: user.id,
-        name: user.name,
-        lastName: user.lastName,
-        role: user.role,
-        username: user.username,
-        email: user.email,
-        photo: user.photo,
-        credits: user.credits,
-        point: user.point,
-        registerDate: user.registerDate,
+        id: safeUser.id,
+        name: safeUser.name,
+        lastName: safeUser.lastName,
+        role: safeUser.role,
+        username: safeUser.username,
+        email: safeUser.email,
+        photo: safeUser.photo,
+        credits: safeUser.credits,
+        point: safeUser.point,
+        registerDate: safeUser.registerDate,
       },
     });
   } catch (error) {
@@ -131,7 +150,7 @@ export const createUser = async (req, res) => {
     console.log("userId solicitado desde frontend:", requestedUserId);
 
     const [result] = await pool.query(
-      "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?)",
       [
         name,
         lastName,
@@ -150,6 +169,7 @@ export const createUser = async (req, res) => {
     console.log("Usuario creado:", result);
 
     // Enviar credenciales por correo electrónico
+    let emailSent = false;
     try {
       const emailResult = await sendUserCredentials(
         email,
@@ -159,6 +179,7 @@ export const createUser = async (req, res) => {
       );
 
       if (emailResult.success) {
+        emailSent = true;
         console.log("✅ Correo de credenciales enviado exitosamente");
       } else {
         console.warn("⚠️ Error al enviar correo:", emailResult.error);
@@ -180,7 +201,10 @@ export const createUser = async (req, res) => {
       point,
       status,
       userId,
-      message: "Usuario creado exitosamente y credenciales enviadas por correo",
+      emailSent,
+      message: emailSent
+        ? "Usuario creado exitosamente y credenciales enviadas por correo"
+        : "Usuario creado exitosamente. No fue posible enviar el correo con credenciales.",
     });
   } catch (error) {
     console.error("Error al crear usuario:", error);
@@ -281,9 +305,9 @@ export const registerUser = async (req, res) => {
 
     console.log("Username generado:", username);
 
-    // Crear el usuario con status = 2 (pendiente), role = adoptante, userId = NULL
+    // Crear el usuario activo con role = adoptante y contraseña hasheada en SHA-256
     const [result] = await pool.query(
-      "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?)",
       [
         name,
         lastName,
@@ -301,6 +325,32 @@ export const registerUser = async (req, res) => {
 
     console.log("Usuario registrado:", result);
 
+    // Enviar credenciales por correo electrónico (username generado + contraseña definida)
+    let emailSent = false;
+    try {
+      const emailResult = await sendUserCredentials(
+        email,
+        `${name} ${lastName}`,
+        username,
+        password,
+      );
+
+      emailSent = emailResult.success;
+      if (emailSent) {
+        console.log("✅ Correo de credenciales enviado en registro");
+      } else {
+        console.warn(
+          "⚠️ Registro creado, pero no se pudo enviar correo:",
+          emailResult.error,
+        );
+      }
+    } catch (emailError) {
+      console.error(
+        "❌ Error crítico al enviar correo en registro:",
+        emailError,
+      );
+    }
+
     res.status(201).json({
       id: result.insertId,
       name,
@@ -308,9 +358,11 @@ export const registerUser = async (req, res) => {
       role: "adoptante",
       username,
       email,
-      status: 2,
-      message:
-        "Usuario registrado exitosamente. Cuenta pendiente de aprobación.",
+      status: 1,
+      emailSent,
+      message: emailSent
+        ? "Su cuenta ha sido creada exitosamente. Verifique sus credenciales de acceso en su correo electrónico."
+        : "Su cuenta ha sido creada exitosamente. No fue posible enviar el correo con credenciales en este momento.",
     });
   } catch (error) {
     console.error("Error al registrar usuario:", error);
