@@ -90,6 +90,7 @@
 }
 
 .register-box::before {
+  color: #ffffff;
   content: '';
   position: absolute;
   top: 0;
@@ -249,21 +250,22 @@ h2 {
 }
 
 /* Link a Login */
-.login-link {
+.login-text {
   margin-top: 20px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
 }
 
-.login-link a {
-  color: rgba(255, 255, 255, 0.95);
+.login-text a {
+  color: #ffffff;
   font-weight: 700;
   text-decoration: none;
   transition: var(--transition-magic);
   cursor: pointer;
 }
 
-.login-link a:hover {
+.login-text a:hover {
   color: #7BA995;
   text-decoration: underline;
 }
