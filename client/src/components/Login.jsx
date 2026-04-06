@@ -6,10 +6,10 @@ import { useUsers } from "../context/UserContext";
 export default function Login() {
   const navigate = useNavigate();
   const { login, isAuthenticated, loggedUser } = useUsers();
-  
+
   const [formData, setFormData] = useState({
     username: "",
-    password: ""
+    password: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,7 @@ export default function Login() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -45,7 +45,7 @@ export default function Login() {
 
     try {
       const result = await login(formData);
-      
+
       if (result.success) {
         // Redirección basada en el rol del usuario
         if (result.user.role === "admin") {
@@ -82,44 +82,52 @@ export default function Login() {
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <label>Usuario</label>
-            <input 
-              type="text" 
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Ingresa tu usuario"
-              required
-            />
+            <div className="input-with-icon">
+              <i
+                className="bi bi-person-fill input-icon"
+                aria-hidden="true"
+              ></i>
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Ingresa tu usuario"
+                required
+              />
+            </div>
           </div>
 
           <div className="input-group">
             <label>Contraseña</label>
-            <input 
-              type="password" 
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Ingresa tu contraseña"
-              required
-            />
+            <div className="input-with-icon">
+              <i className="bi bi-lock-fill input-icon" aria-hidden="true"></i>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Ingresa tu contraseña"
+                required
+              />
+            </div>
           </div>
 
           {error && (
-            <div className="error-message" style={{
-              color: '#e74c3c',
-              textAlign: 'center',
-              marginBottom: '15px',
-              fontSize: '14px'
-            }}>
+            <div
+              className="error-message"
+              style={{
+                color: "#e74c3c",
+                textAlign: "center",
+                marginBottom: "15px",
+                fontSize: "14px",
+              }}
+            >
               {error}
             </div>
           )}
 
-          <button 
-            type="submit" 
-            className="btn-login" 
-            disabled={loading}
-          >
+          <button type="submit" className="btn-login" disabled={loading}>
             {loading ? "Iniciando..." : "Iniciar Sesión"}
           </button>
         </form>

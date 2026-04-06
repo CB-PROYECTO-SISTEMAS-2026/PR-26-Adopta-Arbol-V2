@@ -1,22 +1,21 @@
-
 :root {
-  --accent-mint: #7BA995;
-  --accent-forest: #2D5F3F;
-  --accent-gold: #D4A574;
+  --accent-mint: #7ba995;
+  --accent-forest: #2d5f3f;
+  --accent-gold: #d4a574;
   --transition-magic: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Contenedor principal - Fondo limpio y elegante */
 .login-container {
   color: #ffffff;
-  background: linear-gradient(135deg, #0F4C3A 0%, #2D5F3F 50%, #164D3D 100%);
+  background: linear-gradient(135deg, #0f4c3a 0%, #2d5f3f 50%, #164d3d 100%);
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  font-family: "Poppins", "Segoe UI", sans-serif;
   overflow: hidden;
-  position: relative;  
+  position: relative;
 }
 
 /* Caja de login - Diseño integrado sin doble contenedor */
@@ -34,6 +33,17 @@
   z-index: 2;
   animation: slideUpMagic 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
   transition: var(--transition-magic);
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  scrollbar-color: rgba(255, 255, 255, 0) transparent;
+  -ms-overflow-style: none;
+}
+
+.login-box::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 
 @keyframes slideUpMagic {
@@ -48,7 +58,7 @@
 }
 
 .login-box::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -91,7 +101,7 @@
   width: 100px;
   transition: var(--transition-magic);
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
-  content: url('/quirquincho.png');
+  content: url("/quirquincho.png");
 }
 
 h2 {
@@ -103,12 +113,43 @@ h2 {
   font-weight: 700;
   /* text-shadow: 0 2px 8px rgba(148, 148, 148, 0.897); */
   transition: var(--transition-magic);
-  
 }
 
 .input-group {
+  display: block;
+  width: 100%;
   text-align: left;
   margin-bottom: 18px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 20px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 1;
+  text-shadow: none;
+  filter: none;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+.input-with-icon input {
+  position: relative;
+  z-index: 1;
 }
 
 .input-group label {
@@ -116,28 +157,28 @@ h2 {
   color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
   display: block;
+  width: 100%;
   margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: 0.85;
 }
 
-h1{
+h1 {
   color: #ffffff;
   margin-bottom: 28px;
   margin-top: 0;
   font-size: 2.1;
   letter-spacing: 0.5px;
   font-weight: 700;
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
-
+  font-family: "Poppins", "Segoe UI", sans-serif;
 }
 
 .input-group input {
   width: 100%;
-  padding: 13px 16px;
+  padding: 13px 16px 13px 44px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
+  border-radius: 18px;
   outline: none;
   font-size: 14px;
   transition: var(--transition-magic);
@@ -145,7 +186,7 @@ h1{
   box-sizing: border-box;
   color: #ffffff;
   font-weight: 500;
-  backdrop-filter: blur(10px);
+  backdrop-filter: none;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -156,7 +197,7 @@ h1{
 
 .input-group input:focus {
   border-color: rgba(123, 169, 149, 0.8);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 3px rgba(0, 0, 0, 0.1),
     0 0 0 4px rgba(123, 169, 149, 0.3);
   background: rgba(255, 255, 255, 0.12);
@@ -187,13 +228,18 @@ h1{
 }
 
 .btn-login::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.4s;
 }
 
@@ -250,7 +296,6 @@ h1{
     border-radius: 24px;
   }
 
-
   .logo {
     margin-bottom: 24px;
     padding: 14px;
@@ -262,9 +307,14 @@ h1{
   }
 
   .input-group input {
-    padding: 12px 14px;
+    padding: 12px 14px 12px 40px;
     font-size: 14px;
-    border-radius: 10px;
+    border-radius: 14px;
+  }
+
+  .input-with-icon .input-icon {
+    left: 12px;
+    font-size: 18px;
   }
 
   .btn-login {
@@ -279,7 +329,6 @@ h1{
   .login-box {
     padding: 35px 20px;
   }
-
 
   .logo img {
     height: 70px;
