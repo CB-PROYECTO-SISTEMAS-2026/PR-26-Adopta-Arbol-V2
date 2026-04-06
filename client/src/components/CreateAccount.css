@@ -1,209 +1,87 @@
-/* CreateAccount.css - Diseño moderno con animaciones dinámicas */
-
 :root {
-  --gradient-primary: linear-gradient(135deg, #0a5c5c, #2e8a8a);
-  --gradient-secondary: linear-gradient(135deg, #16c78d, #0f9f6f);
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --accent-mint: #7BA995;
+  --accent-forest: #2D5F3F;
+  --accent-gold: #D4A574;
+  --transition-magic: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Contenedor principal */
+/* Contenedor principal - Fondo limpio y elegante */
 .register-container {
-  background: var(--gradient-primary);
+  color: #ffffff;
+  background: linear-gradient(135deg, #0F4C3A 0%, #2D5F3F 50%, #164D3D 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Poppins", sans-serif;
-  position: relative;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
   overflow: hidden;
-  animation: bgShift 8s ease-in-out infinite alternate;
-}
-
-@keyframes bgShift {
-  0% {
-    background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
-  }
-  100% {
-    background: linear-gradient(225deg, #1b4d4d, #3a9999);
-  }
-}
-
-/* Fondo con hojas decorativas flotantes */
-.register-container::before {
-  content: "";
-  position: absolute;
-  top: -50px;
-  left: -50px;
-  width: 200%;
-  height: 200%;
-  background-image: url('https://i.ibb.co/3yfz9h5/leaf-icon.png');
-  background-repeat: repeat;
-  background-size: 80px;
-  opacity: 0.08;
-  z-index: 0;
-  animation: floatLeaves 60s linear infinite;
-}
-
-@keyframes floatLeaves {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  100% {
-    transform: translateY(-200px) rotate(360deg);
-  }
-}
-
-/* Caja de registro mejorada */
-.register-box {
   position: relative;
-  background: linear-gradient(135deg, #f9fffe, #f0f7f7);
-  padding: 45px 50px;
-  border-radius: 24px;
-  width: 380px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 1;
-  transition: var(--transition-smooth);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
+  padding-right: 0;
 }
 
-.register-box:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25), inset 0 0 1px rgba(255, 255, 255, 0.5);
-}
-
-/* Logo */
-.logo {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logo img {
-  height: 70px;
-  border-radius: 14px;
-  transition: var(--transition-smooth);
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
-  animation: floatLogo 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-}
-
-.logo img:hover {
-  transform: scale(1.08) rotateZ(-5deg);
-  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
-}
-
-/* Título */
-h2 {
-  text-align: center;
-  color: #0a5c5c;
-  margin-bottom: 25px;
-  font-size: 1.9rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Grupos de inputs */
-.input-group {
-  text-align: left;
-  margin-bottom: 18px;
-}
-
-.input-group label {
-  font-size: 13px;
-  color: #1b4d4d;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Inputs mejorados */
-.input-group input {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1.5px solid #d0e8e8;
-  border-radius: 12px;
-  outline: none;
-  transition: var(--transition-smooth);
-  background: linear-gradient(135deg, #f9fffe, #f0f7f7);
-  color: #333;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-.input-group input::placeholder {
-  color: #a0c8c8;
-  font-size: 13px;
-}
-
-.input-group input:focus {
-  border-color: #16c78d;
-  box-shadow: 0 0 0 3px rgba(22, 199, 141, 0.1);
-  background: #ffffff;
-}
-
-.input-group input:hover:not(:focus) {
-  border-color: #2e8a8a;
-  box-shadow: 0 0 0 2px rgba(46, 138, 138, 0.05);
-}
-
-/* Botón de registro mejorado */
-.btn-register {
-  width: 100%;
-  background: var(--gradient-secondary);
-  color: #fff;
+/* Caja de registro - Diseño integrado sin doble contenedor */
+.register-box {
+  color: #ffffff;
+  background: transparent;
+  backdrop-filter: none;
   border: none;
-  padding: 13px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-  transition: var(--transition-smooth);
-  box-shadow: 0 8px 20px rgba(22, 199, 141, 0.3);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-top: 10px;
+  border-radius: 28px;
+  box-shadow: none;
+  padding: 50px 0px 50px 40px;
+  width: 380px;
+  max-width: 90vw;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  animation: slideUpMagic 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  transition: var(--transition-magic);
+  max-height: 90vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  scrollbar-gutter: stable;
 }
 
-.btn-register:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(22, 199, 141, 0.4);
+/* Scrollbar personalizado - Chrome, Safari, Edge */
+.register-box::-webkit-scrollbar {
+  width: 10px;
 }
 
-.btn-register:active {
-  transform: translateY(-1px);
+.register-box::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* Texto de login */
-.login-text {
-  margin-top: 20px;
-  font-size: 13px;
-  color: #1b4d4d;
+.register-box::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  min-height: 40px;
 }
 
-.login-text a {
-  color: #16c78d;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  cursor: pointer;
+.register-box::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.7);
+  background-clip: padding-box;
 }
 
-.login-text a:hover {
-  color: #0a5c5c;
-  text-decoration: underline;
+.register-box::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.8);
+  background-clip: padding-box;
 }
 
-/* Animaciones */
-@keyframes slideUp {
+/* Contenedor interno para mantener padding sin afectar scrollbar */
+.register-box > * {
+  padding-right: 40px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+@keyframes slideUpMagic {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -211,20 +89,291 @@ h2 {
   }
 }
 
-@keyframes floatLogo {
-  0%, 100% {
-    transform: translateY(0);
+.register-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  display: none;
+  z-index: 1;
+}
+
+.register-box:hover {
+  transform: translateY(-8px);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Logo elegante y simple */
+.logo {
+  margin-bottom: 32px;
+  background: transparent;
+  padding: 18px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: none;
+  box-shadow: none;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo:hover {
+  background: transparent;
+  transform: scale(1.05);
+  box-shadow: none;
+}
+
+.logo img {
+  height: 90px;
+  width: 100px;
+  transition: var(--transition-magic);
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+  content: url('/quirquincho.png');
+}
+
+h2 {
+  color: white;
+  margin-bottom: 28px;
+  margin-top: 0;
+  font-size: 2.1rem;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  transition: var(--transition-magic);
+}
+
+.input-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.input-group label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  outline: none;
+  font-size: 14px;
+  transition: var(--transition-magic);
+  background: rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  color: #ffffff;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.input-group input:focus {
+  border-color: rgba(123, 169, 149, 0.8);
+  box-shadow: 
+    inset 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 0 0 4px rgba(123, 169, 149, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.input-group input:hover:not(:focus) {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Mensaje de error */
+.error-message {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.btn-register {
+  width: 100%;
+  background: linear-gradient(135deg, #4a9b6f 0%, #2d6a4f 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 13px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  transition: var(--transition-magic);
+  box-shadow: 0 8px 20px rgba(45, 106, 79, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.4s;
+}
+
+.btn-register:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(45, 106, 79, 0.4);
+}
+
+.btn-register:hover::before {
+  left: 100%;
+}
+
+.btn-register:active {
+  transform: translateY(0);
+}
+
+/* Link a Login */
+.login-link {
+  margin-top: 20px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.login-link a {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-magic);
+  cursor: pointer;
+}
+
+.login-link a:hover {
+  color: #7BA995;
+  text-decoration: underline;
+}
+
+/* Responsive - Tablets y pantallas medianas */
+@media (max-width: 768px) {
+  .register-box {
+    width: 95vw;
+    max-width: 500px;
+    padding: 45px 35px;
+    max-height: 85vh;
   }
-  50% {
-    transform: translateY(-12px);
+
+  .register-box::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  h2 {
+    font-size: 1.9rem;
+  }
+
+  .logo img {
+    height: 85px;
+    width: 95px;
+  }
+
+  .input-group input {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .btn-register {
+    padding: 12px 18px;
+    font-size: 13px;
   }
 }
 
-/* Responsive */
+/* Responsive - Teléfonos */
 @media (max-width: 480px) {
+  .register-container {
+    padding: 0 10px;
+  }
+
   .register-box {
-    padding: 35px 25px;
-    width: 90%;
+    padding: 40px 25px;
+    width: 100%;
+    max-width: calc(100vw - 20px);
+    max-height: 90vh;
+    border-radius: 20px;
+  }
+
+  .register-box::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+  }
+
+  .logo {
+    margin-bottom: 20px;
+  }
+
+  .logo img {
+    height: 75px;
+    width: 85px;
+  }
+
+  .input-group {
+    margin-bottom: 15px;
+  }
+
+  .input-group label {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .input-group input {
+    padding: 11px 12px;
+    font-size: 12px;
+    border-radius: 12px;
+  }
+
+  .error-message {
+    font-size: 11px;
+    margin-top: 3px;
+  }
+
+  .btn-register {
+    padding: 11px 18px;
+    font-size: 12px;
+    margin-top: 15px;
+  }
+
+  .login-link {
+    margin-top: 15px;
+    font-size: 12px;
+  }
+}
+
+/* Responsive - Teléfonos pequeños */
+@media (max-width: 360px) {
+  .register-box {
+    padding: 35px 20px;
+    width: calc(100vw - 20px);
+  }
+
+  .register-box::-webkit-scrollbar {
+    width: 5px;
   }
 
   h2 {
@@ -232,33 +381,17 @@ h2 {
   }
 
   .logo img {
-    height: 60px;
+    height: 65px;
+    width: 75px;
   }
 
   .input-group input {
-    padding: 11px 12px;
-    font-size: 13px;
+    padding: 10px 11px;
+    font-size: 12px;
   }
 
   .btn-register {
-    padding: 11px;
-    font-size: 14px;
-  }
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .register-box {
-    padding: 30px 25px;
-    width: 100%;
-  }
-
-  h2 {
-    font-size: 22px;
-  }
-
-  .btn-register {
-    font-size: 15px;
-    padding: 10px;
+    padding: 10px 16px;
+    font-size: 11px;
   }
 }
