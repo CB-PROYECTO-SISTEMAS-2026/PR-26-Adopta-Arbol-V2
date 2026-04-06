@@ -29,7 +29,7 @@
   content: "";
   width: 36px;
   height: 36px;
-  background-image: url('/quirquincho.png');
+  background-image: url("/quirquincho.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
