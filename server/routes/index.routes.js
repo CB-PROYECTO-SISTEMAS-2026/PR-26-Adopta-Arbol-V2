@@ -2,11 +2,15 @@ import { Router } from "express";
 import { pool } from "../db.js";
 const router = Router();
 
-// Test route to check database connection
-router.get("/ping", async (req, res) => {
+// Health check liviano para Render (no depende de base de datos)
+router.get("/ping", (req, res) => {
+  res.status(200).json({ ok: true, service: "backend" });
+});
+
+// Diagnóstico de base de datos
+router.get("/ping-db", async (req, res) => {
   const [rows] = await pool.query("SELECT 1 + 1 AS result");
-  console.log(rows);
-  res.json(rows);
+  res.json({ ok: true, db: rows });
 });
 
 //
