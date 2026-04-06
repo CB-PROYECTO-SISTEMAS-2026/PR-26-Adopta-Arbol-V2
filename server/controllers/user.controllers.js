@@ -1,5 +1,27 @@
 import { pool } from "../db.js";
 import { sendUserCredentials } from "../services/emailService.js";
+import { randomInt } from "crypto";
+
+const isLikelyHashedPassword = (value) => {
+  if (typeof value !== "string") return false;
+
+  const isSha256Hex = /^[a-fA-F0-9]{64}$/.test(value);
+  const isBcryptHash = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(value);
+
+  return isSha256Hex || isBcryptHash;
+};
+
+const generateTemporaryPassword = (length = 12) => {
+  const chars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#$%&*";
+  let password = "";
+
+  for (let i = 0; i < length; i++) {
+    password += chars[randomInt(chars.length)];
+  }
+
+  return password;
+};
 
 // Login de usuario
 export const loginUser = async (req, res) => {
@@ -149,8 +171,13 @@ export const createUser = async (req, res) => {
     console.log("userId establecido como:", userId);
     console.log("userId solicitado desde frontend:", requestedUserId);
 
-    // Guardar el password original para el email
-    const originalPassword = password;
+    // Si llega una contraseña ya hasheada, generar una temporal en claro para el correo.
+    const plainPassword = isLikelyHashedPassword(password)
+      ? generateTemporaryPassword()
+      : password;
+
+    // Guardar la contraseña en claro que se enviará por correo.
+    const originalPassword = plainPassword;
 
     const [result] = await pool.query(
       "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?)",
@@ -159,7 +186,7 @@ export const createUser = async (req, res) => {
         lastName,
         role,
         username,
-        password,
+        plainPassword,
         email,
         photo,
         credits,
