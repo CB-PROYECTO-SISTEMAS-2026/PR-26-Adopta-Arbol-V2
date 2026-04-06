@@ -139,7 +139,7 @@
 
 h2 {
   color: white;
-  margin-bottom: 28px;
+  margin-bottom: 18px;
   margin-top: 0;
   font-size: 2.1rem;
   letter-spacing: 0.5px;
@@ -149,7 +149,7 @@ h2 {
 
 .input-group {
   text-align: left;
-  margin-bottom: 18px;
+  margin-bottom: 3px;
 }
 
 .input-group label {
@@ -157,7 +157,7 @@ h2 {
   color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: 0.85;
@@ -200,10 +200,12 @@ h2 {
 /* Mensaje de error */
 .error-message {
   color: #ff6b6b;
-  font-size: 12px;
-  margin-top: 4px;
-  margin-bottom: 8px;
+  font-size: 10px;
+  margin-top: -3px;
+  margin-bottom: 0px;
   font-weight: 500;
+  line-height: 1;
+  padding: 0px;
 }
 
 .btn-register {

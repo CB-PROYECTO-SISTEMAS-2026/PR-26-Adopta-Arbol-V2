@@ -244,8 +244,9 @@ export default function CreateAccount() {
             {fieldErrors.name && (
               <div className="error-message" style={{
                 color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
+                fontSize: '10px',
+                marginTop: '-2px',
+                lineHeight: '1'
               }}>
                 {fieldErrors.name}
               </div>
@@ -265,8 +266,9 @@ export default function CreateAccount() {
             {fieldErrors.lastName && (
               <div className="error-message" style={{
                 color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
+                fontSize: '10px',
+                marginTop: '-2px',
+                lineHeight: '1'
               }}>
                 {fieldErrors.lastName}
               </div>
@@ -286,8 +288,9 @@ export default function CreateAccount() {
             {fieldErrors.email && (
               <div className="error-message" style={{
                 color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
+                fontSize: '10px',
+                marginTop: '-2px',
+                lineHeight: '1'
               }}>
                 {fieldErrors.email}
               </div>
@@ -307,8 +310,9 @@ export default function CreateAccount() {
             {fieldErrors.password && (
               <div className="error-message" style={{
                 color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
+                fontSize: '10px',
+                marginTop: '-2px',
+                lineHeight: '1'
               }}>
                 {fieldErrors.password}
               </div>
@@ -328,8 +332,9 @@ export default function CreateAccount() {
             {fieldErrors.confirmPassword && (
               <div className="error-message" style={{
                 color: '#e74c3c',
-                fontSize: '12px',
-                marginTop: '5px'
+                fontSize: '10px',
+                marginTop: '-2px',
+                lineHeight: '1'
               }}>
                 {fieldErrors.confirmPassword}
               </div>
@@ -340,12 +345,13 @@ export default function CreateAccount() {
             <div className="error-message" style={{
               color: '#e74c3c',
               textAlign: 'center',
-              marginBottom: '15px',
-              fontSize: '14px',
-              backgroundColor: '#fee',
-              border: '1px solid #fcc',
-              borderRadius: '8px',
-              padding: '10px'
+              marginBottom: '8px',
+              marginTop: '0px',
+              fontSize: '12px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              borderRadius: '0px',
+              padding: '0px'
             }}>
               {error}
             </div>
@@ -355,12 +361,13 @@ export default function CreateAccount() {
             <div className="success-message" style={{
               color: '#27ae60',
               textAlign: 'center',
-              marginBottom: '15px',
-              fontSize: '14px',
-              backgroundColor: '#efe',
-              border: '1px solid #cfc',
-              borderRadius: '8px',
-              padding: '10px'
+              marginBottom: '8px',
+              marginTop: '0px',
+              fontSize: '12px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              borderRadius: '0px',
+              padding: '0px'
             }}>
               {success}
             </div>

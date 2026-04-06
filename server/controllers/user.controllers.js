@@ -1,5 +1,6 @@
 import { pool } from "../db.js";
 import { sendUserCredentials } from "../services/emailService.js";
+import bcrypt from "bcrypt";
 
 // Login de usuario
 export const loginUser = async (req, res) => {
@@ -13,8 +14,8 @@ export const loginUser = async (req, res) => {
     }
 
     const [result] = await pool.query(
-      "SELECT id, name, lastName, role, username, email, photo, credits, point, status, registerDate FROM user WHERE username = ? AND password = ? AND status = 1",
-      [username, password],
+      "SELECT id, name, lastName, role, username, email, photo, credits, point, status, registerDate, password FROM user WHERE username = ? AND status = 1",
+      [username],
     );
 
     if (result.length === 0) {
@@ -24,6 +25,15 @@ export const loginUser = async (req, res) => {
     }
 
     const user = result[0];
+    
+    // Comparar password hasheado con el que envía el usuario
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({
+        message: "Credenciales inválidas",
+      });
+    }
 
     console.log("=== LOGIN USER DATA ===");
     console.log("User from DB:", user);
@@ -130,6 +140,12 @@ export const createUser = async (req, res) => {
     console.log("userId establecido como:", userId);
     console.log("userId solicitado desde frontend:", requestedUserId);
 
+    // Guardar el password original para el email
+    const originalPassword = password;
+
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const [result] = await pool.query(
       "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
       [
@@ -137,7 +153,7 @@ export const createUser = async (req, res) => {
         lastName,
         role,
         username,
-        password,
+        hashedPassword,
         email,
         photo,
         credits,
@@ -149,13 +165,13 @@ export const createUser = async (req, res) => {
 
     console.log("Usuario creado:", result);
 
-    // Enviar credenciales por correo electrónico
+    // Enviar credenciales por correo electrónico con el password original
     try {
       const emailResult = await sendUserCredentials(
         email,
         `${name} ${lastName}`,
         username,
-        password,
+        originalPassword,
       );
 
       if (emailResult.success) {
@@ -281,6 +297,12 @@ export const registerUser = async (req, res) => {
 
     console.log("Username generado:", username);
 
+    // Guardar el password original para el email
+    const originalPassword = password;
+
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Crear el usuario con status = 2 (pendiente), role = adoptante, userId = NULL
     const [result] = await pool.query(
       "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
@@ -289,7 +311,7 @@ export const registerUser = async (req, res) => {
         lastName,
         "adoptante", // role por defecto
         username,
-        password,
+        hashedPassword,
         email,
         null, // photo
         0, // credits
