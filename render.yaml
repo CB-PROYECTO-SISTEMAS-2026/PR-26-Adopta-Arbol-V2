@@ -28,5 +28,4 @@ services:
         sync: false
       - key: BACKEND_URL
         sync: false
-    healthCheckPath: /api
-
+    healthCheckPath: /ping
