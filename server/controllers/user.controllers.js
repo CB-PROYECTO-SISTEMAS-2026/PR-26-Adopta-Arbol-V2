@@ -2,15 +2,6 @@ import { pool } from "../db.js";
 import { sendUserCredentials } from "../services/emailService.js";
 import { randomInt } from "crypto";
 
-const isLikelyHashedPassword = (value) => {
-  if (typeof value !== "string") return false;
-
-  const isSha256Hex = /^[a-fA-F0-9]{64}$/.test(value);
-  const isBcryptHash = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(value);
-
-  return isSha256Hex || isBcryptHash;
-};
-
 const generateTemporaryPassword = (length = 12) => {
   const chars =
     "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#$%&*";
@@ -168,8 +159,6 @@ export const createUser = async (req, res) => {
       name,
       lastName,
       role,
-      username,
-      password,
       email,
       photo = null,
       credits = 0,
@@ -182,24 +171,17 @@ export const createUser = async (req, res) => {
     const normalizedLastName =
       typeof lastName === "string" ? lastName.trim() : "";
     const normalizedRole = typeof role === "string" ? role.trim() : "";
-    const normalizedUsername =
-      typeof username === "string" ? username.trim() : "";
     const normalizedEmail = normalizeEmail(email);
-    const normalizedPassword =
-      typeof password === "string" ? password.trim() : "";
 
     // Validar campos requeridos
     if (
       !normalizedName ||
       !normalizedLastName ||
       !normalizedRole ||
-      !normalizedUsername ||
-      !normalizedPassword ||
       !normalizedEmail
     ) {
       return res.status(400).json({
-        message:
-          "Campos requeridos: name, lastName, role, username, password, email",
+        message: "Campos requeridos: name, lastName, role, email",
       });
     }
 
@@ -214,16 +196,26 @@ export const createUser = async (req, res) => {
       });
     }
 
-    const [existingUsername] = await pool.query(
-      "SELECT id FROM user WHERE username = ? LIMIT 1",
-      [normalizedUsername],
-    );
+    // Generar username automáticamente (misma lógica que register)
+    const baseUsername = `${normalizedName.toLowerCase()}_${normalizedLastName.toLowerCase().charAt(0)}`;
+    let generatedUsername = baseUsername;
+    let counter = 1;
 
-    if (existingUsername.length > 0) {
-      return res.status(400).json({
-        message: "El nombre de usuario ya está registrado",
-      });
+    while (true) {
+      const [existingUsername] = await pool.query(
+        "SELECT id FROM user WHERE username = ?",
+        [generatedUsername],
+      );
+
+      if (existingUsername.length === 0) {
+        break;
+      }
+
+      generatedUsername = `${baseUsername}${counter}`;
+      counter++;
     }
+
+    const generatedPassword = generateTemporaryPassword();
 
     // Verificar si ya existe algún usuario
     const [existingUsers] = await pool.query(
@@ -240,22 +232,14 @@ export const createUser = async (req, res) => {
     console.log("userId establecido como:", userId);
     console.log("userId solicitado desde frontend:", requestedUserId);
 
-    // Si llega una contraseña ya hasheada, generar una temporal en claro para el correo.
-    const plainPassword = isLikelyHashedPassword(normalizedPassword)
-      ? generateTemporaryPassword()
-      : normalizedPassword;
-
-    // Guardar la contraseña en claro que se enviará por correo.
-    const originalPassword = plainPassword;
-
     const [result] = await pool.query(
       "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?)",
       [
         normalizedName,
         normalizedLastName,
         normalizedRole,
-        normalizedUsername,
-        plainPassword,
+        generatedUsername,
+        generatedPassword,
         normalizedEmail,
         photo,
         credits,
@@ -274,8 +258,8 @@ export const createUser = async (req, res) => {
       const emailResult = await sendUserCredentials(
         normalizedEmail,
         `${normalizedName} ${normalizedLastName}`,
-        normalizedUsername,
-        originalPassword,
+        generatedUsername,
+        generatedPassword,
       );
 
       if (emailResult.success) {
@@ -304,7 +288,7 @@ export const createUser = async (req, res) => {
       name: normalizedName,
       lastName: normalizedLastName,
       role: normalizedRole,
-      username: normalizedUsername,
+      username: generatedUsername,
       email: normalizedEmail,
       photo,
       credits,

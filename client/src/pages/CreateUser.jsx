@@ -9,28 +9,6 @@ function CreateUser({ isOpen, onClose }) {
   const { createUser, loggedUser } = useUsers();
   const { showSuccess, showError, showWarning } = useNotification();
 
-  // Función para generar username basado en nombre + año
-  const generateUsername = (name) => {
-    if (!name) return "";
-    const currentYear = new Date().getFullYear();
-    const cleanName = name
-      .toLowerCase()
-      .replace(/\s+/g, "")
-      .replace(/[^a-z0-9]/g, "");
-    return `${cleanName}${currentYear}`;
-  };
-
-  // Función para generar contraseña aleatoria
-  const generatePassword = () => {
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
-    let password = "";
-    for (let i = 0; i < 12; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return password;
-  };
-
   // Función de validación para nombre y apellido
   const validateName = (value) => {
     if (!value) return "";
@@ -99,21 +77,13 @@ function CreateUser({ isOpen, onClose }) {
         return;
       }
 
-      // Generar username y contraseña automáticamente
-      const generatedUsername = generateUsername(trimmedValues.name);
-      const generatedPassword = generatePassword();
-
       const finalData = {
         ...trimmedValues,
-        username: generatedUsername,
-        password: generatedPassword,
         status: 1,
         userId: loggedUser.id, // Usar el ID del usuario logueado
       };
 
       console.log("Datos del formulario completos:", finalData);
-      console.log("Username generado:", generatedUsername);
-      console.log("Contraseña generada:", generatedPassword);
 
       const response = await createUser(finalData);
 
@@ -125,8 +95,7 @@ function CreateUser({ isOpen, onClose }) {
         );
       } else {
         showWarning(
-          "Usuario creado, pero no se pudo enviar el correo de credenciales. " +
-            `Comparte manualmente estas credenciales:\nUsuario: ${generatedUsername}\nContraseña: ${generatedPassword}`,
+          "Usuario creado, pero no se pudo enviar el correo de credenciales.",
         );
       }
 
