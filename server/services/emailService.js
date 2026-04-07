@@ -210,12 +210,7 @@ export const sendUserCredentials = async (
         );
 
         if (!shouldRetry) {
-          return {
-            success: false,
-            error: smtpError.message,
-            code: smtpError.code,
-            responseCode: smtpError.responseCode,
-          };
+          break;
         }
 
         await wait(attempt * 1000);
@@ -230,7 +225,6 @@ export const sendUserCredentials = async (
         to: toEmail,
         subject: "Credenciales de Acceso - AdoptaArbol",
         text: textTemplate,
-        html: htmlTemplate,
       });
 
       console.log(
