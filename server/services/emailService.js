@@ -45,6 +45,87 @@ const isTransientSmtpError = (error) => {
   );
 };
 
+const escapeHtml = (value) =>
+  String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const buildCredentialsTemplates = ({
+  userName,
+  username,
+  password,
+  userEmail,
+}) => {
+  const safeUserName = escapeHtml(userName);
+  const safeUsername = escapeHtml(username);
+  const safePassword = escapeHtml(password);
+  const safeUserEmail = escapeHtml(userEmail);
+
+  const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Credenciales de Acceso - AdoptaArbol</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background-color: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+          .credentials { background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #4CAF50; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+          .logo { font-size: 24px; font-weight: bold; }
+          .important { color: #e74c3c; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo">AdoptaArbol</div>
+            <h2>Bienvenido al sistema</h2>
+          </div>
+          
+          <div class="content">
+            <h3>Hola ${safeUserName},</h3>
+            <p>Tu cuenta ha sido creada exitosamente. Estas son tus credenciales de acceso:</p>
+            
+            <div class="credentials">
+              <h4>Credenciales de Acceso</h4>
+              <p><strong>Usuario:</strong> ${safeUsername}</p>
+              <p><strong>Contrasena:</strong> ${safePassword}</p>
+              <p><strong>Correo:</strong> ${safeUserEmail}</p>
+            </div>
+            
+            <p class="important">IMPORTANTE: Guarda estas credenciales en un lugar seguro.</p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automatico, por favor no responder.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+  const text = [
+    `Hola ${userName},`,
+    "",
+    "Tu cuenta ha sido creada exitosamente en AdoptaArbol.",
+    "",
+    "Credenciales de acceso:",
+    `Usuario: ${username}`,
+    `Contrasena: ${password}`,
+    `Correo: ${userEmail}`,
+    "",
+    "Guarda estas credenciales en un lugar seguro.",
+  ].join("\n");
+
+  return { html, text };
+};
+
 // Configuración del transportador SMTP
 const createTransporter = () => {
   const emailUser = normalizeEnv(process.env.EMAIL_USER);
@@ -89,65 +170,24 @@ export const sendUserCredentials = async (
       };
     }
 
-    const htmlTemplate = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Credenciales de Acceso - AdoptaÁrbol</title>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-          .content { background-color: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-          .credentials { background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #4CAF50; }
-          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
-          .logo { font-size: 24px; font-weight: bold; }
-          .important { color: #e74c3c; font-weight: bold; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <div class="logo">🌳 AdoptaÁrbol</div>
-            <h2>¡Bienvenido al sistema!</h2>
-          </div>
-          
-          <div class="content">
-            <h3>Hola ${userName},</h3>
-            <p>Tu cuenta ha sido creada exitosamente en nuestro sistema AdoptaÁrbol. A continuación encontrarás tus credenciales de acceso:</p>
-            
-            <div class="credentials">
-              <h4>📧 Credenciales de Acceso</h4>
-              <p><strong>Usuario:</strong> ${username}</p>
-              <p><strong>Contraseña:</strong> ${password}</p>
-              <p><strong>Correo:</strong> ${userEmail}</p>
-            </div>
-            
-            <p class="important">⚠️ IMPORTANTE: Guarda estas credenciales en un lugar seguro. Te recomendamos cambiar la contraseña en tu primer inicio de sesión.</p>
-            
-            <p>Puedes acceder al sistema usando estas credenciales. Si tienes alguna duda o problema, no dudes en contactar al administrador.</p>
-            
-            <p>¡Gracias por ser parte de AdoptaÁrbol! 🌱</p>
-          </div>
-          
-          <div class="footer">
-            <p>Este es un correo automático, por favor no responder.</p>
-            <p>© 2025 AdoptaÁrbol - Todos los derechos reservados</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+    const { html: htmlTemplate, text: textTemplate } =
+      buildCredentialsTemplates({
+        userName,
+        username,
+        password,
+        userEmail: toEmail,
+      });
 
     const mailOptions = {
       from: fromEmail,
       to: toEmail,
       subject: "🌳 Credenciales de Acceso - AdoptaÁrbol",
       html: htmlTemplate,
+      text: textTemplate,
     };
 
     const maxAttempts = 3;
+    let lastSmtpError = null;
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
@@ -160,6 +200,7 @@ export const sendUserCredentials = async (
         return { success: true, messageId: result.messageId, attempt };
       } catch (error) {
         const smtpError = formatEmailError(error);
+        lastSmtpError = smtpError;
         const shouldRetry =
           attempt < maxAttempts && isTransientSmtpError(error);
 
@@ -181,11 +222,44 @@ export const sendUserCredentials = async (
       }
     }
 
-    return {
-      success: false,
-      error: "No fue posible enviar el correo después de varios intentos",
-      code: "SMTP_RETRY_EXHAUSTED",
-    };
+    // Fallback final: correo simple sin emoji en asunto para mejorar compatibilidad.
+    try {
+      const fallbackTransporter = createTransporter();
+      const fallbackResult = await fallbackTransporter.sendMail({
+        from: fromEmail,
+        to: toEmail,
+        subject: "Credenciales de Acceso - AdoptaArbol",
+        text: textTemplate,
+        html: htmlTemplate,
+      });
+
+      console.log(
+        "✅ Correo enviado exitosamente (fallback):",
+        fallbackResult.messageId,
+      );
+      return {
+        success: true,
+        messageId: fallbackResult.messageId,
+        attempt: "fallback",
+      };
+    } catch (fallbackError) {
+      const fallbackSmtpError = formatEmailError(fallbackError);
+      console.error("❌ Error en envío fallback:", fallbackSmtpError);
+
+      return {
+        success: false,
+        error:
+          fallbackSmtpError.message ||
+          lastSmtpError?.message ||
+          "No fue posible enviar el correo después de varios intentos",
+        code:
+          fallbackSmtpError.code ||
+          lastSmtpError?.code ||
+          "SMTP_RETRY_EXHAUSTED",
+        responseCode:
+          fallbackSmtpError.responseCode || lastSmtpError?.responseCode,
+      };
+    }
   } catch (error) {
     const smtpError = formatEmailError(error);
     console.error("❌ Error al enviar correo:", smtpError);
