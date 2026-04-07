@@ -23,6 +23,35 @@ const generateTemporaryPassword = (length = 12) => {
   return password;
 };
 
+const normalizeEmail = (value) =>
+  typeof value === "string" ? value.trim().toLowerCase() : "";
+
+const parsePositiveInt = (value) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+};
+
+const resolveAuditUserId = async (requestedUserId) => {
+  const parsedRequestedUserId = parsePositiveInt(requestedUserId);
+
+  if (parsedRequestedUserId) {
+    const [requestedUser] = await pool.query(
+      "SELECT id FROM user WHERE id = ? LIMIT 1",
+      [parsedRequestedUserId],
+    );
+
+    if (requestedUser.length > 0) {
+      return requestedUser[0].id;
+    }
+  }
+
+  const [fallbackUser] = await pool.query(
+    "SELECT id FROM user WHERE status = 1 ORDER BY id ASC LIMIT 1",
+  );
+
+  return fallbackUser.length > 0 ? fallbackUser[0].id : null;
+};
+
 // Login de usuario
 export const loginUser = async (req, res) => {
   try {
@@ -149,11 +178,50 @@ export const createUser = async (req, res) => {
       userId: requestedUserId,
     } = req.body;
 
+    const normalizedName = typeof name === "string" ? name.trim() : "";
+    const normalizedLastName =
+      typeof lastName === "string" ? lastName.trim() : "";
+    const normalizedRole = typeof role === "string" ? role.trim() : "";
+    const normalizedUsername =
+      typeof username === "string" ? username.trim() : "";
+    const normalizedEmail = normalizeEmail(email);
+    const normalizedPassword =
+      typeof password === "string" ? password.trim() : "";
+
     // Validar campos requeridos
-    if (!name || !lastName || !role || !username || !password || !email) {
+    if (
+      !normalizedName ||
+      !normalizedLastName ||
+      !normalizedRole ||
+      !normalizedUsername ||
+      !normalizedPassword ||
+      !normalizedEmail
+    ) {
       return res.status(400).json({
         message:
           "Campos requeridos: name, lastName, role, username, password, email",
+      });
+    }
+
+    const [existingEmail] = await pool.query(
+      "SELECT id FROM user WHERE email = ? LIMIT 1",
+      [normalizedEmail],
+    );
+
+    if (existingEmail.length > 0) {
+      return res.status(400).json({
+        message: "El correo electrónico ya está registrado",
+      });
+    }
+
+    const [existingUsername] = await pool.query(
+      "SELECT id FROM user WHERE username = ? LIMIT 1",
+      [normalizedUsername],
+    );
+
+    if (existingUsername.length > 0) {
+      return res.status(400).json({
+        message: "El nombre de usuario ya está registrado",
       });
     }
 
@@ -165,16 +233,17 @@ export const createUser = async (req, res) => {
 
     // Si no hay usuarios, este será el primero (sin supervisor)
     // Si ya hay usuarios, usar el userId enviado desde el frontend (usuario logueado)
-    let userId = userCount === 0 ? null : requestedUserId || 1;
+    let userId =
+      userCount === 0 ? null : await resolveAuditUserId(requestedUserId);
 
     console.log("Número de usuarios existentes:", userCount);
     console.log("userId establecido como:", userId);
     console.log("userId solicitado desde frontend:", requestedUserId);
 
     // Si llega una contraseña ya hasheada, generar una temporal en claro para el correo.
-    const plainPassword = isLikelyHashedPassword(password)
+    const plainPassword = isLikelyHashedPassword(normalizedPassword)
       ? generateTemporaryPassword()
-      : password;
+      : normalizedPassword;
 
     // Guardar la contraseña en claro que se enviará por correo.
     const originalPassword = plainPassword;
@@ -182,12 +251,12 @@ export const createUser = async (req, res) => {
     const [result] = await pool.query(
       "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?)",
       [
-        name,
-        lastName,
-        role,
-        username,
+        normalizedName,
+        normalizedLastName,
+        normalizedRole,
+        normalizedUsername,
         plainPassword,
-        email,
+        normalizedEmail,
         photo,
         credits,
         point,
@@ -203,9 +272,9 @@ export const createUser = async (req, res) => {
     let emailError = null;
     try {
       const emailResult = await sendUserCredentials(
-        email,
-        `${name} ${lastName}`,
-        username,
+        normalizedEmail,
+        `${normalizedName} ${normalizedLastName}`,
+        normalizedUsername,
         originalPassword,
       );
 
@@ -232,11 +301,11 @@ export const createUser = async (req, res) => {
 
     res.status(201).json({
       id: result.insertId,
-      name,
-      lastName,
-      role,
-      username,
-      email,
+      name: normalizedName,
+      lastName: normalizedLastName,
+      role: normalizedRole,
+      username: normalizedUsername,
+      email: normalizedEmail,
       photo,
       credits,
       point,
@@ -252,6 +321,20 @@ export const createUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al crear usuario:", error);
+
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({
+        message: "El correo electrónico o nombre de usuario ya está registrado",
+      });
+    }
+
+    if (error.code === "ER_NO_REFERENCED_ROW_2") {
+      return res.status(400).json({
+        message:
+          "No se pudo asociar el usuario creador. Cierre sesión, vuelva a iniciar y reintente.",
+      });
+    }
+
     return res.status(500).json({ message: error.message });
   }
 };

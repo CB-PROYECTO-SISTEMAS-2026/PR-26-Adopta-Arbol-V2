@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+
 const normalizeEnv = (value) => {
   if (typeof value !== "string") return "";
 
@@ -16,6 +18,32 @@ const normalizeEnv = (value) => {
 
 const normalizeGmailAppPassword = (value) =>
   normalizeEnv(value).replace(/\s+/g, "");
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const formatEmailError = (error) => ({
+  message: error?.message,
+  code: error?.code,
+  command: error?.command,
+  response: error?.response,
+  responseCode: error?.responseCode,
+});
+
+const isTransientSmtpError = (error) => {
+  const transientCodes = new Set([
+    "ETIMEDOUT",
+    "ESOCKET",
+    "ECONNECTION",
+    "EAI_AGAIN",
+    "ECONNRESET",
+  ]);
+  const transientResponseCodes = new Set([421, 425, 429, 450, 451, 452, 454]);
+
+  return (
+    transientCodes.has(error?.code) ||
+    transientResponseCodes.has(error?.responseCode)
+  );
+};
 
 // Configuración del transportador SMTP
 const createTransporter = () => {
@@ -50,8 +78,16 @@ export const sendUserCredentials = async (
   password,
 ) => {
   try {
-    const transporter = createTransporter();
-    const fromEmail = normalizeEnv(process.env.EMAIL_USER);
+    const fromEmail = normalizeEnv(process.env.EMAIL_USER).toLowerCase();
+    const toEmail = normalizeEnv(userEmail).toLowerCase();
+
+    if (!EMAIL_REGEX.test(toEmail)) {
+      return {
+        success: false,
+        error: "Correo de destinatario inválido",
+        code: "INVALID_RECIPIENT",
+      };
+    }
 
     const htmlTemplate = `
       <!DOCTYPE html>
@@ -106,27 +142,58 @@ export const sendUserCredentials = async (
 
     const mailOptions = {
       from: fromEmail,
-      to: userEmail,
+      to: toEmail,
       subject: "🌳 Credenciales de Acceso - AdoptaÁrbol",
       html: htmlTemplate,
     };
 
-    const result = await transporter.sendMail(mailOptions);
-    console.log("✅ Correo enviado exitosamente:", result.messageId);
-    return { success: true, messageId: result.messageId };
-  } catch (error) {
-    console.error("❌ Error al enviar correo:", {
-      message: error.message,
-      code: error.code,
-      command: error.command,
-      response: error.response,
-      responseCode: error.responseCode,
-    });
+    const maxAttempts = 3;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const transporter = createTransporter();
+        const result = await transporter.sendMail(mailOptions);
+        console.log(
+          `✅ Correo enviado exitosamente (intento ${attempt}):`,
+          result.messageId,
+        );
+        return { success: true, messageId: result.messageId, attempt };
+      } catch (error) {
+        const smtpError = formatEmailError(error);
+        const shouldRetry =
+          attempt < maxAttempts && isTransientSmtpError(error);
+
+        console.error(
+          `❌ Error al enviar correo (intento ${attempt}/${maxAttempts}):`,
+          smtpError,
+        );
+
+        if (!shouldRetry) {
+          return {
+            success: false,
+            error: smtpError.message,
+            code: smtpError.code,
+            responseCode: smtpError.responseCode,
+          };
+        }
+
+        await wait(attempt * 1000);
+      }
+    }
+
     return {
       success: false,
-      error: error.message,
-      code: error.code,
-      responseCode: error.responseCode,
+      error: "No fue posible enviar el correo después de varios intentos",
+      code: "SMTP_RETRY_EXHAUSTED",
+    };
+  } catch (error) {
+    const smtpError = formatEmailError(error);
+    console.error("❌ Error al enviar correo:", smtpError);
+    return {
+      success: false,
+      error: smtpError.message,
+      code: smtpError.code,
+      responseCode: smtpError.responseCode,
     };
   }
 };
