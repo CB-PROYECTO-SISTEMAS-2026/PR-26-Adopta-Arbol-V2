@@ -9,6 +9,7 @@ import {
   rejectRedemption,
   getRedemptionDetails,
   getUserQr,
+  getFirstActiveQRCode,
   getQRCodeById,
   getAllQRCodes,
   updateQRCodeStatus,
@@ -106,18 +107,14 @@ router.post(
             .json({ message: "El archivo es demasiado grande. Máximo 5MB" });
         }
         if (err.message === "Solo se permiten archivos de imagen") {
-          return res
-            .status(400)
-            .json({
-              message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)",
-            });
-        }
-        return res
-          .status(400)
-          .json({
-            message: "Error al procesar el archivo",
-            error: err.message,
+          return res.status(400).json({
+            message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)",
           });
+        }
+        return res.status(400).json({
+          message: "Error al procesar el archivo",
+          error: err.message,
+        });
       }
 
       if (!req.file) {
@@ -142,6 +139,9 @@ router.put("/reject/:id", rejectRedemption);
 
 // Obtener detalles de un redemption
 router.get("/details/:id", getRedemptionDetails);
+
+// Obtener el primer QR activo (status = 1)
+router.get("/qrcode-active", getFirstActiveQRCode);
 
 // Obtener QR del usuario
 router.get("/qrcode/:userId", getUserQr);
@@ -171,18 +171,14 @@ router.post(
             .json({ message: "El archivo es demasiado grande. Máximo 5MB" });
         }
         if (err.message === "Solo se permiten archivos de imagen") {
-          return res
-            .status(400)
-            .json({
-              message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)",
-            });
-        }
-        return res
-          .status(400)
-          .json({
-            message: "Error al procesar el archivo",
-            error: err.message,
+          return res.status(400).json({
+            message: "Solo se permiten archivos de imagen (JPG, PNG, GIF)",
           });
+        }
+        return res.status(400).json({
+          message: "Error al procesar el archivo",
+          error: err.message,
+        });
       }
       next();
     });

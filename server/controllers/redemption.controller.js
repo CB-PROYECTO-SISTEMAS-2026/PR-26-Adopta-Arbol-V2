@@ -270,6 +270,26 @@ export const getUserQr = async (req, res) => {
   }
 };
 
+// Obtener el primer QR activo de tipo cobro (status = 1)
+export const getFirstActiveQRCode = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "SELECT id, url, expirationDate, status, userId, type FROM qrcode WHERE status = 1 AND type = 'cobro' ORDER BY id ASC LIMIT 1",
+    );
+
+    if (result.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No hay QR activo de cobro disponible" });
+    }
+
+    res.json(result[0]);
+  } catch (error) {
+    console.error("Error al obtener el primer QR activo:", error);
+    res.status(500).json({ message: "Error al obtener QR activo" });
+  }
+};
+
 // Obtener QR por ID específico
 export const getQRCodeById = async (req, res) => {
   try {
@@ -325,12 +345,9 @@ export const updateQRCodeStatus = async (req, res) => {
 
     const qrType = (qrRows[0].type || "").toLowerCase();
     if (qrType === "retiro") {
-      return res
-        .status(403)
-        .json({
-          message:
-            "No está permitido modificar el estado de QR de tipo 'retiro'",
-        });
+      return res.status(403).json({
+        message: "No está permitido modificar el estado de QR de tipo 'retiro'",
+      });
     }
 
     const [result] = await pool.query(

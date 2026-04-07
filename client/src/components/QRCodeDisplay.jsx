@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useUsers } from "../context/UserContext";
 import { useNotification } from "../context/NotificationContext.jsx";
 import {
-  getQRCodeById,
+  getFirstActiveQRCode,
   createPurchaseRequest,
   uploadPurchaseProof,
 } from "../api/redemption.api";
@@ -43,8 +43,8 @@ export default function QRCodeDisplay() {
   const loadQRCode = async () => {
     try {
       setLoading(true);
-      // Obtener QR code con ID 1 de la base de datos
-      const response = await getQRCodeById(1);
+      // Obtener el primer QR activo (status = 1)
+      const response = await getFirstActiveQRCode();
 
       setQrCode({
         id: response.data.id,
@@ -53,10 +53,10 @@ export default function QRCodeDisplay() {
       });
     } catch (error) {
       console.error("Error al cargar QR code:", error);
-      setError("Error al cargar el código QR");
-      // Fallback a imagen local si hay error
+      setError("No hay QR activo disponible en este momento");
+      // Mostrar fallback visual, sin forzar un id inválido
       setQrCode({
-        id: 1,
+        id: null,
         imagePath: "/qrcodes/1.png",
         credits: initialCredits,
       });
@@ -173,12 +173,18 @@ export default function QRCodeDisplay() {
         return;
       }
 
+      if (!qrCode?.id) {
+        showError("No hay un QR activo disponible para procesar esta compra.");
+        setIsUploading(false);
+        return;
+      }
+
       // 1. Crear la solicitud de compra
       console.log("Creando solicitud de compra...");
       const currentOption = locationOption;
       const tempPurchaseData = {
         userId: loggedUser.id,
-        qrcodeId: qrCode?.id || 1,
+        qrcodeId: qrCode.id,
         creditId: currentOption?.id || creditOptionId,
       };
 
