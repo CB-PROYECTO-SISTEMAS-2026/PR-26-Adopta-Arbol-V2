@@ -61,8 +61,8 @@ export const registerTree = async (req, res) => {
     // Insertar multimedia
     for (const imagePath of imagePaths) {
       await pool.query(
-        `INSERT INTO multimedia (treeId, path, status, userId) VALUES (?, ?, 2, ?)`,
-        [treeId, imagePath, userId]
+        `INSERT INTO multimedia (treeId, path, status) VALUES (?, ?, 2)`,
+        [treeId, imagePath]
       );
     }
 
