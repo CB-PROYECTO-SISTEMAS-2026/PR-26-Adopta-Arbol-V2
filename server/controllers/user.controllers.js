@@ -2,6 +2,15 @@ import { pool } from "../db.js";
 import { sendUserCredentials } from "../services/emailService.js";
 import { randomInt } from "crypto";
 
+const isLikelyHashedPassword = (value) => {
+  if (typeof value !== "string") return false;
+
+  const isSha256Hex = /^[a-fA-F0-9]{64}$/.test(value);
+  const isBcryptHash = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(value);
+
+  return isSha256Hex || isBcryptHash;
+};
+
 const generateTemporaryPassword = (length = 12) => {
   const chars =
     "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#$%&*";
@@ -375,8 +384,20 @@ export const registerUser = async (req, res) => {
 
     const { name, lastName, email, password } = req.body;
 
+    const normalizedName = typeof name === "string" ? name.trim() : "";
+    const normalizedLastName =
+      typeof lastName === "string" ? lastName.trim() : "";
+    const normalizedEmail = normalizeEmail(email);
+    const normalizedPassword =
+      typeof password === "string" ? password.trim() : "";
+
     // Validar campos requeridos
-    if (!name || !lastName || !email || !password) {
+    if (
+      !normalizedName ||
+      !normalizedLastName ||
+      !normalizedEmail ||
+      !normalizedPassword
+    ) {
       return res.status(400).json({
         message: "Campos requeridos: name, lastName, email, password",
       });
@@ -385,7 +406,7 @@ export const registerUser = async (req, res) => {
     // Verificar si el email ya existe
     const [existingEmail] = await pool.query(
       "SELECT id FROM user WHERE email = ?",
-      [email],
+      [normalizedEmail],
     );
 
     if (existingEmail.length > 0) {
@@ -395,7 +416,7 @@ export const registerUser = async (req, res) => {
     }
 
     // Generar username automáticamente
-    const baseUsername = `${name.toLowerCase()}_${lastName.toLowerCase().charAt(0)}`;
+    const baseUsername = `${normalizedName.toLowerCase()}_${normalizedLastName.toLowerCase().charAt(0)}`;
     let username = baseUsername;
     let counter = 1;
 
@@ -416,16 +437,20 @@ export const registerUser = async (req, res) => {
 
     console.log("Username generado:", username);
 
+    const plainPassword = isLikelyHashedPassword(normalizedPassword)
+      ? generateTemporaryPassword()
+      : normalizedPassword;
+
     // Crear el usuario activo con role = adoptante y contraseña hasheada en SHA-256
     const [result] = await pool.query(
       "INSERT INTO user(name, lastName, role, username, password, email, photo, credits, point, status, userId) VALUES(?,?,?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?)",
       [
-        name,
-        lastName,
+        normalizedName,
+        normalizedLastName,
         "adoptante", // role por defecto
         username,
-        password,
-        email,
+        plainPassword,
+        normalizedEmail,
         null, // photo
         0, // credits
         0, // point
@@ -441,10 +466,10 @@ export const registerUser = async (req, res) => {
     let emailError = null;
     try {
       const emailResult = await sendUserCredentials(
-        email,
-        `${name} ${lastName}`,
+        normalizedEmail,
+        `${normalizedName} ${normalizedLastName}`,
         username,
-        password,
+        plainPassword,
       );
 
       emailSent = emailResult.success;
@@ -472,11 +497,11 @@ export const registerUser = async (req, res) => {
 
     res.status(201).json({
       id: result.insertId,
-      name,
-      lastName,
+      name: normalizedName,
+      lastName: normalizedLastName,
       role: "adoptante",
       username,
-      email,
+      email: normalizedEmail,
       status: 1,
       emailSent,
       ...(emailSent || process.env.NODE_ENV === "production"
