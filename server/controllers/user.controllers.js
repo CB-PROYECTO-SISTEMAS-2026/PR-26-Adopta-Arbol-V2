@@ -200,6 +200,7 @@ export const createUser = async (req, res) => {
 
     // Enviar credenciales por correo electrónico
     let emailSent = false;
+    let emailError = null;
     try {
       const emailResult = await sendUserCredentials(
         email,
@@ -212,10 +213,20 @@ export const createUser = async (req, res) => {
         emailSent = true;
         console.log("✅ Correo de credenciales enviado exitosamente");
       } else {
-        console.warn("⚠️ Error al enviar correo:", emailResult.error);
+        emailError = {
+          message: emailResult.error,
+          code: emailResult.code,
+          responseCode: emailResult.responseCode,
+        };
+        console.warn("⚠️ Error al enviar correo:", emailError);
       }
-    } catch (emailError) {
-      console.error("❌ Error crítico al enviar correo:", emailError);
+    } catch (error) {
+      console.error("❌ Error crítico al enviar correo:", error);
+      emailError = {
+        message: error.message,
+        code: error.code,
+        responseCode: error.responseCode,
+      };
       // No afecta la creación del usuario
     }
 
@@ -232,6 +243,9 @@ export const createUser = async (req, res) => {
       status,
       userId,
       emailSent,
+      ...(emailSent || process.env.NODE_ENV === "production"
+        ? {}
+        : { emailError }),
       message: emailSent
         ? "Usuario creado exitosamente y credenciales enviadas por correo"
         : "Usuario creado exitosamente. No fue posible enviar el correo con credenciales.",
@@ -357,6 +371,7 @@ export const registerUser = async (req, res) => {
 
     // Enviar credenciales por correo electrónico (username generado + contraseña definida)
     let emailSent = false;
+    let emailError = null;
     try {
       const emailResult = await sendUserCredentials(
         email,
@@ -369,16 +384,23 @@ export const registerUser = async (req, res) => {
       if (emailSent) {
         console.log("✅ Correo de credenciales enviado en registro");
       } else {
+        emailError = {
+          message: emailResult.error,
+          code: emailResult.code,
+          responseCode: emailResult.responseCode,
+        };
         console.warn(
           "⚠️ Registro creado, pero no se pudo enviar correo:",
-          emailResult.error,
+          emailError,
         );
       }
-    } catch (emailError) {
-      console.error(
-        "❌ Error crítico al enviar correo en registro:",
-        emailError,
-      );
+    } catch (error) {
+      console.error("❌ Error crítico al enviar correo en registro:", error);
+      emailError = {
+        message: error.message,
+        code: error.code,
+        responseCode: error.responseCode,
+      };
     }
 
     res.status(201).json({
@@ -390,6 +412,9 @@ export const registerUser = async (req, res) => {
       email,
       status: 1,
       emailSent,
+      ...(emailSent || process.env.NODE_ENV === "production"
+        ? {}
+        : { emailError }),
       message: emailSent
         ? "Su cuenta ha sido creada exitosamente. Verifique sus credenciales de acceso en su correo electrónico."
         : "Su cuenta ha sido creada exitosamente. No fue posible enviar el correo con credenciales en este momento.",

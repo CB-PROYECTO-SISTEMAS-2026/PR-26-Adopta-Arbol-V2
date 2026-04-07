@@ -1,15 +1,44 @@
 import nodemailer from "nodemailer";
 
+const normalizeEnv = (value) => {
+  if (typeof value !== "string") return "";
+
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+
+  const hasDoubleQuotes =
+    trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.length >= 2;
+  const hasSingleQuotes =
+    trimmed.startsWith("'") && trimmed.endsWith("'") && trimmed.length >= 2;
+
+  return hasDoubleQuotes || hasSingleQuotes ? trimmed.slice(1, -1) : trimmed;
+};
+
+const normalizeGmailAppPassword = (value) =>
+  normalizeEnv(value).replace(/\s+/g, "");
+
 // Configuración del transportador SMTP
 const createTransporter = () => {
+  const emailUser = normalizeEnv(process.env.EMAIL_USER);
+  const emailPass = normalizeGmailAppPassword(process.env.EMAIL_PASS);
+
+  if (!emailUser || !emailPass) {
+    throw new Error(
+      "Faltan EMAIL_USER o EMAIL_PASS en variables de entorno para SMTP",
+    );
+  }
+
   return nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL_USER || "edu.pantoja1210@gmail.com",
-      pass: process.env.EMAIL_PASS || "ahkq qyjx swxy qcka",
+      user: emailUser,
+      pass: emailPass,
     },
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 30000,
   });
 };
 
@@ -18,10 +47,11 @@ export const sendUserCredentials = async (
   userEmail,
   userName,
   username,
-  password
+  password,
 ) => {
   try {
     const transporter = createTransporter();
+    const fromEmail = normalizeEnv(process.env.EMAIL_USER);
 
     const htmlTemplate = `
       <!DOCTYPE html>
@@ -75,7 +105,7 @@ export const sendUserCredentials = async (
     `;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER || "edu.pantoja1210@gmail.com",
+      from: fromEmail,
       to: userEmail,
       subject: "🌳 Credenciales de Acceso - AdoptaÁrbol",
       html: htmlTemplate,
@@ -85,8 +115,19 @@ export const sendUserCredentials = async (
     console.log("✅ Correo enviado exitosamente:", result.messageId);
     return { success: true, messageId: result.messageId };
   } catch (error) {
-    console.error("❌ Error al enviar correo:", error);
-    return { success: false, error: error.message };
+    console.error("❌ Error al enviar correo:", {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response,
+      responseCode: error.responseCode,
+    });
+    return {
+      success: false,
+      error: error.message,
+      code: error.code,
+      responseCode: error.responseCode,
+    };
   }
 };
 
