@@ -54,10 +54,10 @@ export default function QRCodeDisplay() {
     } catch (error) {
       console.error("Error al cargar QR code:", error);
       setError("No hay QR activo disponible en este momento");
-      // Mostrar fallback visual, sin forzar un id inválido
+      // Mantener estado sin imagen para evitar pedir rutas fijas como /qrcodes/1.png.
       setQrCode({
         id: null,
-        imagePath: "/qrcodes/1.png",
+        imagePath: "",
         credits: initialCredits,
       });
     } finally {
@@ -390,15 +390,24 @@ export default function QRCodeDisplay() {
           {/* QR Code Section */}
           <div>
             <div className="p-1 bg-white rounded">
-              <img
-                src={qrCode?.imagePath || "/qrcodes/1.png"}
-                alt="Código QR"
-                className="qr-code-image"
-                onError={(e) => {
-                  console.error("Error al cargar imagen QR:", e.target.src);
-                  e.target.src = "/qrcodes/1.png";
-                }}
-              />
+              {qrCode?.imagePath ? (
+                <img
+                  src={qrCode.imagePath}
+                  alt="Código QR"
+                  className="qr-code-image"
+                  onError={(e) => {
+                    console.error(
+                      "Error al cargar imagen QR dinámica:",
+                      e.target.src,
+                    );
+                    setError("No se pudo cargar la imagen del QR activo");
+                  }}
+                />
+              ) : (
+                <div className="error-message">
+                  No hay imagen de QR disponible en este momento.
+                </div>
+              )}
             </div>
 
             {/* Credits Display */}

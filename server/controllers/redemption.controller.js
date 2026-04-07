@@ -3,6 +3,109 @@ import { createNotification } from "./notification.controller.js";
 import fs from "fs";
 import path from "path";
 
+const QR_FOLDER = path.join("public", "qrcodes");
+
+const ensureQrFolderExists = () => {
+  if (!fs.existsSync(QR_FOLDER)) {
+    fs.mkdirSync(QR_FOLDER, { recursive: true });
+  }
+};
+
+const normalizeQrExtension = (extension) => {
+  const normalized = String(extension || "").toLowerCase();
+  return normalized === ".jpeg" ? ".jpg" : normalized;
+};
+
+const getQrImageFileMap = () => {
+  const map = new Map();
+
+  if (!fs.existsSync(QR_FOLDER)) {
+    return map;
+  }
+
+  const files = fs.readdirSync(QR_FOLDER, { withFileTypes: true });
+  for (const fileEntry of files) {
+    if (!fileEntry.isFile()) {
+      continue;
+    }
+
+    const parsed = path.parse(fileEntry.name);
+    const extension = parsed.ext.toLowerCase();
+    if (!extension) {
+      continue;
+    }
+
+    if (!/^\d+$/.test(parsed.name)) {
+      continue;
+    }
+
+    const qrId = Number(parsed.name);
+    const filePath = path.join(QR_FOLDER, fileEntry.name);
+    let mtimeMs = 0;
+
+    try {
+      mtimeMs = fs.statSync(filePath).mtimeMs;
+    } catch {
+      continue;
+    }
+
+    const current = map.get(qrId);
+    if (!current || mtimeMs >= current.mtimeMs) {
+      map.set(qrId, { fileName: fileEntry.name, mtimeMs });
+    }
+  }
+
+  return map;
+};
+
+const deleteQrFilesForId = (qrId) => {
+  if (!fs.existsSync(QR_FOLDER)) {
+    return;
+  }
+
+  const idPrefix = `${qrId}.`;
+  const files = fs.readdirSync(QR_FOLDER, { withFileTypes: true });
+
+  for (const fileEntry of files) {
+    if (!fileEntry.isFile()) {
+      continue;
+    }
+
+    if (!fileEntry.name.startsWith(idPrefix)) {
+      continue;
+    }
+
+    const extension = path.extname(fileEntry.name).toLowerCase();
+    if (!extension) {
+      continue;
+    }
+
+    const filePath = path.join(QR_FOLDER, fileEntry.name);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
+};
+
+const resolveQrUrlForRow = (qrRow, fileMap = null) => {
+  const map = fileMap || getQrImageFileMap();
+  const mapEntry = map.get(Number(qrRow?.id));
+
+  if (mapEntry?.fileName) {
+    return `/qrcodes/${mapEntry.fileName}`;
+  }
+
+  if (qrRow?.url) {
+    const dbFileName = path.basename(qrRow.url);
+    const dbFilePath = path.join(QR_FOLDER, dbFileName);
+    if (dbFileName && fs.existsSync(dbFilePath)) {
+      return `/qrcodes/${dbFileName}`;
+    }
+  }
+
+  return null;
+};
+
 export const uploadQrForUser = async (req, res) => {
   console.log("=== INICIO uploadQrForUser ===");
   console.log("Body:", req.body);
@@ -21,43 +124,21 @@ export const uploadQrForUser = async (req, res) => {
     return res.status(400).json({ message: "ID de usuario requerido" });
   }
 
-  // Carpeta para los QR (usando la estructura correcta)
-  const qrFolder = path.join("public", "qrcodes");
-  console.log("Carpeta QR:", qrFolder);
-  if (!fs.existsSync(qrFolder)) {
-    console.log("Creando carpeta QR:", qrFolder);
-    fs.mkdirSync(qrFolder, { recursive: true });
-  }
+  ensureQrFolderExists();
+  console.log("Carpeta QR:", QR_FOLDER);
 
   // Obtener la extensión del archivo original
-  const fileExtension = path.extname(file.originalname).toLowerCase();
-  const allowedExtensions = [".png", ".jpg", ".jpeg"];
+  const fileExtension = normalizeQrExtension(path.extname(file.originalname));
+  const isImageMimeType = String(file.mimetype || "").startsWith("image/");
 
-  if (!allowedExtensions.includes(fileExtension)) {
-    console.log("ERROR: Extensión no permitida:", fileExtension);
+  if (!isImageMimeType || !fileExtension) {
+    console.log("ERROR: Archivo no válido para QR", {
+      mimetype: file.mimetype,
+      extension: fileExtension,
+    });
     return res
       .status(400)
-      .json({ message: "Solo se permiten archivos PNG y JPG" });
-  }
-
-  // Determinar el nombre del archivo basado en la extensión
-  const fileName =
-    fileExtension === ".jpg" || fileExtension === ".jpeg" ? "1.jpg" : "1.png";
-  const filePath = path.join(qrFolder, fileName);
-  console.log("Archivo destino:", filePath);
-
-  // Eliminar archivos anteriores (tanto .png como .jpg)
-  const pngPath = path.join(qrFolder, "1.png");
-  const jpgPath = path.join(qrFolder, "1.jpg");
-
-  if (fs.existsSync(pngPath)) {
-    console.log("Eliminando archivo anterior 1.png");
-    fs.unlinkSync(pngPath);
-  }
-
-  if (fs.existsSync(jpgPath)) {
-    console.log("Eliminando archivo anterior 1.jpg");
-    fs.unlinkSync(jpgPath);
+      .json({ message: "Solo se permiten archivos de imagen" });
   }
 
   // Verificar que el archivo temporal existe
@@ -66,52 +147,97 @@ export const uploadQrForUser = async (req, res) => {
     return res.status(500).json({ message: "Archivo temporal no encontrado" });
   }
 
-  // Mover el nuevo archivo
-  console.log("Moviendo archivo de", file.path, "a", filePath);
-  fs.renameSync(file.path, filePath);
-  console.log("Archivo movido exitosamente");
-
-  // URL fija basada en la extensión
-  const qrUrl = `/qrcodes/${fileName}`;
+  let connection = null;
+  let movedFilePath = null;
 
   try {
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
     console.log(
       "Actualizando BD con userId:",
       userId,
       "expirationDate:",
       expirationDate,
-      "qrUrl:",
-      qrUrl,
     );
 
-    // Verificar si ya existe un QR para este usuario
-    const [existingQr] = await pool.query(
-      "SELECT id FROM qrcode WHERE userId = ?",
+    // Buscar un QR de cobro existente para este usuario.
+    const [existingQr] = await connection.query(
+      "SELECT id FROM qrcode WHERE userId = ? AND type = 'cobro' ORDER BY id ASC LIMIT 1",
       [userId],
     );
 
+    let qrId;
     if (existingQr.length > 0) {
-      // Actualizar QR existente
-      await pool.query(
-        `UPDATE qrcode 
-         SET url = ?, expirationDate = ?, status = 1, type = 'cobro'
-         WHERE userId = ?`,
-        [qrUrl, expirationDate, userId],
-      );
-      console.log("QR actualizado para usuario:", userId);
+      qrId = existingQr[0].id;
+      console.log("QR existente encontrado para usuario:", userId, "id:", qrId);
     } else {
-      // Crear nuevo QR
-      await pool.query(
+      const [insertResult] = await connection.query(
         `INSERT INTO qrcode (url, expirationDate, userId, status, registerDate, type)
-         VALUES (?, ?, ?, 1, NOW(), 'cobro')`,
-        [qrUrl, expirationDate, userId],
+         VALUES ('', ?, ?, 1, NOW(), 'cobro')`,
+        [expirationDate || null, userId],
       );
-      console.log("Nuevo QR creado para usuario:", userId);
+      qrId = insertResult.insertId;
+      console.log("Nuevo QR creado para usuario:", userId, "id:", qrId);
     }
 
+    const fileName = `${qrId}${fileExtension}`;
+    const targetFilePath = path.join(QR_FOLDER, fileName);
+    const qrUrl = `/qrcodes/${fileName}`;
+
+    // Mantener solo una imagen por id QR (sin depender de extensión previa).
+    deleteQrFilesForId(qrId);
+
+    console.log("Moviendo archivo de", file.path, "a", targetFilePath);
+    fs.renameSync(file.path, targetFilePath);
+    movedFilePath = targetFilePath;
+    console.log("Archivo movido exitosamente");
+
+    await connection.query(
+      `UPDATE qrcode 
+       SET url = ?, expirationDate = ?, status = 1, type = 'cobro', registerDate = NOW()
+       WHERE id = ?`,
+      [qrUrl, expirationDate || null, qrId],
+    );
+
+    await connection.commit();
+
     console.log("=== ÉXITO uploadQrForUser ===");
-    res.json({ message: "✅ QR actualizado correctamente", qrUrl });
+    res.json({ message: "✅ QR actualizado correctamente", qrUrl, qrId });
   } catch (error) {
+    if (connection) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error(
+          "Error al hacer rollback uploadQrForUser:",
+          rollbackError,
+        );
+      }
+    }
+
+    if (movedFilePath && fs.existsSync(movedFilePath)) {
+      try {
+        fs.unlinkSync(movedFilePath);
+      } catch (cleanupError) {
+        console.error(
+          "Error limpiando archivo movido tras fallo:",
+          cleanupError,
+        );
+      }
+    }
+
+    if (file?.path && fs.existsSync(file.path)) {
+      try {
+        fs.unlinkSync(file.path);
+      } catch (tempCleanupError) {
+        console.error(
+          "Error limpiando archivo temporal tras fallo:",
+          tempCleanupError,
+        );
+      }
+    }
+
     console.error("=== ERROR uploadQrForUser ===");
     console.error("Error completo:", error);
     console.error("Stack trace:", error.stack);
@@ -120,6 +246,10 @@ export const uploadQrForUser = async (req, res) => {
       error: error.message,
       stack: error.stack,
     });
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 };
 
@@ -283,7 +413,28 @@ export const getFirstActiveQRCode = async (req, res) => {
         .json({ message: "No hay QR activo de cobro disponible" });
     }
 
-    res.json(result[0]);
+    const qrRow = result[0];
+    const resolvedUrl = resolveQrUrlForRow(qrRow);
+
+    if (!resolvedUrl) {
+      return res.status(404).json({
+        message:
+          "Hay un QR activo de cobro en base de datos, pero no se encontro su imagen",
+      });
+    }
+
+    if (resolvedUrl !== qrRow.url) {
+      try {
+        await pool.query("UPDATE qrcode SET url = ? WHERE id = ?", [
+          resolvedUrl,
+          qrRow.id,
+        ]);
+      } catch (syncError) {
+        console.error("No se pudo sincronizar URL de QR:", syncError.message);
+      }
+    }
+
+    res.json({ ...qrRow, url: resolvedUrl });
   } catch (error) {
     console.error("Error al obtener el primer QR activo:", error);
     res.status(500).json({ message: "Error al obtener QR activo" });
@@ -304,7 +455,9 @@ export const getQRCodeById = async (req, res) => {
       return res.status(404).json({ message: "No se encontró QR con ese ID" });
     }
 
-    res.json(result[0]);
+    const qrRow = result[0];
+    const resolvedUrl = resolveQrUrlForRow(qrRow);
+    res.json({ ...qrRow, url: resolvedUrl || qrRow.url });
   } catch (error) {
     console.error("Error al obtener QR por ID:", error);
     res.status(500).json({ message: "Error al obtener QR por ID" });
@@ -317,7 +470,13 @@ export const getAllQRCodes = async (req, res) => {
     const [rows] = await pool.query(
       "SELECT qr.id, qr.url, qr.expirationDate, qr.status, qr.userId, qr.registerDate, qr.type, u.name as userName, u.lastName as userLastName FROM qrcode qr LEFT JOIN user u ON qr.userId = u.id ORDER BY qr.registerDate DESC",
     );
-    res.json(rows);
+    const fileMap = getQrImageFileMap();
+    const normalizedRows = rows.map((row) => {
+      const resolvedUrl = resolveQrUrlForRow(row, fileMap);
+      return { ...row, url: resolvedUrl || row.url };
+    });
+
+    res.json(normalizedRows);
   } catch (error) {
     console.error("Error al obtener todos los QR codes:", error);
     res.status(500).json({ message: "Error al obtener QR codes" });
