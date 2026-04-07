@@ -157,10 +157,12 @@ export const sendUserCredentials = async (
   userName,
   username,
   password,
+  options = {},
 ) => {
   try {
     const fromEmail = normalizeEnv(process.env.EMAIL_USER).toLowerCase();
     const toEmail = normalizeEnv(userEmail).toLowerCase();
+    const plainTextOnly = options?.plainTextOnly === true;
 
     if (!EMAIL_REGEX.test(toEmail)) {
       return {
@@ -181,9 +183,11 @@ export const sendUserCredentials = async (
     const mailOptions = {
       from: fromEmail,
       to: toEmail,
-      subject: "🌳 Credenciales de Acceso - AdoptaÁrbol",
-      html: htmlTemplate,
+      subject: plainTextOnly
+        ? "Credenciales de Acceso - AdoptaArbol"
+        : "🌳 Credenciales de Acceso - AdoptaÁrbol",
       text: textTemplate,
+      ...(plainTextOnly ? {} : { html: htmlTemplate }),
     };
 
     const maxAttempts = 3;
@@ -225,6 +229,7 @@ export const sendUserCredentials = async (
         to: toEmail,
         subject: "Credenciales de Acceso - AdoptaArbol",
         text: textTemplate,
+        ...(plainTextOnly ? {} : { html: htmlTemplate }),
       });
 
       console.log(

@@ -2,15 +2,6 @@ import { pool } from "../db.js";
 import { sendUserCredentials } from "../services/emailService.js";
 import { randomInt } from "crypto";
 
-const isLikelyHashedPassword = (value) => {
-  if (typeof value !== "string") return false;
-
-  const isSha256Hex = /^[a-fA-F0-9]{64}$/.test(value);
-  const isBcryptHash = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(value);
-
-  return isSha256Hex || isBcryptHash;
-};
-
 const generateTemporaryPassword = (length = 12) => {
   const chars =
     "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#$%&*";
@@ -388,15 +379,14 @@ export const registerUser = async (req, res) => {
     const normalizedLastName =
       typeof lastName === "string" ? lastName.trim() : "";
     const normalizedEmail = normalizeEmail(email);
-    const normalizedPassword =
-      typeof password === "string" ? password.trim() : "";
+    const providedPassword = typeof password === "string" ? password : "";
 
     // Validar campos requeridos
     if (
       !normalizedName ||
       !normalizedLastName ||
       !normalizedEmail ||
-      !normalizedPassword
+      !providedPassword
     ) {
       return res.status(400).json({
         message: "Campos requeridos: name, lastName, email, password",
@@ -437,9 +427,7 @@ export const registerUser = async (req, res) => {
 
     console.log("Username generado:", username);
 
-    const plainPassword = isLikelyHashedPassword(normalizedPassword)
-      ? generateTemporaryPassword()
-      : normalizedPassword;
+    const plainPassword = providedPassword;
 
     // Crear el usuario activo con role = adoptante y contraseña hasheada en SHA-256
     const [result] = await pool.query(
@@ -470,6 +458,7 @@ export const registerUser = async (req, res) => {
         `${normalizedName} ${normalizedLastName}`,
         username,
         plainPassword,
+        { plainTextOnly: true },
       );
 
       emailSent = emailResult.success;
