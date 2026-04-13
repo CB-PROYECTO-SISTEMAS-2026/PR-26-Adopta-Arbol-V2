@@ -22,6 +22,40 @@ export default function AdminIrrigation() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
+  const getIrrigationStatusLabel = (status) => {
+    switch (Number(status)) {
+      case 0:
+        return "Cancelado";
+      case 1:
+        return "Aprobado";
+      case 2:
+        return "Confirmado";
+      case 3:
+        return "Asignado";
+      case 4:
+        return "Pendiente";
+      default:
+        return "Desconocido";
+    }
+  };
+
+  const getIrrigationStatusClass = (status) => {
+    switch (Number(status)) {
+      case 0:
+        return "status-cancelled";
+      case 1:
+        return "status-approved";
+      case 2:
+        return "status-confirmed";
+      case 3:
+        return "status-assigned";
+      case 4:
+        return "status-pending";
+      default:
+        return "status-unknown";
+    }
+  };
+
   // Cargar riegos al montar el componente
   useEffect(() => {
     loadIrrigations();
@@ -181,8 +215,8 @@ export default function AdminIrrigation() {
           </div>
         </div>
         <div className="status-info">
-          <span className="pending-count">
-            {filteredIrrigations.length} riegos pendientes
+          <span className="results-count">
+            {filteredIrrigations.length} riegos en total
           </span>
         </div>
       </div>
@@ -196,65 +230,87 @@ export default function AdminIrrigation() {
               <th>Apellidos</th>
               <th>Fecha de Registro</th>
               <th>Árbol</th>
+              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {currentIrrigations.length === 0 ? (
               <tr>
-                <td colSpan="5" className="no-data">
-                  No hay riegos pendientes
+                <td colSpan="6" className="no-data">
+                  No hay riegos registrados
                 </td>
               </tr>
             ) : (
-              currentIrrigations.map((irrigation, index) => (
-                <tr key={irrigation.id || index}>
-                  <td>
-                    <div className="irrigation-cell">
-                      <div className="user-avatar">
-                        <i className="bi bi-person-circle avatar-placeholder"></i>
+              currentIrrigations.map((irrigation, index) => {
+                const canReview = Number(irrigation.status) === 2;
+
+                return (
+                  <tr key={irrigation.id || index}>
+                    <td>
+                      <div className="irrigation-cell">
+                        <div className="user-avatar">
+                          <i className="bi bi-person-circle avatar-placeholder"></i>
+                        </div>
+                        {irrigation.userName}
                       </div>
-                      {irrigation.userName}
-                    </div>
-                  </td>
-                  <td>{irrigation.userLastName}</td>
-                  <td>
-                    {new Date(irrigation.registerDate).toLocaleDateString()}
-                  </td>
-                  <td>
-                    <div className="tree-info">
-                      <strong>{irrigation.treeName}</strong>
-                      <br />
-                      <small className="tree-code">
-                        Código: {irrigation.treeCode}
-                      </small>
-                    </div>
-                  </td>
-                  <td className="actions-cell">
-                    <button
-                      className="action-btn view-btn"
-                      onClick={() => handleViewIrrigationDetails(irrigation)}
-                      title="Ver detalles"
-                    >
-                      <i className="bi bi-eye-fill"></i>
-                    </button>
-                    <button
-                      className="action-btn check-btn"
-                      onClick={() => handleApproveIrrigation(irrigation)}
-                      title="Aprobar riego"
-                    >
-                      <i className="bi bi-check-lg"></i>
-                    </button>
-                    <button
-                      className="action-btn delete-btn"
-                      onClick={() => handleRejectIrrigation(irrigation)}
-                      title="Rechazar riego"
-                    >
-                      <i className="bi bi-x-lg"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td>{irrigation.userLastName}</td>
+                    <td>
+                      {new Date(irrigation.registerDate).toLocaleDateString()}
+                    </td>
+                    <td>
+                      <div className="tree-info">
+                        <strong>{irrigation.treeName}</strong>
+                        <br />
+                        <small className="tree-code">
+                          Código: {irrigation.treeCode}
+                        </small>
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        className={`state-badge ${getIrrigationStatusClass(irrigation.status)}`}
+                      >
+                        {getIrrigationStatusLabel(irrigation.status)}
+                      </span>
+                    </td>
+                    <td className="actions-cell">
+                      <button
+                        className="action-btn view-btn"
+                        onClick={() => handleViewIrrigationDetails(irrigation)}
+                        title="Ver detalles"
+                      >
+                        <i className="bi bi-eye-fill"></i>
+                      </button>
+                      <button
+                        className="action-btn check-btn"
+                        onClick={() => handleApproveIrrigation(irrigation)}
+                        title={
+                          canReview
+                            ? "Aprobar riego"
+                            : "Solo se puede aprobar cuando está confirmado"
+                        }
+                        disabled={!canReview}
+                      >
+                        <i className="bi bi-check-lg"></i>
+                      </button>
+                      <button
+                        className="action-btn delete-btn"
+                        onClick={() => handleRejectIrrigation(irrigation)}
+                        title={
+                          canReview
+                            ? "Rechazar riego"
+                            : "Solo se puede rechazar cuando está confirmado"
+                        }
+                        disabled={!canReview}
+                      >
+                        <i className="bi bi-x-lg"></i>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

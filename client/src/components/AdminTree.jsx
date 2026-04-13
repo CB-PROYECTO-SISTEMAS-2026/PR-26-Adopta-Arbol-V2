@@ -17,6 +17,32 @@ export default function AdminTree() {
   const [itemsPerPage] = useState(10);
   const [search, setSearch] = useState("");
 
+  const getTreeStatusLabel = (status) => {
+    switch (Number(status)) {
+      case 0:
+        return "Inactivo";
+      case 1:
+        return "Activo";
+      case 2:
+        return "Pendiente";
+      default:
+        return "Desconocido";
+    }
+  };
+
+  const getTreeStatusClass = (status) => {
+    switch (Number(status)) {
+      case 0:
+        return "status-inactive";
+      case 1:
+        return "status-active";
+      case 2:
+        return "status-pending";
+      default:
+        return "status-unknown";
+    }
+  };
+
   // Obtener todos los árboles sin importar su status
   useEffect(() => {
     async function fetchTrees() {
@@ -56,7 +82,7 @@ export default function AdminTree() {
           const response = await setTreeStateToActive(id);
           if (response.status === 200) {
             // Recarga toda la lista de árboles
-            const refreshed = await getTreesRequest();
+            const refreshed = await getAllTreesForAdminRequest();
             setTrees(refreshed.data);
             showSuccess("Árbol activado exitosamente");
             console.log("Árbol activado y lista refrescada.");
@@ -81,7 +107,7 @@ export default function AdminTree() {
           const response = await setTreeStateToInactive(id);
           if (response.status === 200) {
             // Recarga toda la lista de árboles
-            const refreshed = await getTreesRequest();
+            const refreshed = await getAllTreesForAdminRequest();
             setTrees(refreshed.data);
             showSuccess("Árbol desactivado exitosamente");
             console.log("Árbol desactivado y lista refrescada.");
@@ -213,14 +239,10 @@ export default function AdminTree() {
                 <td>{new Date(tree.registerDate).toLocaleDateString()}</td>
                 <td>{tree.name}</td>
                 <td>
-                  <span className={`status-badge status-${tree.status}`}>
-                    {tree.status === 0
-                      ? "Inactivo"
-                      : tree.status === 1
-                        ? "Activo"
-                        : tree.status === 2
-                          ? "Pendiente"
-                          : "Desconocido"}
+                  <span
+                    className={`state-badge ${getTreeStatusClass(tree.status)}`}
+                  >
+                    {getTreeStatusLabel(tree.status)}
                   </span>
                 </td>
                 <td className="actions-cell">

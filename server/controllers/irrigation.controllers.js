@@ -72,7 +72,7 @@ export const createIrrigation = async (req, res) => {
   }
 };
 
-// Obtener todos los riegos con estado 2 (pendientes)
+// Obtener todos los riegos para administración (todos los estados)
 export const getIrrigations = async (req, res) => {
   try {
     const [result] = await pool.query(`
@@ -87,7 +87,6 @@ export const getIrrigations = async (req, res) => {
       FROM irrigation
       INNER JOIN user ON irrigation.userId = user.id
       INNER JOIN tree ON irrigation.treeId = tree.id
-      WHERE irrigation.status = 2
       ORDER BY irrigation.registerDate DESC
     `);
     res.json(result);

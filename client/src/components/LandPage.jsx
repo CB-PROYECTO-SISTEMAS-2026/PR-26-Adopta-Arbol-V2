@@ -22,18 +22,10 @@ const LandPage = () => {
           </div>
 
           <div className="hero__nav-actions">
-            <button
-              type="button"
-              className="btn btn--ghost text-center"
-              onClick={goLogin}
-            >
+            <button type="button" className="btn btn--ghost" onClick={goLogin}>
               Ingresar
             </button>
-            <button
-              type="button"
-              className="btn text-center"
-              onClick={goRegister}
-            >
+            <button type="button" className="btn" onClick={goRegister}>
               Crear cuenta
             </button>
           </div>
