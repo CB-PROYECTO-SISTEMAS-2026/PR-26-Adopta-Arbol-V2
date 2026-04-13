@@ -108,7 +108,17 @@ export const approveIrrigation = async (req, res) => {
     // Obtener datos del riego
     const [irrigationData] = await connection.query(
       `
-      SELECT i.userId, t.name as treeName 
+      SELECT 
+        i.userId AS irrigatorId,
+        t.name AS treeName,
+        t.price AS treePrice,
+        (
+          SELECT a.userId
+          FROM adoption a
+          WHERE a.treeId = i.treeId AND a.status = 1
+          ORDER BY a.registerDate DESC, a.id DESC
+          LIMIT 1
+        ) AS adopterId
       FROM irrigation i
       JOIN tree t ON i.treeId = t.id
       WHERE i.id = ? AND i.status = 2
@@ -123,37 +133,101 @@ export const approveIrrigation = async (req, res) => {
         .json({ message: "Riego no encontrado o ya procesado" });
     }
 
-    const { userId, treeName } = irrigationData[0];
+    const { irrigatorId, adopterId, treeName, treePrice } = irrigationData[0];
+
+    if (!adopterId) {
+      await connection.rollback();
+      return res.status(400).json({
+        message:
+          "No se encontró un adoptante activo para este árbol. No se puede aprobar el riego.",
+      });
+    }
+
+    const rewardPercentage = 0.15;
+    const irrigationReward = Number(
+      (Number(treePrice) * rewardPercentage).toFixed(2),
+    );
+    const adopterPointsReward = Math.round(
+      Number(treePrice) * rewardPercentage,
+    );
+    const irrigatorPointsReward = Math.round(
+      Number(treePrice) * rewardPercentage,
+    );
 
     // Actualizar estado del riego
-    const [result] = await connection.query(
-      "UPDATE irrigation SET status = 1 WHERE id = ?",
-      [id],
-    );
+    let result;
+    try {
+      [result] = await connection.query(
+        "UPDATE irrigation SET status = 1, reward = ?, lastUpdate = CURRENT_TIMESTAMP WHERE id = ?",
+        [irrigationReward, id],
+      );
+    } catch (updateError) {
+      // Compatibilidad temporal si la migración del campo reward aún no se aplicó.
+      if (updateError.code === "ER_BAD_FIELD_ERROR") {
+        [result] = await connection.query(
+          "UPDATE irrigation SET status = 1, lastUpdate = CURRENT_TIMESTAMP WHERE id = ?",
+          [id],
+        );
+      } else {
+        throw updateError;
+      }
+    }
 
     if (result.affectedRows === 0) {
       await connection.rollback();
       return res.status(404).json({ message: "Riego no encontrado" });
     }
 
-    // Note: Reward system would require additional database columns
+    // Recompensa para adoptante: 15% del valor del árbol en puntos.
+    await connection.query("UPDATE user SET point = point + ? WHERE id = ?", [
+      adopterPointsReward,
+      adopterId,
+    ]);
+
+    // Recompensa para regador: 15% del valor del árbol en puntos y créditos.
+    await connection.query(
+      "UPDATE user SET point = point + ?, credits = credits + ? WHERE id = ?",
+      [irrigatorPointsReward, irrigationReward, irrigatorId],
+    );
 
     await connection.commit();
 
-    // Crear notificación para el usuario
+    // Crear notificaciones para adoptante y regador
     try {
       await createNotification(
-        userId,
+        adopterId,
         "tree_irrigated",
         "¡Riego Aprobado!",
-        `Tu riego del árbol "${treeName}" ha sido aprobado.`,
+        `El riego del árbol "${treeName}" fue validado correctamente. Ganaste ${adopterPointsReward} puntos.`,
+        id,
+      );
+
+      await createNotification(
+        irrigatorId,
+        "irrigation_reward",
+        "¡Riego Validado!",
+        `Tu riego del árbol "${treeName}" fue aprobado. Recibiste ${irrigatorPointsReward} puntos y ${irrigationReward} créditos.`,
         id,
       );
     } catch (notifError) {
       console.error("Error al crear notificación:", notifError);
     }
 
-    res.json({ message: "Riego aprobado exitosamente y puntos agregados" });
+    res.json({
+      message: "Riego aprobado exitosamente y recompensas aplicadas",
+      rewards: {
+        percentageApplied: 15,
+        adopter: {
+          userId: adopterId,
+          points: adopterPointsReward,
+        },
+        irrigator: {
+          userId: irrigatorId,
+          points: irrigatorPointsReward,
+          credits: irrigationReward,
+        },
+      },
+    });
   } catch (error) {
     await connection.rollback();
     console.error("Error al aprobar riego:", error.message);
