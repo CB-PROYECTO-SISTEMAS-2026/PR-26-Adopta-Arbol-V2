@@ -15,15 +15,25 @@ const LandPage = () => {
 
         <nav className="hero__nav">
           <div className="brand">
-            <span className="brand__icon" aria-hidden="true">🌱</span>
+            <span className="brand__icon" aria-hidden="true">
+              🌱
+            </span>
             <span className="brand__name">Adopta Un Árbol</span>
           </div>
 
           <div className="hero__nav-actions">
-            <button type="button" className="btn btn--ghost" onClick={goLogin}>
+            <button
+              type="button"
+              className="btn btn--ghost text-center"
+              onClick={goLogin}
+            >
               Ingresar
             </button>
-            <button type="button" className="btn" onClick={goRegister}>
+            <button
+              type="button"
+              className="btn text-center"
+              onClick={goRegister}
+            >
               Crear cuenta
             </button>
           </div>
@@ -32,12 +42,14 @@ const LandPage = () => {
         <div className="hero__content">
           <p className="hero__eyebrow">Programa comunitario</p>
           <h1>
-            Conectamos personas, barrios y empresas para regenerar bosques urbanos.
+            Conectamos personas, barrios y empresas para regenerar bosques
+            urbanos.
           </h1>
           <p className="hero__description">
-            Adopta el cuidado de un árbol, recibe reportes reales de su crecimiento y colabora con especialistas que garantizan su bienestar.
+            Adopta el cuidado de un árbol, recibe reportes reales de su
+            crecimiento y colabora con especialistas que garantizan su
+            bienestar.
           </p>
-
 
           <ul className="hero__metrics">
             <li>
@@ -55,9 +67,6 @@ const LandPage = () => {
           </ul>
         </div>
       </header>
-
-      
-      
     </div>
   );
 };

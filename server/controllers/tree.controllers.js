@@ -56,6 +56,61 @@ export const getTrees = async (req, res) => {
   }
 };
 
+// Obtener todos los árboles sin importar status (para admin)
+export const getAllTreesForAdmin = async (req, res) => {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        tree.id, 
+        tree.name, 
+        tree.description, 
+        tree.code, 
+        tree.price, 
+        tree.address, 
+        tree.registerDate, 
+        tree.status, 
+        user.name AS userName, 
+        user.lastName AS userLastName,
+        GROUP_CONCAT(multimedia.path ORDER BY multimedia.id) AS imagePaths
+      FROM tree
+      JOIN user ON tree.userId = user.id
+      LEFT JOIN multimedia ON tree.id = multimedia.treeId AND multimedia.status = 2
+      GROUP BY 
+        tree.id,
+        tree.name,
+        tree.description,
+        tree.code,
+        tree.price,
+        tree.address,
+        tree.registerDate,
+        tree.status,
+        user.name,
+        user.lastName
+      ORDER BY tree.registerDate DESC
+    `);
+
+    const trees = result.map((tree) => {
+      const paths = tree.imagePaths
+        ? tree.imagePaths
+            .split(",")
+            .map((path) => path.trim())
+            .filter(Boolean)
+        : [];
+
+      return {
+        ...tree,
+        imagePaths: paths,
+        imagePath: paths[0] || null,
+      };
+    });
+
+    res.json(trees);
+  } catch (error) {
+    console.error("Error al obtener todos los árboles:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Cambiar el estado de un árbol a 1 (activo)
 export const setTreeStateToActive = async (req, res) => {
   const { id } = req.params;

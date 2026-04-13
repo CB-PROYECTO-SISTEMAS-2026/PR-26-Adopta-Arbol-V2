@@ -5,7 +5,14 @@ import ViewDetailsModal from "./ViewDetailsModal.jsx";
 import "./AdminIrrigation.css";
 
 export default function AdminIrrigation() {
-  const { irrigations, loading, error, loadIrrigations, approveIrrigation, rejectIrrigation } = useIrrigations();
+  const {
+    irrigations,
+    loading,
+    error,
+    loadIrrigations,
+    approveIrrigation,
+    rejectIrrigation,
+  } = useIrrigations();
   const { showSuccess, showError, showConfirm } = useNotification();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedIrrigation, setSelectedIrrigation] = useState(null);
@@ -36,9 +43,14 @@ export default function AdminIrrigation() {
   const handleApproveIrrigation = (irrigation) => {
     showConfirm(
       `¿Estás seguro de que deseas aprobar el riego de ${irrigation.userName} ${irrigation.userLastName} para el árbol ${irrigation.treeName}?`,
-      () => {
-        approveIrrigation(irrigation.id);
-      }
+      async () => {
+        const result = await approveIrrigation(irrigation.id);
+        if (result.success) {
+          showSuccess(`✅ ${result.message}`);
+        } else {
+          showError(`❌ Error: ${result.message}`);
+        }
+      },
     );
   };
 
@@ -46,9 +58,14 @@ export default function AdminIrrigation() {
   const handleRejectIrrigation = (irrigation) => {
     showConfirm(
       `¿Estás seguro de que deseas rechazar el riego de ${irrigation.userName} ${irrigation.userLastName} para el árbol ${irrigation.treeName}?`,
-      () => {
-        rejectIrrigation(irrigation.id);
-      }
+      async () => {
+        const result = await rejectIrrigation(irrigation.id);
+        if (result.success) {
+          showSuccess(`✅ ${result.message}`);
+        } else {
+          showError(`❌ Error: ${result.message}`);
+        }
+      },
     );
   };
 
@@ -92,7 +109,7 @@ export default function AdminIrrigation() {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
-    
+
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -100,12 +117,12 @@ export default function AdminIrrigation() {
     } else {
       const start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
       const end = Math.min(totalPages, start + maxVisiblePages - 1);
-      
+
       for (let i = start; i <= end; i++) {
         pages.push(i);
       }
     }
-    
+
     return pages;
   };
 
@@ -146,18 +163,18 @@ export default function AdminIrrigation() {
         <div className="date-filters">
           <div className="date-input-group">
             <label>Fecha Inicio</label>
-            <input 
-              type="date" 
-              className="date-input" 
+            <input
+              type="date"
+              className="date-input"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
           <div className="date-input-group">
             <label>Fecha Fin</label>
-            <input 
-              type="date" 
-              className="date-input" 
+            <input
+              type="date"
+              className="date-input"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
@@ -201,12 +218,16 @@ export default function AdminIrrigation() {
                     </div>
                   </td>
                   <td>{irrigation.userLastName}</td>
-                  <td>{new Date(irrigation.registerDate).toLocaleDateString()}</td>
+                  <td>
+                    {new Date(irrigation.registerDate).toLocaleDateString()}
+                  </td>
                   <td>
                     <div className="tree-info">
                       <strong>{irrigation.treeName}</strong>
                       <br />
-                      <small className="tree-code">Código: {irrigation.treeCode}</small>
+                      <small className="tree-code">
+                        Código: {irrigation.treeCode}
+                      </small>
                     </div>
                   </td>
                   <td className="actions-cell">
@@ -242,39 +263,39 @@ export default function AdminIrrigation() {
       {/* Paginación */}
       {totalPages > 1 && (
         <div className="pagination-section">
-          <button 
-            className="pagination-btn" 
+          <button
+            className="pagination-btn"
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
           >
             {"<"}
           </button>
-          
+
           {getPageNumbers().map((pageNum) => (
             <button
               key={pageNum}
-              className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
+              className={`pagination-btn ${currentPage === pageNum ? "active" : ""}`}
               onClick={() => handlePageChange(pageNum)}
             >
               {pageNum}
             </button>
           ))}
-          
+
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <span className="pagination-dots">...</span>
           )}
-          
+
           {totalPages > 5 && currentPage < totalPages - 1 && (
             <button
-              className={`pagination-btn ${currentPage === totalPages ? 'active' : ''}`}
+              className={`pagination-btn ${currentPage === totalPages ? "active" : ""}`}
               onClick={() => handlePageChange(totalPages)}
             >
               {totalPages}
             </button>
           )}
-          
-          <button 
-            className="pagination-btn" 
+
+          <button
+            className="pagination-btn"
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
           >
@@ -293,5 +314,3 @@ export default function AdminIrrigation() {
     </div>
   );
 }
-
-
