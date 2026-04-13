@@ -27,7 +27,7 @@
   border: none;
   border-radius: 28px;
   box-shadow: none;
-  padding: 50px 0px 50px 40px;
+  padding: 50px 40px;
   width: 380px;
   max-width: 90vw;
   text-align: center;
@@ -73,7 +73,6 @@
 
 /* Contenedor interno para mantener padding sin afectar scrollbar */
 .register-box > * {
-  padding-right: 40px;
   margin-left: 0;
   margin-right: 0;
 }

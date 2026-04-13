@@ -238,7 +238,7 @@ export default function CreateAccount() {
           <img src="/logo.png" alt="Logo" />
         </div>
 
-        <h2>Crear Cuenta</h2>
+        <h2 className="text-center text-light">Crear Cuenta</h2>
 
         <form onSubmit={handleRegister}>
           <div className="input-group">
