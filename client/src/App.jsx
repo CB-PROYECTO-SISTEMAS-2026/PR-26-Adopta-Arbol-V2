@@ -1,44 +1,46 @@
 import React from "react";
-import TreeAdoption from "./components/TreeAdoption";
+import { Route, Routes } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+
 import AdminDashboard from "./pages/AdminDashboard"; // Página de administración de usuarios
 import BuyCredits from "./components/BuyCredits";
 import UserBuyCredits from "./components/UserBuyCredits";
 import QRCodeDisplay from "./components/QRCodeDisplay";
 import FinalViewCard from "./components/FinalViewCard";
 import VisitTree from "./components/VisitTree";
-import AdminTree from "./components/AdminTree"; //Componente de administración de árboles
-import AdminIrrigation from "./components/AdminIrrigation"; //Componente de administración de riegos
 import TreeHome from "./components/TreeHome";
 import Ranking from "./components/Ranking";
-import IrrigatorRanking from "./components/IrrigatorRanking";
 import TreeLog from "./components/TreeLog";
-import CreateAccount from "./components/CreateAccount";
 import AdoptTree from "./pages/AdoptTree";
 import IrrigateTree from "./pages/IrrigateTree";
-import IrrigatorMap from "./components/IrrigatorMap"; // Componente para regadores
-import IrrigatorConfirm from "./components/IrrigatorConfirm"; // Componente para confirmar riego
-import IrrigatorCredits from "./components/IrrigatorCredits"; // Componente para cobro de créditos del regador
-import ProtectedRoute from "./components/ProtectedRoute";
-import { Route, Routes } from "react-router-dom";
-import SideNavbar from "./components/SideNavbar";
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import AdminAdoption from "./components/AdminAdoption";
-import AdminQrCode from "./components/AdminQrCode";
-import AdminCategory from "./components/AdminCategory";
-import AdminPayments from "./components/AdminPayments";
-import AdminRedemptions from "./components/AdminRedemptions";
 import MyTrees from "./components/MyTrees";
-import LandPage from "./components/LandPage";
-
-import { Link } from "react-router-dom";
+import {
+  AdminAdoption,
+  AdminCategory,
+  AdminIrrigation,
+  AdminPayments,
+  AdminQrCode,
+  AdminRedemptions,
+  AdminTree,
+  SideNavbar,
+} from "./components/admin";
+import { CreateAccount, Login } from "./components/auth";
+import {
+  IrrigatorConfirm,
+  IrrigatorCredits,
+  IrrigatorMap,
+  IrrigatorRanking,
+} from "./components/irrigator";
+import { LandPage } from "./components/landing";
+import {
+  ConfirmDialog,
+  NotificationContainer,
+  ProtectedRoute,
+} from "./components/shared";
 import { UserContextProvider } from "./context/UserContext.jsx";
 import { IrrigationContextProvider } from "./context/IrrigationContext.jsx";
 import { NotificationProvider } from "./context/NotificationContext.jsx";
-import NotificationContainer from "./components/NotificationContainer.jsx";
-import ConfirmDialog from "./components/ConfirmDialog.jsx";
-
-import Login from "./components/Login";
 
 function App() {
   return (

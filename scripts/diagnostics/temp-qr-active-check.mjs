@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { getFirstActiveQRCode } from "./server/controllers/redemption.controller.js";
+import { getFirstActiveQRCode } from "../../server/controllers/redemption.controller.js";
 
 const req = {};
 const res = {

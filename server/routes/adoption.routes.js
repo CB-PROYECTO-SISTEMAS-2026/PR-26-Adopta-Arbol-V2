@@ -5,7 +5,7 @@ import {
   rejectAdoption,
   deleteAdoption,
   createAdoption,
-} from "../controllers/adoption.controllers.js";
+} from "../controllers/adoption.controller.js";
 
 const router = express.Router();
 

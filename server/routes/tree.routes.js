@@ -9,7 +9,7 @@ import {
   getMyTrees,
   renameTree,
   abandonTree,
-} from "../controllers/tree.controllers.js";
+} from "../controllers/tree.controller.js";
 
 const router = express.Router();
 
