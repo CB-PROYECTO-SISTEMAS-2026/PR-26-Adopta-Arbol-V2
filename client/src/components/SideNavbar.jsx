@@ -64,7 +64,7 @@ function SideNavbar() {
             <li>
               <Link to="/buy-credits" onClick={handleNavigate}>
                 <i className="bi bi-coin"></i>
-                <span>Créditos</span>
+                <span>Recargas</span>
               </Link>
             </li>
             <li>
@@ -76,7 +76,7 @@ function SideNavbar() {
             <li>
               <Link to="/admin/payments" onClick={handleNavigate}>
                 <i className="bi bi-cash-coin"></i>
-                <span>Pagos</span>
+                <span>Créditos</span>
               </Link>
             </li>
             <li>

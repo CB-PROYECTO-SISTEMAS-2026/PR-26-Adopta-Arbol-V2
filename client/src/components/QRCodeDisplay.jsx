@@ -269,10 +269,6 @@ export default function QRCodeDisplay() {
       {/* Navbar igual a TreeHome */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <button className="btn-back-map" onClick={() => navigate(-1)}>
-            <i className="bi bi-arrow-left"></i>
-          </button>
-
           <div className="navbar-center">
             <span className="navbar-greeting">
               BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
@@ -300,13 +296,23 @@ export default function QRCodeDisplay() {
                 <div className="logout-card">
                   <div className="logout-card-info">
                     <div className="navbar-points">
-                      <span className="points-icon">⭐</span>
+                      <img
+                        src="/StartCoin.svg"
+                        alt="points"
+                        className="points-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span className="points-amount">
                         {loggedUser?.point || 0}
                       </span>
                     </div>
                     <div className="navbar-credits">
-                      <i className="bi bi-currency-dollar"></i>
+                      <img
+                        src="/DollarCoin.svg"
+                        alt="credits"
+                        className="credits-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span>{loggedUser?.credits || 0}</span>
                     </div>
                   </div>

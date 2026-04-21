@@ -79,7 +79,14 @@
 
 .tree-icon {
   font-size: 3.5rem;
-  opacity: 0.65;
+  opacity: 1;
+  background: linear-gradient(135deg, #245f3f, #174732);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px;
 }
 
 .tree-details {

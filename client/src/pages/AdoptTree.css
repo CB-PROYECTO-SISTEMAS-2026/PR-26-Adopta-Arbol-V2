@@ -85,10 +85,13 @@
 
 .tree-icon {
   font-size: 3rem;
-  background: linear-gradient(135deg, #1b4d4d, #2e8a8a);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: linear-gradient(135deg, #245f3f, #174732);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px;
   flex-shrink: 0;
 }
 
@@ -378,6 +381,13 @@
 
   .tree-icon {
     font-size: 2.5rem;
+    background: linear-gradient(135deg, #245f3f, #174732);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border-radius: 8px;
+    padding: 6px;
   }
 
   .credits-display {

@@ -216,7 +216,7 @@ body.modal-open .sidebar {
   font-weight: 600;
   background: linear-gradient(135deg, #ac5e5e, #8b4a4a);
   transition: var(--transition-smooth);
-  text-align: left;
+  text-align: center;
 }
 
 .logout-menu-btn i {

@@ -166,7 +166,11 @@ function CreateUser({ isOpen, onClose }) {
         {/* Header con fondo verde */}
         <div className="form-header">
           <div className="tree-icon">
-            <i className="bi bi-tree-fill"></i>
+            <img
+              src="/StartCoin.svg"
+              alt="coin"
+              style={{ width: "28px", height: "28px" }}
+            />
           </div>
         </div>
 

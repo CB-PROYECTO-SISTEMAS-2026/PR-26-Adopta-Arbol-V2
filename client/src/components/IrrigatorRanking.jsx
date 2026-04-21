@@ -67,10 +67,6 @@ export default function IrrigatorRanking() {
       {/* Navbar (reutiliza la estructura de IrrigatorMap) */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <button className="btn-back-map" onClick={() => navigate(-1)}>
-            <i className="bi bi-arrow-left"></i>
-          </button>
-
           <div className="navbar-actions">
             <button
               className="btn-hamburger"
@@ -93,13 +89,23 @@ export default function IrrigatorRanking() {
                 <div className="logout-card">
                   <div className="logout-card-info">
                     <div className="navbar-points">
-                      <span className="points-icon">⭐</span>
+                      <img
+                        src="/StartCoin.svg"
+                        alt="points"
+                        className="points-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span className="points-amount">
                         {loggedUser?.point || 0}
                       </span>
                     </div>
                     <div className="navbar-credits">
-                      <i className="bi bi-currency-dollar"></i>
+                      <img
+                        src="/DollarCoin.svg"
+                        alt="credits"
+                        className="credits-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span>{loggedUser?.credits || 0}</span>
                     </div>
                   </div>
@@ -172,6 +178,7 @@ export default function IrrigatorRanking() {
       <div className="ranking-list">
         {users.map((user, index) => (
           <div key={user.id} className="ranking-item">
+            <div className="ranking-index">{index + 1}</div>
             <div className="ranking-user-avatar">
               <div className="ranking-avatar-circle">
                 <svg viewBox="0 0 24 24" fill="currentColor">
@@ -183,12 +190,14 @@ export default function IrrigatorRanking() {
               <span className="ranking-user-name">
                 {user.name} {user.lastName}
               </span>
-              <span className="user-points">{user.point}</span>
+              <span className="user-points">{user.point} puntos</span>
             </div>
-            <div className="tree-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
-              </svg>
+            <div>
+              <img
+                src="/StartCoin.svg"
+                alt="coin"
+                style={{ width: "36px", height: "36px" }}
+              />
             </div>
           </div>
         ))}

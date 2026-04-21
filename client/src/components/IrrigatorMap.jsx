@@ -197,10 +197,6 @@ export default function IrrigatorMap() {
       {/* Navbar */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <button className="btn-back-map" onClick={() => navigate(-1)}>
-            <i className="bi bi-arrow-left"></i>
-          </button>
-
           <div className="navbar-center">
             <span className="navbar-greeting">
               BIENVENIDO {loggedUser?.name || "Regador"}
@@ -228,13 +224,23 @@ export default function IrrigatorMap() {
                 <div className="logout-card">
                   <div className="logout-card-info">
                     <div className="navbar-points">
-                      <span className="points-icon">⭐</span>
+                      <img
+                        src="/StartCoin.svg"
+                        alt="points"
+                        className="points-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span className="points-amount">
                         {loggedUser?.point || 0}
                       </span>
                     </div>
                     <div className="navbar-credits">
-                      <i className="bi bi-currency-dollar"></i>
+                      <img
+                        src="/DollarCoin.svg"
+                        alt="credits"
+                        className="credits-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span>{loggedUser?.credits || 0}</span>
                     </div>
                   </div>
@@ -320,7 +326,7 @@ export default function IrrigatorMap() {
               <p>
                 {hasAssignedIrrigation
                   ? "No tienes riegos asignados"
-                  : "No hay riegos pendientes en este momento 💧"}
+                  : "No hay riegos pendientes en este momento"}
               </p>
             </div>
           ) : (

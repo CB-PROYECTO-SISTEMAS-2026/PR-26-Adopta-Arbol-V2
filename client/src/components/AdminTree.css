@@ -241,7 +241,7 @@
 }
 
 .avatar-placeholder {
-  color: #6c757d;
+  color: #ffffff;
   font-size: 24px;
 }
 
@@ -276,13 +276,13 @@
 }
 
 .check-btn {
-  background: linear-gradient(135deg, #3d8b40 0%, #2d5f3f 100%);
+  background: #28a745;
   color: white;
   transition: all 0.3s ease-in-out;
 }
 
 .check-btn:hover {
-  background: linear-gradient(135deg, #4caf50 0%, #3d8b40 100%);
+  background: #20c997;
   transform: scale(1.1);
 }
 

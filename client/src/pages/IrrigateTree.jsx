@@ -136,7 +136,12 @@ export default function IrrigateTree() {
               />
             ) : (
               <div className="image-placeholder">
-                <span className="tree-icon">🌳</span>
+                <img
+                  src="/StartCoin.svg"
+                  alt="coin"
+                  className="tree-icon"
+                  style={{ width: "28px", height: "28px" }}
+                />
               </div>
             )}
           </div>
