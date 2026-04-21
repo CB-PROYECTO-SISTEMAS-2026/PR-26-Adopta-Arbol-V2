@@ -712,19 +712,32 @@ export default function TreeHome() {
                     </button>
                   </div>
 
-                  {/* Botón suelto */}
-                  <button
-                    className="btn-secondary checkHistory treehome-info-action-full d-flex align-items-center justify-content-between mt-3"
-                    onClick={handleToggleInlineHistory}
-                  >
-                    <span>Ver historial</span>
-                    <i
-                      className={`bi ${
-                        showInlineHistory ? "bi-chevron-up" : "bi-chevron-down"
-                      } treehome-history-arrow`}
-                      aria-hidden="true"
-                    ></i>
-                  </button>
+                  {/* Toggle de historial */}
+                  <div className="treehome-history-toggle-header mt-3">
+                    <span className="treehome-history-toggle-label">
+                      Ver historial
+                    </span>
+                    <button
+                      type="button"
+                      className="treehome-history-toggle-button"
+                      onClick={handleToggleInlineHistory}
+                      aria-expanded={showInlineHistory}
+                      aria-label={
+                        showInlineHistory
+                          ? "Ocultar historial del arbol"
+                          : "Mostrar historial del arbol"
+                      }
+                    >
+                      <i
+                        className={`bi ${
+                          showInlineHistory
+                            ? "bi-chevron-up"
+                            : "bi-chevron-down"
+                        } treehome-history-arrow`}
+                        aria-hidden="true"
+                      ></i>
+                    </button>
+                  </div>
 
                   {showInlineHistory && (
                     <div className="treehome-inline-history">
@@ -740,19 +753,18 @@ export default function TreeHome() {
                               </div>
                               {irrigationCount > 0 && (
                                 <span className="history-section-count">
-                                  {irrigationCount}
+                                  Total Riegos: {irrigationCount}
                                 </span>
                               )}
                             </header>
                             {irrigationCount > 0 ? (
-                              <div className="history-timeline">
+                              <div className="d-flex flex-column gap-3">
                                 {treeHistory.irrigations.map(
                                   (irrigation, index) => (
                                     <div
                                       className="history-timeline-item"
                                       key={`${irrigation.id || index}`}
                                     >
-                                      <div className="history-timeline-dot" />
                                       <div className="history-timeline-card">
                                         <div className="history-timeline-header">
                                           <span className="history-timeline-user">
@@ -800,7 +812,7 @@ export default function TreeHome() {
                               </div>
                               {previousOwnersCount > 0 && (
                                 <span className="history-section-count">
-                                  {previousOwnersCount}
+                                  Total Adopciones: {previousOwnersCount}
                                 </span>
                               )}
                             </header>
@@ -1090,13 +1102,12 @@ export default function TreeHome() {
                       )}
                     </header>
                     {irrigationCount > 0 ? (
-                      <div className="history-timeline">
+                      <div>
                         {treeHistory.irrigations.map((irrigation, index) => (
                           <div
                             className="history-timeline-item"
                             key={`${irrigation.id || index}`}
                           >
-                            <div className="history-timeline-dot" />
                             <div className="history-timeline-card">
                               <div className="history-timeline-header">
                                 <span className="history-timeline-user">

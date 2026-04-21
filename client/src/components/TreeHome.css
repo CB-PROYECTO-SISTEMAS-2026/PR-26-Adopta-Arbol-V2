@@ -275,6 +275,47 @@
   width: 100%;
 }
 
+.treehome-history-toggle-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #dbe4e4;
+  border-radius: 12px;
+  background: #f8fbfb;
+  gap: 12px;
+}
+
+.treehome-history-toggle-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1b4d4d;
+}
+
+.treehome-history-toggle-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5f6573;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.treehome-history-toggle-button:hover {
+  background-color: #e8f4f4;
+  color: #1b4d4d;
+}
+
+.treehome-history-toggle-button:active {
+  transform: scale(0.95);
+}
+
 .visitButton,
 .checkHistory {
   background: #7f8b8f;
@@ -985,7 +1026,7 @@
 }
 
 .history-section-card {
-  background: #ffffff;
+  background: #f1f3f4;
   border-radius: 22px;
   padding: 24px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
@@ -996,7 +1037,7 @@
 }
 
 .history-section-card--secondary {
-  background: linear-gradient(135deg, #f7fffe 0%, #ffffff 100%);
+  background: #f1f3f4;
 }
 
 .history-section-header {
@@ -1074,7 +1115,6 @@
 }
 
 .history-timeline-card {
-  margin-left: 16px;
   background: #f7ffff;
   border-radius: 16px;
   padding: 14px 18px;
@@ -1170,8 +1210,8 @@
 .history-owner-avatar {
   width: 44px;
   height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c55e, #17984a);
   display: flex;
   align-items: center;
   justify-content: center;

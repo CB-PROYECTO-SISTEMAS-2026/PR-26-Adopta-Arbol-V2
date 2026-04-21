@@ -7,7 +7,7 @@
 /* MyTrees Content - reutiliza treehome-container del navbar */
 .mytrees-content {
   flex: 1;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e9f0f5 100%);
+  background: linear-gradient(135deg, #245f3f, #174732);
   font-family: "Poppins", sans-serif;
   padding: 0;
 }

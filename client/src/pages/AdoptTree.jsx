@@ -10,13 +10,15 @@ import "./AdoptTree.css";
 export default function AdoptTree() {
   const { treeId } = useParams();
   const navigate = useNavigate();
-  const { loggedUser, updateUserCredits, refreshUserData } = useUsers();
+  const { loggedUser, updateUserCredits, refreshUserData, logout } = useUsers();
   const { showSuccess, showError, showWarning, showConfirm } =
     useNotification();
 
   const [tree, setTree] = useState(null);
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(false);
+  const [showLogoutCard, setShowLogoutCard] = useState(false);
+  const [showNavMenu, setShowNavMenu] = useState(false);
 
   useEffect(() => {
     loadTreeData();
@@ -204,14 +206,167 @@ export default function AdoptTree() {
     );
   };
 
-  const handleCancel = () => {
-    navigate("/home");
+  const handleLogout = () => {
+    showConfirm("¿Estás seguro de que quieres cerrar sesión?", () => {
+      logout();
+      window.location.replace("/");
+    });
+  };
+
+  const getTreeStatusMeta = (status) => {
+    const normalized = String(status ?? "")
+      .trim()
+      .toLowerCase();
+
+    if (["1", "activo", "active"].includes(normalized)) {
+      return { label: "Activo", className: "tree-status-active" };
+    }
+
+    if (
+      ["0", "inactivo", "inhabilitado", "inactive", "disabled"].includes(
+        normalized,
+      )
+    ) {
+      return { label: "Inhabilitado", className: "tree-status-disabled" };
+    }
+
+    if (
+      [
+        "2",
+        "pendiente",
+        "en revision",
+        "en revisión",
+        "review",
+        "pending",
+      ].includes(normalized)
+    ) {
+      return { label: "En Revision", className: "tree-status-review" };
+    }
+
+    return {
+      label: normalized ? String(status) : "Sin estado",
+      className: "tree-status-unknown",
+    };
+  };
+
+  const renderNavbar = () => {
+    return (
+      <nav className="map-navbar">
+        <div className="navbar-container">
+          <div className="navbar-center"></div>
+
+          <div className="navbar-actions">
+            <button
+              className="btn-hamburger"
+              onClick={() => {
+                setShowNavMenu((prev) => !prev);
+                setShowLogoutCard(false);
+              }}
+              aria-label="Menú"
+            >
+              <i className={showNavMenu ? "bi bi-x-lg" : "bi bi-list"}></i>
+            </button>
+
+            <div className="user-icon-container">
+              <div
+                className="user-icon"
+                onClick={() => {
+                  setShowLogoutCard((prev) => !prev);
+                  setShowNavMenu(false);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                <i className="bi bi-person-fill"></i>
+              </div>
+              {showLogoutCard && (
+                <div className="logout-card">
+                  <div className="logout-card-info">
+                    <div className="navbar-points">
+                      <img
+                        src="/StartCoin.svg"
+                        alt="points"
+                        className="points-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
+                      <span className="points-amount">
+                        {loggedUser?.point || 0}
+                      </span>
+                    </div>
+                    <div className="navbar-credits">
+                      <img
+                        src="/DollarCoin.svg"
+                        alt="credits"
+                        className="credits-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
+                      <span>{loggedUser?.credits || 0}</span>
+                    </div>
+                  </div>
+                  <button className="logout-card-button" onClick={handleLogout}>
+                    <i className="bi bi-box-arrow-right"></i>
+                    Cerrar Sesión
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {showNavMenu && (
+          <div className="navbar-menu">
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/tree-home");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-map-fill"></i>
+              <span>Mapa de Árboles</span>
+            </button>
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/my-trees");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-tree-fill"></i>
+              <span>Mis Árboles</span>
+            </button>
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/user-buy-credits");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-cart-fill"></i>
+              <span>Comprar Créditos</span>
+            </button>
+            <button
+              className="navbar-menu-item"
+              onClick={() => {
+                navigate("/ranking");
+                setShowNavMenu(false);
+              }}
+            >
+              <i className="bi bi-trophy-fill"></i>
+              <span>Ranking</span>
+            </button>
+          </div>
+        )}
+      </nav>
+    );
   };
 
   if (loading) {
     return (
       <div className="adopt-tree-container">
-        <div className="loading">Cargando información...</div>
+        {renderNavbar()}
+        <div className="adopt-tree-state-card">
+          <div className="loading">Cargando información...</div>
+        </div>
       </div>
     );
   }
@@ -219,87 +374,83 @@ export default function AdoptTree() {
   if (!tree) {
     return (
       <div className="adopt-tree-container">
-        <div className="error">Árbol no encontrado</div>
+        {renderNavbar()}
+        <div className="adopt-tree-state-card">
+          <div className="error">Árbol no encontrado</div>
+        </div>
       </div>
     );
   }
 
+  const treeStatusMeta = getTreeStatusMeta(tree.status);
+
   return (
     <div className="adopt-tree-container">
-      <header className="adopt-header">
-        <button className="back-btn" onClick={handleCancel}>
-          ← Volver
-        </button>
-        <h1>Adoptar Árbol</h1>
-      </header>
+      {renderNavbar()}
 
       <div className="adoption-content">
-        {/* Información del árbol */}
-        <div className="tree-info-section">
-          <h2>Información del Árbol</h2>
-          <div className="tree-card">
-            <div className="tree-icon">
-              <img
-                src="/StartCoin.svg"
-                alt="coin"
-                style={{ width: "28px", height: "28px" }}
-              />
-            </div>
-            <div className="tree-details">
-              <h3>{tree.name}</h3>
-              <p>
-                <strong>Código:</strong> {tree.code}
-              </p>
-              <p>
-                <strong>Ubicación:</strong> {tree.address}
-              </p>
-              <p>
-                <strong>Precio:</strong>{" "}
-                <span className="price">{tree.price} créditos</span>
-              </p>
-              {tree.description && (
-                <p>
-                  <strong>Descripción:</strong> {tree.description}
-                </p>
-              )}
-            </div>
-          </div>
+        <div className="adopt-header">
+          <h1>Adopta un Árbol</h1>
+          <p>
+            Verifica la información del árbol que deseas adoptar y confirma tu
+            solicitud
+          </p>
         </div>
 
         {/* Información del usuario */}
         <div className="user-info-section">
-          <h2>Tus Créditos</h2>
-          <div className="credits-display">
-            <div className="credits-icon">💰</div>
-            <div className="credits-info">
-              <span className="credits-amount">{loggedUser?.credits || 0}</span>
-              <span className="credits-label">créditos disponibles</span>
+          <h2>Balance de Cuenta</h2>
+          <div className="credits-info">
+            <span className="credits-amount text-center">
+              $ {loggedUser?.credits || 0}
+            </span>
+          </div>
+
+          <div className="credits-comparison tree-summary-card">
+            <div className="tree-summary-row">
+              <div className="tree-summary-main">
+                <div className="tree-summary-name-row">
+                  <h3 className="tree-summary-name">{tree.name}</h3>
+                  <span
+                    className={`tree-status-badge ${treeStatusMeta.className}`}
+                  >
+                    {treeStatusMeta.label}
+                  </span>
+                </div>
+                <h4 className="tree-summary-code">{tree.code}</h4>
+              </div>
+
+              <p className="tree-summary-price">
+                <strong>$ </strong>
+                {Number(tree.price)}
+              </p>
             </div>
           </div>
 
           {/* Mostrar información de créditos necesarios */}
           <div className="credits-comparison">
-            <p>
-              <strong>Costo del árbol:</strong> {Number(tree.price)} créditos
-            </p>
-            <p>
-              <strong>Tus créditos:</strong> {Number(loggedUser?.credits || 0)}{" "}
-              créditos
-            </p>
-            <p>
-              <strong>Diferencia:</strong>
-              <span
-                className={
-                  Number(tree.price) <= Number(loggedUser?.credits || 0)
-                    ? "sufficient-credits"
-                    : "insufficient-credits-text"
-                }
-              >
-                {Number(tree.price) <= Number(loggedUser?.credits || 0)
-                  ? `✅ Suficientes créditos (sobran ${Number(loggedUser?.credits || 0) - Number(tree.price)})`
-                  : `❌ Faltan ${Number(tree.price) - Number(loggedUser?.credits || 0)} créditos`}
-              </span>
-            </p>
+            <div className="d-flex justify-content-between">
+              <p>
+                <strong>Costo del árbol:</strong>
+              </p>
+              <p>{Number(tree.price)} créditos</p>
+            </div>
+
+            <div className="d-flex justify-content-between">
+              <p>
+                <strong>Diferencia:</strong>
+              </p>
+              <p>
+                {Number(loggedUser?.credits || 0) - Number(tree.price)} créditos
+              </p>
+            </div>
+
+            <div className="d-flex justify-content-between">
+              <p>
+                <strong>Bonus de Puntos:</strong>
+              </p>
+              <p>{Math.round(Number(tree.price) * 0.15)} puntos</p>
+            </div>
           </div>
 
           {Number(tree.price) > Number(loggedUser?.credits || 0) && (
@@ -314,15 +465,20 @@ export default function AdoptTree() {
           )}
         </div>
 
-        {/* Botones de acción */}
+        <div className="adoption-info">
+          <h3>Información importante:</h3>
+          <ul>
+            <li>Tu solicitud será revisada por un administrador</li>
+            <li>
+              Al confirmar la solicitud se descontarán {tree.price} créditos de
+              tu cuenta
+            </li>
+            <li>Recibirás notificación cuando tu adopción sea aprobada</li>
+            <li>Podrás ver el historial del árbol una vez adoptado</li>
+          </ul>
+        </div>
+
         <div className="action-buttons">
-          <button
-            className="btn-cancel"
-            onClick={handleCancel}
-            disabled={confirming}
-          >
-            Cancelar
-          </button>
           <button
             className="btn-confirm"
             onClick={handleConfirmAdoption}
@@ -333,19 +489,6 @@ export default function AdoptTree() {
           >
             {confirming ? "Procesando..." : "Confirmar Adopción"}
           </button>
-        </div>
-
-        {/* Información adicional */}
-        <div className="adoption-info">
-          <h3>Información importante:</h3>
-          <ul>
-            <li>Tu solicitud será revisada por un administrador</li>
-            <li>
-              Se descontarán {tree.price} créditos de tu cuenta al ser aprobada
-            </li>
-            <li>Recibirás notificación cuando tu adopción sea aprobada</li>
-            <li>Podrás ver el historial del árbol una vez adoptado</li>
-          </ul>
         </div>
       </div>
     </div>
