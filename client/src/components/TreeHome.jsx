@@ -72,6 +72,8 @@ export default function TreeHome() {
   const [selectedTree, setSelectedTree] = useState(null);
   const [treeHistory, setTreeHistory] = useState(null);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [showInlineHistory, setShowInlineHistory] = useState(false);
+  const [loadingInlineHistory, setLoadingInlineHistory] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showNotificationsPanel, setShowNotificationsPanel] = useState(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
@@ -199,6 +201,32 @@ export default function TreeHome() {
       setShowHistoryModal(true);
     } catch (error) {
       console.error("Error al cargar historial:", error);
+    }
+  };
+
+  const handleToggleInlineHistory = async () => {
+    if (!selectedTree) return;
+
+    if (showInlineHistory) {
+      setShowInlineHistory(false);
+      return;
+    }
+
+    if (treeHistory) {
+      setShowInlineHistory(true);
+      return;
+    }
+
+    try {
+      setLoadingInlineHistory(true);
+      const response = await getTreeHistory(selectedTree.id);
+      setTreeHistory(response.data);
+      setHistoryImageIndex(0);
+      setShowInlineHistory(true);
+    } catch (error) {
+      console.error("Error al cargar historial:", error);
+    } finally {
+      setLoadingInlineHistory(false);
     }
   };
 
@@ -686,11 +714,148 @@ export default function TreeHome() {
 
                   {/* Botón suelto */}
                   <button
-                    className="btn-secondary checkHistory treehome-info-action-full"
-                    onClick={handleViewHistory}
+                    className="btn-secondary checkHistory treehome-info-action-full d-flex align-items-center justify-content-between mt-3"
+                    onClick={handleToggleInlineHistory}
                   >
-                    Ver Historial
+                    <span>Ver historial</span>
+                    <i
+                      className={`bi ${
+                        showInlineHistory ? "bi-chevron-up" : "bi-chevron-down"
+                      } treehome-history-arrow`}
+                      aria-hidden="true"
+                    ></i>
                   </button>
+
+                  {showInlineHistory && (
+                    <div className="treehome-inline-history">
+                      {loadingInlineHistory ? (
+                        <div className="history-empty-row">Cargando...</div>
+                      ) : treeHistory ? (
+                        <>
+                          <section className="history-section-card">
+                            <header className="history-section-header">
+                              <div>
+                                <h3>Riegos registrados</h3>
+                                <p>Seguimiento de mantenimiento y cuidado</p>
+                              </div>
+                              {irrigationCount > 0 && (
+                                <span className="history-section-count">
+                                  {irrigationCount}
+                                </span>
+                              )}
+                            </header>
+                            {irrigationCount > 0 ? (
+                              <div className="history-timeline">
+                                {treeHistory.irrigations.map(
+                                  (irrigation, index) => (
+                                    <div
+                                      className="history-timeline-item"
+                                      key={`${irrigation.id || index}`}
+                                    >
+                                      <div className="history-timeline-dot" />
+                                      <div className="history-timeline-card">
+                                        <div className="history-timeline-header">
+                                          <span className="history-timeline-user">
+                                            {irrigation.userName}{" "}
+                                            {irrigation.userLastName}
+                                          </span>
+                                          <span
+                                            className={`history-status-pill status-${irrigation.status}`}
+                                          >
+                                            {irrigation.status === 1
+                                              ? "Aprobado"
+                                              : irrigation.status === 2
+                                                ? "Pendiente"
+                                                : irrigation.status === 0
+                                                  ? "Rechazado"
+                                                  : "Desconocido"}
+                                          </span>
+                                        </div>
+                                        <div className="history-timeline-meta">
+                                          {new Date(
+                                            irrigation.registerDate,
+                                          ).toLocaleDateString()}
+                                        </div>
+                                        <p className="history-timeline-notes">
+                                          {irrigation.observations ||
+                                            "Sin observaciones."}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            ) : (
+                              <div className="history-empty-row">
+                                Aún no hay registros de riego para este árbol.
+                              </div>
+                            )}
+                          </section>
+
+                          <section className="history-section-card history-section-card--secondary">
+                            <header className="history-section-header">
+                              <div>
+                                <h3>Historial de adopciones</h3>
+                                <p>Usuarios que han cuidado este árbol</p>
+                              </div>
+                              {previousOwnersCount > 0 && (
+                                <span className="history-section-count">
+                                  {previousOwnersCount}
+                                </span>
+                              )}
+                            </header>
+                            {previousOwnersCount > 0 ? (
+                              <div className="history-owners-list">
+                                {treeHistory.previousOwners.map(
+                                  (owner, index) => (
+                                    <div
+                                      className="history-owner-card"
+                                      key={`${owner.id || index}`}
+                                    >
+                                      <div className="history-owner-avatar">
+                                        <span>
+                                          {owner.userName?.charAt(0) || "?"}
+                                        </span>
+                                      </div>
+                                      <div className="history-owner-info">
+                                        <span className="history-owner-name">
+                                          {owner.userName}
+                                        </span>
+                                        <div className="history-owner-dates">
+                                          <span>
+                                            Adopción:{" "}
+                                            {new Date(
+                                              owner.adoptionDate,
+                                            ).toLocaleDateString()}
+                                          </span>
+                                          <span>
+                                            Finalización:{" "}
+                                            {owner.abandonmentDate
+                                              ? new Date(
+                                                  owner.abandonmentDate,
+                                                ).toLocaleDateString()
+                                              : "Activo"}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            ) : (
+                              <div className="history-empty-row">
+                                No se registran adopciones anteriores.
+                              </div>
+                            )}
+                          </section>
+                        </>
+                      ) : (
+                        <div className="history-empty-row">
+                          No se pudo cargar el historial.
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Card 3 */}
                   <div className="treehome-info-section-card">

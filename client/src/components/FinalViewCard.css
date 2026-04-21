@@ -39,7 +39,7 @@
   font-size: 32px;
   font-weight: 700;
   line-height: 1.08;
-  color: #096720  ;
+  color: #096720;
   letter-spacing: -0.6px;
   margin: 0;
   text-align: center;
@@ -167,7 +167,7 @@
 
 /* Button */
 .final-btn {
-  background: #2D5F3F;
+  background: #2d5f3f;
   border: none;
   color: white;
   padding: 10px 24px;

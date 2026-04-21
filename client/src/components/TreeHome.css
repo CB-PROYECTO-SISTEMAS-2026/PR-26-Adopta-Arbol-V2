@@ -326,6 +326,18 @@
   color: #1f2f2f;
 }
 
+.treehome-inline-history {
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.treehome-history-arrow {
+  font-size: 18px;
+}
+
 .treehome-tree-details-info {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
