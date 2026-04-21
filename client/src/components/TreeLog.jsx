@@ -228,11 +228,7 @@ export default function TreeLog() {
       {/* Cabecera similar a map-header (solo visual, sin opciones de menú) */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <div className="navbar-center">
-            <span className="navbar-greeting">
-              BIENVENIDO {loggedUser?.name || "Usuario"}
-            </span>
-          </div>
+          <div className="navbar-center"></div>
 
           <div className="navbar-actions">
             <button className="btn-logout" onClick={handleLogout}>

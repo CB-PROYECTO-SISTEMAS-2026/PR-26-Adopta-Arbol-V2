@@ -406,11 +406,7 @@ export default function TreeHome() {
       {/* Navbar */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <div className="navbar-center">
-            <span className="navbar-greeting">
-              BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
-            </span>
-          </div>
+          <div className="navbar-center"></div>
 
           <div className="navbar-actions">
             <button
@@ -476,7 +472,9 @@ export default function TreeHome() {
               <i className="bi bi-bell-fill"></i>
               <span>Notificaciones</span>
               {unreadNotificationsCount > 0 && (
-                <span className="menu-badge">{unreadNotificationsCount}</span>
+                <div className="flex justify-end ml-auto">
+                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                </div>
               )}
             </button>
             <button
@@ -513,8 +511,11 @@ export default function TreeHome() {
         )}
       </nav>
 
-      <div className="map-container px-2">
-        <h3 className="text-white mt-3">Mapa de Árboles</h3>
+      <div className="map-container">
+        <div className="treemap-header">
+          <h1>Mapa de Árboles</h1>
+          <p>Explora el mapa para ver los árboles disponibles para adoptar.</p>
+        </div>
         {(() => {
           const validTrees = trees.filter(
             (tree) =>
@@ -542,7 +543,7 @@ export default function TreeHome() {
               <MapContainer
                 center={getMapCenter()}
                 zoom={12}
-                style={{ height: "400px", width: "100%", borderRadius: "15px" }}
+                style={{ height: "600px", width: "100%", borderRadius: "15px" }}
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -620,71 +621,115 @@ export default function TreeHome() {
 
       {selectedTree && (
         <div className="info-card">
-          <section className="tree-details">
-            <div className="tree-info-content">
-              <h2>Detalles del árbol seleccionado</h2>
-              <div className="treehome-tree-details-info">
-                <div className="treehome-detail-item">
-                  <span className="treehome-label">Árbol</span>
-                  <span className="treehome-text">{selectedTree.name}</span>
-                </div>
-                <div className="treehome-detail-item">
-                  <span className="treehome-label">Estado</span>
-                  <span className="treehome-text">
-                    {selectedTree.isAdopted === 1
-                      ? "Adoptado"
-                      : selectedTree.isAdopted === 2
-                        ? "Pendiente de confirmación"
-                        : "Disponible"}
-                  </span>
-                </div>
-                <div className="treehome-detail-item">
-                  <span className="treehome-label">Dueño</span>
-                  <span className="treehome-text">
-                    {selectedTree.isAdopted
-                      ? `${selectedTree.currentOwner || "Desconocido"}`
-                      : "Sin dueño"}
-                  </span>
-                </div>
-                <div className="treehome-detail-item">
-                  <span className="treehome-label">Precio</span>
-                  <span className="treehome-text">
-                    {selectedTree.price} créditos
-                  </span>
-                </div>
-                <div className="treehome-detail-item treehome-detail-item--full">
-                  <span className="treehome-label">Ubicación</span>
-                  <span className="treehome-text">
-                    {selectedTree.address || "Sin ubicación"}
-                  </span>
-                </div>
-              </div>
+          <div className="tree-info-content">
+            {(() => {
+              const ownerLabel =
+                selectedTree.isAdopted && selectedTree.currentOwner
+                  ? selectedTree.currentOwner
+                  : "Sin dueño";
 
-              <div className="button-group">
-                <button className="btn-secondary" onClick={handleViewHistory}>
-                  Ver Historial
-                </button>
-                <button className="btn-secondary" onClick={handleVisit}>
-                  Visitar
-                </button>
-                {selectedTree.isAdopted === 0 && (
-                  <button className="btn-primary" onClick={handleAdopt}>
-                    Adoptar
+              const statusLabel =
+                selectedTree.isAdopted === 1
+                  ? "Adoptado"
+                  : selectedTree.isAdopted === 2
+                    ? "Pendiente"
+                    : "Disponible";
+
+              const statusClass =
+                selectedTree.isAdopted === 1
+                  ? "adopted"
+                  : selectedTree.isAdopted === 2
+                    ? "pending"
+                    : "available";
+
+              return (
+                <>
+                  {/* Card 1 */}
+                  <div className="treehome-info-section-card">
+                    <div className="treehome-info-row">
+                      <i className="bi bi-person-fill treehome-info-icon"></i>
+                      <span className="treehome-info-row-text treehome-info-row-text--strong">
+                        {ownerLabel}
+                      </span>
+                    </div>
+
+                    <div className="treehome-info-row treehome-info-row--space-between">
+                      <div className="treehome-info-row treehome-info-row--inline">
+                        <i className="bi bi-tree-fill treehome-info-icon"></i>
+                        <span className="treehome-info-row-text treehome-info-row-text--strong">
+                          {selectedTree.name}
+                        </span>
+                      </div>
+
+                      <span className={`treehome-status-pill ${statusClass}`}>
+                        {statusLabel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card 2 */}
+                  <div className="treehome-info-section-card">
+                    <div className="treehome-info-row">
+                      <i className="bi bi-geo-alt-fill treehome-info-icon"></i>
+                      <span className="treehome-info-row-text treehome-info-row-text--strong">
+                        {selectedTree.address || "Sin ubicación"}
+                      </span>
+                    </div>
+
+                    <button
+                      className="btn-secondary visitButton treehome-info-action-full"
+                      onClick={handleVisit}
+                    >
+                      Visitar
+                    </button>
+                  </div>
+
+                  {/* Botón suelto */}
+                  <button
+                    className="btn-secondary checkHistory treehome-info-action-full"
+                    onClick={handleViewHistory}
+                  >
+                    Ver Historial
                   </button>
-                )}
-                {selectedTree.isAdopted === 2 && (
-                  <button className="btn-disabled" disabled>
-                    En Proceso de Adopción
-                  </button>
-                )}
-                {selectedTree.isAdopted === 1 && (
-                  <button className="btn-disabled" disabled>
-                    Ya Adoptado
-                  </button>
-                )}
-              </div>
-            </div>
-          </section>
+
+                  {/* Card 3 */}
+                  <div className="treehome-info-section-card">
+                    <div className="treehome-price-row">
+                      <span className="treehome-price-label">Precio</span>
+                      <span className="treehome-price-value">
+                        $ {selectedTree.price}
+                      </span>
+                    </div>
+
+                    {selectedTree.isAdopted === 0 && (
+                      <button
+                        className="btn-primary treehome-info-action-full"
+                        onClick={handleAdopt}
+                      >
+                        Adoptar
+                      </button>
+                    )}
+                    {selectedTree.isAdopted === 2 && (
+                      <button
+                        className="btn-disabled treehome-info-action-full"
+                        disabled
+                      >
+                        En Proceso de Adopción
+                      </button>
+                    )}
+                    {selectedTree.isAdopted === 1 && (
+                      <button
+                        className="btn-disabled treehome-info-action-full"
+                        disabled
+                      >
+                        Ya Adoptado
+                      </button>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         </div>
       )}
 

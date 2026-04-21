@@ -58,12 +58,7 @@ export default function Ranking() {
       <div className="ranking-container">
         <nav className="map-navbar">
           <div className="navbar-container">
-            <div className="navbar-center">
-              <span className="navbar-greeting">
-                BIENVENIDO{" "}
-                {loggedUser?.name || loggedUser?.username || "Usuario"}
-              </span>
-            </div>
+            <div className="navbar-center"></div>
 
             <div className="navbar-actions">
               <button
@@ -131,7 +126,11 @@ export default function Ranking() {
                 <i className="bi bi-bell-fill"></i>
                 <span>Notificaciones</span>
                 {unreadNotificationsCount > 0 && (
-                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                  <div className="flex justify-end ml-auto">
+                    <span className="menu-badge">
+                      {unreadNotificationsCount}
+                    </span>
+                  </div>
                 )}
               </button>
               <button
@@ -177,11 +176,7 @@ export default function Ranking() {
       {/* Navbar */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <div className="navbar-center">
-            <span className="navbar-greeting">
-              BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
-            </span>
-          </div>
+          <div className="navbar-center"></div>
 
           <div className="navbar-actions">
             <button
@@ -236,7 +231,9 @@ export default function Ranking() {
               <i className="bi bi-bell-fill"></i>
               <span>Notificaciones</span>
               {unreadNotificationsCount > 0 && (
-                <span className="menu-badge">{unreadNotificationsCount}</span>
+                <div className="flex justify-end ml-auto">
+                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                </div>
               )}
             </button>
             <button

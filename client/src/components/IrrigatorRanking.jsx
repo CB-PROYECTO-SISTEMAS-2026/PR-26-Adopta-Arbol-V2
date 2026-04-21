@@ -131,7 +131,9 @@ export default function IrrigatorRanking() {
               <i className="bi bi-bell-fill"></i>
               <span>Notificaciones</span>
               {unreadNotificationsCount > 0 && (
-                <span className="menu-badge">{unreadNotificationsCount}</span>
+                <div className="flex justify-end ml-auto">
+                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                </div>
               )}
             </button>
 

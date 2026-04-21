@@ -229,11 +229,7 @@ export default function MyTrees() {
       {/* Navbar igual a TreeHome */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <div className="navbar-center">
-            <span className="navbar-greeting">
-              BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
-            </span>
-          </div>
+          <div className="navbar-center"></div>
 
           <div className="navbar-actions">
             <button

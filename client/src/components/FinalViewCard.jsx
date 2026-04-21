@@ -13,15 +13,22 @@ export default function FinalViewCard() {
 
   return (
     <div className="final-screen">
-      <div className="final-container">
-        <h2 className="final-title">Canjeo de Créditos en Revisión</h2>
+      <div className="final-container d-flex flex-column justify-content-between align-items-center text-center">
+        <h2 className="final-title">Compra de Créditos en Revisión</h2>
 
-        <div className="final-progress">
-          <div className="progress-step done">1</div>
-          <div className="progress-line"></div>
-          <div className="progress-step done">2</div>
-          <div className="progress-line"></div>
-          <div className="progress-step active">3</div>
+        <div className="final-progress" aria-label="Progreso de compra">
+          <div className="progress-item">
+            <div className="progress-step done">1</div>
+            <span className="progress-text">Seleccionar</span>
+          </div>
+          <div className="progress-item">
+            <div className="progress-step done">2</div>
+            <span className="progress-text">Pagar</span>
+          </div>
+          <div className="progress-item">
+            <div className="progress-step active">3</div>
+            <span className="progress-text">Confirmar</span>
+          </div>
         </div>
 
         <div className="final-content">
@@ -42,10 +49,11 @@ export default function FinalViewCard() {
             </p>
           ) : null}
 
-          <button className="final-btn" onClick={handleBack}>
+          
+        </div>
+        <button className="final-btn" onClick={handleBack}>
             Volver
           </button>
-        </div>
       </div>
     </div>
   );

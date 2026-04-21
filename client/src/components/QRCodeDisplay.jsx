@@ -27,6 +27,7 @@ export default function QRCodeDisplay() {
   const [isUploading, setIsUploading] = useState(false);
   const [showLogoutCard, setShowLogoutCard] = useState(false);
   const [showNavMenu, setShowNavMenu] = useState(false);
+  const [showProofPreview, setShowProofPreview] = useState(false);
   const fileInputRef = useRef(null);
 
   // Obtener la información de la opción seleccionada del estado
@@ -269,11 +270,7 @@ export default function QRCodeDisplay() {
       {/* Navbar igual a TreeHome */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <div className="navbar-center">
-            <span className="navbar-greeting">
-              BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
-            </span>
-          </div>
+          <div className="navbar-center"></div>
 
           <div className="navbar-actions">
             <button
@@ -365,7 +362,7 @@ export default function QRCodeDisplay() {
 
       {/* Main Content */}
       <main className="qr-display-main">
-        <div className="qr-display-content bg-white rounded">
+        <div className="qr-display-content">
           {/* Input de archivo oculto */}
           <input
             type="file"
@@ -376,20 +373,30 @@ export default function QRCodeDisplay() {
           />
 
           {/* Title */}
-          <h2 className="qr-display-title">
-            Escaneé el Código Qr o Descárguelo y adjunte el comprobante
-          </h2>
+          <h2 className="qr-display-title">Escanea el código QR</h2>
+          <p className="qr-display-description">
+            Escanea el código QR o descárguelo y adjunta el comprobante
+          </p>
 
           {/* Step Indicator */}
-          <div className="steps-indicator">
-            <div className="step">
-              <span>1</span>
+          <div className="steps-indicator" aria-label="Progreso de compra">
+            <div className="step-item">
+              <div className="step">
+                <span>1</span>
+              </div>
+              <span className="step-text">Seleccionar</span>
             </div>
-            <div className="step active">
-              <span>2</span>
+            <div className="step-item">
+              <div className="step active">
+                <span>2</span>
+              </div>
+              <span className="step-text">Pagar</span>
             </div>
-            <div className="step">
-              <span>3</span>
+            <div className="step-item">
+              <div className="step">
+                <span>3</span>
+              </div>
+              <span className="step-text">Confirmar</span>
             </div>
           </div>
 
@@ -441,13 +448,33 @@ export default function QRCodeDisplay() {
           </div>
 
           {/* Attached File Display */}
-          {filePreview && (
-            <div className="proof-preview-container">
-              <img
-                src={filePreview}
-                alt="Vista previa del comprobante"
-                className="proof-preview-image"
-              />
+          {selectedFile && (
+            <div className="proof-preview-card">
+              <div className="proof-preview-header">
+                <span className="proof-preview-label">Comprobante</span>
+                <button
+                  className="proof-preview-toggle"
+                  onClick={() => setShowProofPreview(!showProofPreview)}
+                  aria-label={
+                    showProofPreview
+                      ? "Ocultar comprobante"
+                      : "Mostrar comprobante"
+                  }
+                >
+                  <i
+                    className={`bi ${showProofPreview ? "bi-eye-slash" : "bi-eye"}`}
+                  ></i>
+                </button>
+              </div>
+              {showProofPreview && (
+                <div className="proof-preview-image-container">
+                  <img
+                    src={filePreview}
+                    alt="Vista previa del comprobante"
+                    className="proof-preview-image"
+                  />
+                </div>
+              )}
             </div>
           )}
 

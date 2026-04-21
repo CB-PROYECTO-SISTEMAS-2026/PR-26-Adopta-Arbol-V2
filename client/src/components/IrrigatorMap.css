@@ -187,8 +187,13 @@
   padding: 2px 8px;
   font-size: 12px;
   font-weight: 700;
-  min-width: 20px;
+  width: 40px; /* ancho fijo */
+  min-width: 40px;
   text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none; /* evitar que el badge se estire dentro de contenedores flex */
 }
 
 .points-icon {
@@ -325,10 +330,10 @@
 /* Card contenedor para paneles que deben dejar espacio lateral (igual que map-card) */
 .info-card {
   width: 100%;
-  padding: 0 20px;
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
   margin-bottom: 20px;
-  display: flex;
-  justify-content: center; /* centra el contenido interno */
   box-sizing: border-box;
 }
 
@@ -389,14 +394,8 @@
 
 /* Panel de información del árbol */
 .tree-info-panel {
-  /* Ahora toma todo el ancho disponible dentro de .info-card */
   width: 100%;
   max-width: none;
-  background: #fff;
-  border-radius: 25px;
-  padding: 25px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  margin-bottom: 20px;
   box-sizing: border-box;
 }
 
@@ -411,7 +410,6 @@
   background: #f0f9f9;
   border-radius: 15px;
   padding: 20px;
-  margin-bottom: 20px;
 }
 
 .detail-row {

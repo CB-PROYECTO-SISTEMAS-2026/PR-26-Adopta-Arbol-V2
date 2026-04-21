@@ -197,11 +197,7 @@ export default function IrrigatorMap() {
       {/* Navbar */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <div className="navbar-center">
-            <span className="navbar-greeting">
-              BIENVENIDO {loggedUser?.name || "Regador"}
-            </span>
-          </div>
+          <div className="navbar-center"></div>
 
           <div className="navbar-actions">
             <button
@@ -267,7 +263,9 @@ export default function IrrigatorMap() {
               <i className="bi bi-bell-fill"></i>
               <span>Notificaciones</span>
               {unreadNotificationsCount > 0 && (
-                <span className="menu-badge">{unreadNotificationsCount}</span>
+                <div className="flex justify-end ml-auto">
+                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                </div>
               )}
             </button>
             <button
@@ -387,69 +385,67 @@ export default function IrrigatorMap() {
       {/* Panel de información del irrigation seleccionado */}
       {selectedIrrigation && (
         <div className="info-card">
-          <div className="tree-info-panel">
-            <div className="tree-info-content">
-              <h2>Información del Riego</h2>
-              <div>
-                <div className="detail-row">
-                  <span className="label">Árbol:</span>
-                  <span>{selectedIrrigation.treeName}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Código:</span>
-                  <span>{selectedIrrigation.treeCode}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Precio:</span>
-                  <span>
-                    {hasSelectedPrice
-                      ? `${formatPoints(selectedPriceValue)} pts`
-                      : "No disponible"}
-                  </span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Dirección:</span>
-                  <span>
-                    {selectedIrrigation.treeAddress || "No especificada"}
-                  </span>
-                </div>
+          <div className="tree-info-content">
+            <h2>Información del Riego</h2>
+            <div>
+              <div className="detail-row">
+                <span className="label">Árbol:</span>
+                <span>{selectedIrrigation.treeName}</span>
               </div>
+              <div className="detail-row">
+                <span className="label">Código:</span>
+                <span>{selectedIrrigation.treeCode}</span>
+              </div>
+              <div className="detail-row">
+                <span className="label">Precio:</span>
+                <span>
+                  {hasSelectedPrice
+                    ? `${formatPoints(selectedPriceValue)} pts`
+                    : "No disponible"}
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="label">Dirección:</span>
+                <span>
+                  {selectedIrrigation.treeAddress || "No especificada"}
+                </span>
+              </div>
+            </div>
 
-              <div className="button-group">
-                {hasAssignedIrrigation ? (
-                  <>
-                    <button
-                      className="btn-canjear"
-                      onClick={handleConfirmIrrigation}
-                    >
-                      Confirmar Riego
-                    </button>
-                    <button
-                      className="btn-cancel"
-                      onClick={() => setSelectedIrrigation(null)}
-                    >
-                      Cancelar
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="btn-canjear"
-                      onClick={handleAcceptRequest}
-                      disabled={assigning}
-                    >
-                      {assigning ? "Asignando..." : "Asignar Árbol para regar"}
-                    </button>
-                    <button
-                      className="btn-cancel"
-                      onClick={() => setSelectedIrrigation(null)}
-                      disabled={assigning}
-                    >
-                      Cancelar
-                    </button>
-                  </>
-                )}
-              </div>
+            <div className="button-group">
+              {hasAssignedIrrigation ? (
+                <>
+                  <button
+                    className="btn-canjear"
+                    onClick={handleConfirmIrrigation}
+                  >
+                    Confirmar Riego
+                  </button>
+                  <button
+                    className="btn-cancel"
+                    onClick={() => setSelectedIrrigation(null)}
+                  >
+                    Cancelar
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="btn-canjear"
+                    onClick={handleAcceptRequest}
+                    disabled={assigning}
+                  >
+                    {assigning ? "Asignando..." : "Asignar Árbol para regar"}
+                  </button>
+                  <button
+                    className="btn-cancel"
+                    onClick={() => setSelectedIrrigation(null)}
+                    disabled={assigning}
+                  >
+                    Cancelar
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
