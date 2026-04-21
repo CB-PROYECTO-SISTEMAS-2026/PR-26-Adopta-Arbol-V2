@@ -293,7 +293,7 @@ export default function CreateAccount() {
                 style={{
                   color: "#e74c3c",
                   fontSize: "12px",
-                  marginTop: "5px",
+                  marginTop: "15px",
                 }}
               >
                 {fieldErrors.lastName}
@@ -323,7 +323,7 @@ export default function CreateAccount() {
                 style={{
                   color: "#e74c3c",
                   fontSize: "12px",
-                  marginTop: "5px",
+                  marginTop: "15px",
                 }}
               >
                 {fieldErrors.email}
@@ -350,7 +350,7 @@ export default function CreateAccount() {
                 style={{
                   color: "#e74c3c",
                   fontSize: "12px",
-                  marginTop: "5px",
+                  marginTop: "15px",
                 }}
               >
                 {fieldErrors.password}
@@ -380,7 +380,7 @@ export default function CreateAccount() {
                 style={{
                   color: "#e74c3c",
                   fontSize: "12px",
-                  marginTop: "5px",
+                  marginTop: "15px",
                 }}
               >
                 {fieldErrors.confirmPassword}

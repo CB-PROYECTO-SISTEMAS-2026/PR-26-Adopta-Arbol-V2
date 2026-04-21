@@ -5,6 +5,17 @@
   --transition-magic: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Selección de texto - Visible al arrastrar con mouse */
+.register-container ::selection {
+  background-color: #7ba995;
+  color: #ffffff;
+}
+
+.register-container ::-moz-selection {
+  background-color: #7ba995;
+  color: #ffffff;
+}
+
 /* Contenedor principal - Fondo limpio y elegante */
 .register-container {
   color: #ffffff;
@@ -229,6 +240,26 @@ h2 {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.08) inset;
+  box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.08) inset;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.input-group input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow:
+    0 0 0 1000px rgba(255, 255, 255, 0.12) inset,
+    0 0 0 4px rgba(123, 169, 149, 0.3);
+  box-shadow:
+    0 0 0 1000px rgba(255, 255, 255, 0.12) inset,
+    0 0 0 4px rgba(123, 169, 149, 0.3);
+  border: 2px solid rgba(123, 169, 149, 0.8);
+}
+
 /* Mensaje de error */
 .error-message {
   color: #ff6b6b;
@@ -238,6 +269,7 @@ h2 {
   font-weight: 500;
   line-height: 1;
   padding: 0px;
+  min-height: 0px;
 }
 
 .btn-register {

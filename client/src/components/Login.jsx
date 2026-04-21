@@ -118,9 +118,13 @@ export default function Login() {
               className="error-message"
               style={{
                 color: "#e74c3c",
+                backgroundColor: "#ffe6e6",
+                borderRadius: "12px",
+                border: "1px solid #f5a5a5",
                 textAlign: "center",
                 marginBottom: "15px",
                 fontSize: "14px",
+                padding: "12px 16px",
               }}
             >
               {error}
