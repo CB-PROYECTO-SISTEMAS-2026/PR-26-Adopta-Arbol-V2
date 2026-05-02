@@ -27,7 +27,7 @@
   border: none;
   border-radius: 28px;
   box-shadow: none;
-  padding: 50px 0px 50px 40px;
+  padding: 50px 40px;
   width: 380px;
   max-width: 90vw;
   text-align: center;
@@ -71,12 +71,7 @@
   background: transparent;
 }
 
-/* Contenedor interno para mantener padding sin afectar scrollbar */
-.register-box > * {
-  padding-right: 40px;
-  margin-left: 0;
-  margin-right: 0;
-}
+
 
 @keyframes slideUpMagic {
   from {
@@ -151,7 +146,7 @@ h2 {
   display: block;
   width: 100%;
   text-align: left;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .input-with-icon {
@@ -234,11 +229,12 @@ h2 {
 .error-message {
   color: #ff6b6b;
   font-size: 10px;
-  margin-top: -3px;
-  margin-bottom: 0px;
+  margin-top: -6px;
+  margin-bottom: -10px;
+  padding: 2px 0;
+  line-height: 1.2;
+  display: block;
   font-weight: 500;
-  line-height: 1;
-  padding: 0px;
 }
 
 .btn-register {
