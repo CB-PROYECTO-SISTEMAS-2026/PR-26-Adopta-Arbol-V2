@@ -249,7 +249,7 @@ return (
             <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Ingresa tu nombre" required />
           </div>
           {fieldErrors.name && (
-            <span className="error-message" style={{  color: '#ff5252', padding: '0 5px' , marginTop: '-105px', marginBottom: '-105px', fontSize: '15px' }}>
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
               {fieldErrors.name}
             </span>
           )}
@@ -263,7 +263,7 @@ return (
             <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Ingresa tu apellido" required />
           </div>
           {fieldErrors.lastName && (
-            <span className="error-message" style={{  color: '#ff5252', padding: '0 5px' , marginTop: '-105px', marginBottom: '-105px', fontSize: '15px'}}>
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
               {fieldErrors.lastName}
             </span>
           )}
@@ -277,7 +277,7 @@ return (
             <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="ejemplo@correo.com" required />
           </div>
           {fieldErrors.email && (
-            <span className="error-message" style={{  color: '#ff5252', padding: '0 5px' , marginTop: '-105px', marginBottom: '-105px', fontSize: '15px' }}>
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
               {fieldErrors.email}
             </span>
           )}
@@ -291,7 +291,7 @@ return (
             <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Crea una contraseña" required />
           </div>
           {fieldErrors.password && (
-            <span className="error-message" style={{ color: '#ff5252', padding: '0 5px' , marginTop: '-105px', marginBottom: '-105px', fontSize: '15px'}}>
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
               {fieldErrors.password}
             </span>
           )}
@@ -305,14 +305,14 @@ return (
             <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="Repite tu contraseña" required />
           </div>
           {fieldErrors.confirmPassword && (
-            <span className="error-message" style={{  color: '#ff5252', padding: '0 5px' , marginTop: '-105px', marginBottom: '-105px', fontSize: '15px' }}>
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px'}}>
               {fieldErrors.confirmPassword}
             </span>
           )}
         </div>
 
         {/* Alertas generales */}
-        {error && <div className="alert-message error-alert" style={{  color: '#ff5252', padding: '0 5px' , marginTop: '-105px', marginBottom: '-105px', fontSize: '15px' }}>{error}</div>}
+        {error && <div className="alert-message error-alert" style={{ color: '#ff5252', fontSize: '13px', marginTop: '12px', marginBottom: '12px' }}>{error}</div>}
         {success && <div className="alert-message success-alert">{success}</div>}
 
         <button type="submit" className="btn-register" disabled={loading}>
