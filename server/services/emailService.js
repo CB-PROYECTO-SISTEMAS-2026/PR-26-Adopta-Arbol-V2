@@ -1,4 +1,12 @@
+import "dotenv/config";
 import nodemailer from "nodemailer";
+
+// Debug: mostrar variables de entorno
+console.log("📧 EMAIL CONFIG DEBUG:");
+console.log("   EMAIL_USER:", process.env.EMAIL_USER ? "✓ Configurado" : "✗ No configurado");
+console.log("   EMAIL_PASS:", process.env.EMAIL_PASS ? "✓ Configurado" : "✗ No configurado");
+console.log("   EMAIL_USER value:", process.env.EMAIL_USER);
+console.log("   EMAIL_PASS value:", process.env.EMAIL_PASS);
 
 // Configuración del transportador SMTP
 const createTransporter = () => {
