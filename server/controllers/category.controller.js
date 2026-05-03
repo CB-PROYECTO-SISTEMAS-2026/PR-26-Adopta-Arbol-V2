@@ -3,8 +3,8 @@ import { pool } from "../db.js";
 // Obtener todas las categorías activas (status = 1) con datos del usuario
 export const getCategories = async (req, res) => {
   try {
-    console.log("🔍 Obteniendo categorías...");
-    
+    console.log("Obteniendo categorías...");
+
     const [result] = await pool.query(`
       SELECT 
         c.id, 
@@ -20,13 +20,13 @@ export const getCategories = async (req, res) => {
       WHERE c.status = 1
       ORDER BY c.registerDate DESC
     `);
-    
-    console.log("✅ Categorías obtenidas:", result.length);
-    console.log("📊 Datos completos:", JSON.stringify(result, null, 2));
-    
+
+    console.log("Categorías obtenidas:", result.length);
+    console.log("Datos completos:", JSON.stringify(result, null, 2));
+
     res.json(result);
   } catch (error) {
-    console.error("❌ Error al obtener categorías:", error);
+    console.error("Error al obtener categorías:", error);
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };
@@ -52,7 +52,7 @@ export const createCategory = async (req, res) => {
     // Verificar si ya existe una categoría con el mismo nombre
     const [existing] = await pool.query(
       "SELECT id FROM category WHERE name = ? AND status = 1",
-      [name.trim()]
+      [name.trim()],
     );
 
     if (existing.length > 0) {
@@ -65,7 +65,7 @@ export const createCategory = async (req, res) => {
     const [result] = await pool.query(
       `INSERT INTO category (name, status, userId) 
        VALUES (?, 1, ?)`,
-      [name.trim(), userId]
+      [name.trim(), userId],
     );
 
     res.status(201).json({
@@ -103,7 +103,7 @@ export const updateCategory = async (req, res) => {
     // Verificar si la categoría existe
     const [category] = await pool.query(
       "SELECT id FROM category WHERE id = ? AND status = 1",
-      [id]
+      [id],
     );
 
     if (category.length === 0) {
@@ -113,7 +113,7 @@ export const updateCategory = async (req, res) => {
     // Verificar si ya existe otra categoría con el mismo nombre
     const [existing] = await pool.query(
       "SELECT id FROM category WHERE name = ? AND status = 1 AND id != ?",
-      [name.trim(), id]
+      [name.trim(), id],
     );
 
     if (existing.length > 0) {
@@ -127,7 +127,7 @@ export const updateCategory = async (req, res) => {
       `UPDATE category 
        SET name = ?, lastUpdate = CURRENT_TIMESTAMP, userId = ?
        WHERE id = ?`,
-      [name.trim(), userId, id]
+      [name.trim(), userId, id],
     );
 
     res.json({
@@ -154,7 +154,7 @@ export const deleteCategory = async (req, res) => {
     // Verificar si la categoría existe
     const [category] = await pool.query(
       "SELECT id FROM category WHERE id = ? AND status = 1",
-      [id]
+      [id],
     );
 
     if (category.length === 0) {
@@ -166,7 +166,7 @@ export const deleteCategory = async (req, res) => {
       `UPDATE category 
        SET status = 0, lastUpdate = CURRENT_TIMESTAMP, userId = ?
        WHERE id = ?`,
-      [userId, id]
+      [userId, id],
     );
 
     res.json({ message: "Categoría eliminada exitosamente" });

@@ -122,6 +122,7 @@
   font-weight: 600;
   font-size: 0.98rem;
   padding: 12px 26px;
+  text-align: center;
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,

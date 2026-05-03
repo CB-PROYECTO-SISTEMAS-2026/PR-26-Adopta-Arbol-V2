@@ -121,10 +121,6 @@ export default function IrrigatorCredits() {
       {/* Navbar (reutiliza estructura de IrrigatorMap) */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <button className="btn-back-map" onClick={() => navigate(-1)}>
-            <i className="bi bi-arrow-left"></i>
-          </button>
-
           <div className="navbar-actions">
             <button
               className="btn-hamburger"
@@ -147,13 +143,23 @@ export default function IrrigatorCredits() {
                 <div className="logout-card">
                   <div className="logout-card-info">
                     <div className="navbar-points">
-                      <span className="points-icon">⭐</span>
+                      <img
+                        src="/StartCoin.svg"
+                        alt="points"
+                        className="points-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span className="points-amount">
                         {loggedUser?.point || 0}
                       </span>
                     </div>
                     <div className="navbar-credits">
-                      <i className="bi bi-currency-dollar"></i>
+                      <img
+                        src="/DollarCoin.svg"
+                        alt="credits"
+                        className="credits-icon"
+                        style={{ width: "24px", height: "24px" }}
+                      />
                       <span>{loggedUser?.credits || 0}</span>
                     </div>
                   </div>
@@ -179,7 +185,9 @@ export default function IrrigatorCredits() {
               <i className="bi bi-bell-fill"></i>
               <span>Notificaciones</span>
               {unreadNotificationsCount > 0 && (
-                <span className="menu-badge">{unreadNotificationsCount}</span>
+                <div className="flex justify-end ml-auto">
+                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                </div>
               )}
             </button>
             <button
@@ -220,60 +228,63 @@ export default function IrrigatorCredits() {
 
       {/* Main Content */}
       <div className="redemption-content">
-        <h1 className="redemption-title">Subir Qr</h1>
+        <div className="redemption-card">
+          <h1 className="redemption-title">Subir Qr</h1>
+          <h4 className="redemption-subtitle">
+            Sube tu código QR para retirar créditos
+          </h4>
 
-        {/* QR Upload Area */}
-        <div className="qr-upload-area" onClick={handleImageClick}>
-          {qrImagePreview ? (
-            <img
-              src={qrImagePreview}
-              alt="QR Preview"
-              className="qr-preview-image"
-            />
-          ) : (
-            <div className="qr-placeholder">
-              <i className="bi bi-image placeholder-icon"></i>
-            </div>
-          )}
-        </div>
+          <label className="amount-label">Código QR:</label>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-        />
+          {/* QR Upload Area */}
+          <div className="qr-upload-area" onClick={handleImageClick}>
+            {qrImagePreview ? (
+              <img
+                src={qrImagePreview}
+                alt="QR Preview"
+                className="qr-preview-image"
+              />
+            ) : (
+              <div className="qr-placeholder">
+                <i className="bi bi-image placeholder-icon"></i>
+              </div>
+            )}
+          </div>
 
-        <button className="btn-upload-image" onClick={handleImageClick}>
-          Subir Imagen
-        </button>
-
-        {/* Amount Input */}
-        <div className="amount-section">
-          <label className="amount-label text-light">
-            Ingresar la cantidad que desea retirar:
-          </label>
           <input
-            type="number"
-            className="amount-input"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="0"
-            min="0"
-            step="0.01"
-            max={loggedUser?.credits || 0}
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
           />
-        </div>
 
-        {/* Confirm Button */}
-        <button
-          className="btn-confirm-redemption"
-          onClick={handleSubmit}
-          disabled={submitting}
-        >
-          {submitting ? "PROCESANDO..." : "CONFIRMAR"}
-        </button>
+          {/* Amount Input */}
+          <div className="amount-section">
+            <label className="amount-label">
+              Créditos a retirar (max {loggedUser?.credits || 0}):
+            </label>
+            <input
+              type="number"
+              className="amount-input"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0"
+              min="0"
+              step="0.01"
+              max={loggedUser?.credits || 0}
+            />
+          </div>
+
+          {/* Confirm Button */}
+          <button
+            className="btn-confirm-redemption"
+            onClick={handleSubmit}
+            disabled={submitting}
+          >
+            {submitting ? "PROCESANDO..." : "CONFIRMAR"}
+          </button>
+        </div>
       </div>
 
       {/* Panel de Notificaciones */}

@@ -241,7 +241,7 @@
 }
 
 .avatar-placeholder {
-  color: #6c757d;
+  color: #ffffff;
   font-size: 24px;
 }
 
@@ -276,13 +276,13 @@
 }
 
 .check-btn {
-  background: linear-gradient(135deg, #3d8b40 0%, #2d5f3f 100%);
+  background: #28a745;
   color: white;
   transition: all 0.3s ease-in-out;
 }
 
 .check-btn:hover {
-  background: linear-gradient(135deg, #4caf50 0%, #3d8b40 100%);
+  background: #20c997;
   transform: scale(1.1);
 }
 
@@ -388,6 +388,39 @@
     min-width: 40px;
     font-size: 14px;
   }
+}
+
+/* Estilos para badges de estado (mismo patrón que AdminPayments) */
+.state-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-active {
+  color: #2d5f3f;
+  background: rgba(76, 175, 80, 0.2);
+}
+
+.status-inactive {
+  color: #8b4a4a;
+  background: rgba(172, 94, 94, 0.2);
+}
+
+.status-pending {
+  color: #856404;
+  background: rgba(255, 193, 7, 0.22);
+}
+
+.status-unknown {
+  color: #4a5c4c;
+  background: rgba(74, 92, 76, 0.15);
 }
 
 @media (max-width: 576px) {

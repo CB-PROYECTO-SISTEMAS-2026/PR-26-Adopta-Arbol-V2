@@ -3,7 +3,7 @@
 /* Reutilizar estilos de TreeHome para el container */
 .treehome-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a5c5c, #2e8a8a);
+  background: linear-gradient(135deg, #245f3f, #174732);
   display: flex;
   flex-direction: column;
   font-family:
@@ -18,22 +18,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 25px;
+  gap: 20px;
   padding: 30px 20px;
   overflow-y: auto;
+  width: 100%;
 }
 
 /* Credit Card Section */
 .credit-card-section {
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   margin-top: 6px;
 }
 
 .credit-card {
-  width: 510px;
-  height: 280px;
+  --card-max-height: clamp(180px, 34vh, 280px);
+  width: 100%;
+  max-width: 100%;
+  max-height: var(--card-max-height);
+  height: auto;
+  aspect-ratio: 51 / 28;
+  container-type: inline-size;
   background:
     radial-gradient(
       circle at 85% 20%,
@@ -41,8 +48,9 @@
       transparent 42%
     ),
     linear-gradient(135deg, #0d5a58 0%, #117356 42%, #1db55c 100%);
-  border-radius: 24px;
-  padding: 24px 24px 22px;
+  border-radius: clamp(18px, 4.5cqi, 24px);
+  padding: clamp(12px, 4.2cqi, 24px) clamp(12px, 4.2cqi, 24px)
+    clamp(10px, 3.8cqi, 22px);
   color: white;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -51,6 +59,7 @@
     0 2px 10px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -92,26 +101,33 @@
     0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Card Top - Chip and Contactless */
-.card-top {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  position: relative;
-  z-index: 2;
-}
-
-/* Main wrapper inside .credit-card to arrange middle and bottom vertically */
+/* Main wrapper inside .credit-card to arrange content from bottom */
 .card-main {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   width: 100%;
+  flex: 1;
+  justify-content: flex-end;
+  min-height: 0;
+  container-type: inline-size;
+}
+
+.card-main-content {
+  width: 100%;
+  height: 50%;
+  max-height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+  gap: clamp(6px, 1.8cqi, 12px);
 }
 
 .card-tech-icons {
   display: flex;
   align-items: center;
-  gap: 0px;
+  gap: clamp(2px, 0.9cqi, 8px);
 }
 
 .card-chip-container {
@@ -121,22 +137,22 @@
 }
 
 .chip-image {
-  width: 70px;
-  height: 52px;
+  width: clamp(30px, 9.5cqi, 60px);
+  height: clamp(22px, 7cqi, 44px);
   object-fit: contain;
 }
 
 .card-contactless-icon {
-  width: 44px;
-  height: 44px;
+  width: clamp(22px, 5.8cqi, 36px);
+  height: clamp(22px, 5.8cqi, 36px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .contactless-image {
-  width: 34px;
-  height: 34px;
+  width: clamp(16px, 4.4cqi, 26px);
+  height: clamp(16px, 4.4cqi, 26px);
   object-fit: contain;
   filter: brightness(0) invert(1);
   transform-box: fill-box;
@@ -148,31 +164,29 @@
 .card-middle-info {
   display: flex;
   justify-content: flex-start;
-  gap: 34px;
+  gap: clamp(8px, 3.8cqi, 22px);
   align-items: center;
   position: relative;
   z-index: 2;
-  padding: 8px 0 10px;
+  padding: clamp(2px, 0.9cqi, 6px) 0 clamp(2px, 1.1cqi, 8px);
+  flex-wrap: wrap;
 }
 
 .card-info-item {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: clamp(4px, 1.2cqi, 8px);
   min-width: 0;
 }
 
 .card-info-label {
-  font-size: 16px;
-  font-weight: 500;
-  opacity: 0.95;
-  letter-spacing: 0.2px;
+  font-size: clamp(9px, 2.4cqi, 14px);
+  font-weight: 400;
 }
 
 .card-info-value {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
+  font-size: clamp(10px, 3.1cqi, 16px);
+  font-weight: 600;
   line-height: 1.1;
 }
 
@@ -180,33 +194,55 @@
 .card-bottom {
   position: relative;
   z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(6px, 2.2cqi, 14px);
+  align-items: center;
   border-top: none;
-  padding-top: 6px;
+  padding-top: clamp(2px, 1.1cqi, 8px);
 }
 
 .cardholder-name {
-  font-size: 14px;
+  min-width: 0;
+  font-size: clamp(8px, 2.1cqi, 12px);
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: clamp(0.2px, 0.14cqi, 0.8px);
   text-transform: uppercase;
-  display: inline-block;
-  padding-right: 90px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .visa-logo-image {
-  width: 54px;
+  width: clamp(28px, 8.6cqi, 46px);
+  min-width: 26px;
   height: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: 0.95;
+  justify-self: end;
+  align-self: end;
+  flex-shrink: 0;
+}
+
+/* Content Card Wrapper */
+.content-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px 20px;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Section Title */
 .section-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: #2d5f3f;
   text-align: center;
@@ -220,10 +256,11 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  width: min(260px, 100%);
-  margin: 8px auto 2px;
-  padding: 0 2px;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+  margin: 8px 0 2px;
+  padding: 0;
 }
 
 .buy-credits-content .steps-indicator::before {
@@ -231,16 +268,23 @@
   position: absolute;
   left: calc(var(--step-size) / 2);
   right: calc(var(--step-size) / 2);
-  top: 50%;
+  top: calc(var(--step-size) / 2);
   height: 2px;
   background: #c8ccd4;
-  transform: translateY(-50%);
   z-index: 0;
 }
 
-.buy-credits-content .step {
+.buy-credits-content .step-item {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.buy-credits-content .step {
   width: var(--step-size);
   height: var(--step-size);
   border-radius: 50%;
@@ -258,26 +302,35 @@
 }
 
 .buy-credits-content .step.active {
-  background: #505865;
+  background: #1a3a28;
   color: #ffffff;
-  border-color: #505865;
-  box-shadow: 0 3px 8px rgba(40, 47, 58, 0.35);
+  border-color: #1a3a28;
+  box-shadow: 0 3px 8px rgba(26, 58, 40, 0.35);
+}
+
+.buy-credits-content .step-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5f6573;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 /* Credit Options Grid */
 .credit-options-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  width: 100%;
-  max-width: 520px;
+  width: 90%;
   margin: 20px 0 30px;
 }
 
 .credit-option-card {
   width: 100%;
-  min-height: 240px;
-  border-radius: 20px;
+  max-width: 400px;
+  min-height: 440px;
+  border-radius: 15px;
   border: 2px solid transparent;
   padding: 24px 18px;
   cursor: pointer;
@@ -285,7 +338,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 14px;
   color: white;
   position: relative;
@@ -389,7 +442,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: auto;
   width: 100%;
   text-align: center;
   padding-top: 10px;
@@ -426,11 +478,11 @@
   color: white;
   border: none;
   padding: 14px 50px;
-  border-radius: 25px;
+  border-radius: 15px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  width: 60%;
+  width: 100%;
   transition: all 0.3s ease;
   box-shadow: 0 6px 20px rgba(118, 122, 119, 0.3);
   text-transform: uppercase;
@@ -461,25 +513,12 @@
 
   .credit-card {
     max-width: 100%;
-    height: 220px;
     padding: 18px;
   }
 
   .card-middle-info {
-    gap: 20px;
-    padding: 10px 0 6px;
-  }
-
-  .card-info-label {
-    font-size: 13px;
-  }
-
-  .card-info-value {
-    font-size: 18px;
-  }
-
-  .visa-logo-image {
-    width: 56px;
+    gap: clamp(6px, 3.2cqi, 14px);
+    padding: clamp(2px, 0.8cqi, 5px) 0 clamp(2px, 1cqi, 6px);
   }
 
   .credit-options-grid {
@@ -510,11 +549,14 @@
 
   .buy-credits-content .steps-indicator {
     --step-size: 34px;
-    width: min(230px, 100%);
   }
 
   .buy-credits-content .step {
     font-size: 12px;
+  }
+
+  .buy-credits-content .step-text {
+    font-size: 11px;
   }
 }
 
@@ -524,58 +566,25 @@
     gap: 15px;
   }
 
-  .credit-card-section {
-    max-width: 100%;
-  }
-
   .credit-card {
     max-width: 100%;
-    height: 198px;
     border-radius: 18px;
     padding: 14px;
   }
 
-  .chip-image {
-    width: 44px;
-    height: 34px;
-  }
-
-  .card-contactless-icon {
-    width: 34px;
-    height: 34px;
-  }
-
-  .contactless-image {
-    width: 26px;
-    height: 26px;
-  }
-
   .card-middle-info {
-    gap: 6px;
-    padding: 8px 0 4px;
+    gap: clamp(4px, 2.8cqi, 10px);
+    padding: clamp(2px, 0.7cqi, 4px) 0 clamp(2px, 0.9cqi, 5px);
     flex-direction: column;
     align-items: flex-start;
   }
 
   .card-info-item {
-    gap: 6px;
-  }
-
-  .card-info-label {
-    font-size: 12px;
-  }
-
-  .card-info-value {
-    font-size: 15px;
+    gap: clamp(3px, 1cqi, 6px);
   }
 
   .card-bottom {
-    padding-top: 6px;
-    align-items: center;
-  }
-
-  .visa-logo-image {
-    width: 42px;
+    padding-top: clamp(2px, 0.9cqi, 5px);
   }
 
   .credit-options-grid {
@@ -619,11 +628,14 @@
 
   .buy-credits-content .steps-indicator {
     --step-size: 30px;
-    width: min(205px, 100%);
   }
 
   .buy-credits-content .step {
     font-size: 11px;
+  }
+
+  .buy-credits-content .step-text {
+    font-size: 10px;
   }
 
   .exchange-button {
@@ -635,9 +647,9 @@
 
 .card-title h1 {
   text-align: left;
-  font-size: 24px;
+  margin: 0;
+  font-size: clamp(14px, 4.2cqi, 24px);
   font-weight: 700;
   color: #f0f0f0;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  margin-left: 5px;
 }

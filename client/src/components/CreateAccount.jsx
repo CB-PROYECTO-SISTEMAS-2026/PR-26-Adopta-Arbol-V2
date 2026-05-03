@@ -249,7 +249,7 @@ return (
             <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Ingresa tu nombre" required />
           </div>
           {fieldErrors.name && (
-            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105pxnch' }}>
               {fieldErrors.name}
             </span>
           )}

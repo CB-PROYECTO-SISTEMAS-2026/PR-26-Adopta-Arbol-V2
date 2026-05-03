@@ -1,50 +1,80 @@
 import { useEffect, useState } from "react";
-import { getTreesRequest, setTreeStateToActive, setTreeStateToInactive } from "../api/tree.api.js";  // Asegúrate de que estas funciones estén configuradas
+import {
+  getAllTreesForAdminRequest,
+  setTreeStateToActive,
+  setTreeStateToInactive,
+} from "../api/tree.api.js"; // Asegúrate de que estas funciones estén configuradas
 import { useNotification } from "../context/NotificationContext.jsx";
 import ViewDetailsModal from "../components/ViewDetailsModal.jsx";
 import "./AdminTree.css"; // Asegúrate de que este archivo esté configurado
 
 export default function AdminTree() {
   const { showSuccess, showError, showConfirm } = useNotification();
-  const [trees, setTrees] = useState([]);  // Estado para almacenar los árboles
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);  // Estado para abrir/cerrar el modal de detalles
-  const [selectedTree, setSelectedTree] = useState(null);  // Estado para el árbol seleccionado
+  const [trees, setTrees] = useState([]); // Estado para almacenar los árboles
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // Estado para abrir/cerrar el modal de detalles
+  const [selectedTree, setSelectedTree] = useState(null); // Estado para el árbol seleccionado
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [search, setSearch] = useState("");
 
-  // Obtener los árboles con estado 2
+  const getTreeStatusLabel = (status) => {
+    switch (Number(status)) {
+      case 0:
+        return "Inactivo";
+      case 1:
+        return "Activo";
+      case 2:
+        return "Pendiente";
+      default:
+        return "Desconocido";
+    }
+  };
+
+  const getTreeStatusClass = (status) => {
+    switch (Number(status)) {
+      case 0:
+        return "status-inactive";
+      case 1:
+        return "status-active";
+      case 2:
+        return "status-pending";
+      default:
+        return "status-unknown";
+    }
+  };
+
+  // Obtener todos los árboles sin importar su status
   useEffect(() => {
     async function fetchTrees() {
       try {
-        const response = await getTreesRequest();  // Llama a la API para obtener los árboles con estado 2
-        setTrees(response.data);  // Almacena los árboles en el estado
+        const response = await getAllTreesForAdminRequest(); // Llama a la API para obtener todos los árboles
+        setTrees(response.data); // Almacena los árboles en el estado
       } catch (error) {
         console.error("Error al obtener los árboles:", error);
         showError("Error al cargar los árboles. Inténtalo nuevamente.");
       }
     }
 
-    fetchTrees();  // Llama a la función para obtener los árboles al cargar el componente
-  }, []);  // Solo se ejecuta una vez cuando el componente se monta
+    fetchTrees(); // Llama a la función para obtener los árboles al cargar el componente
+  }, []); // Solo se ejecuta una vez cuando el componente se monta
 
   // Función para ver los detalles del árbol
   const handleViewTreeDetails = (tree) => {
-    setSelectedTree(tree);  // Establece el árbol seleccionado
-    setIsDetailsModalOpen(true);  // Abre el modal
+    setSelectedTree(tree); // Establece el árbol seleccionado
+    setIsDetailsModalOpen(true); // Abre el modal
   };
 
   // Función para cerrar el modal
   const closeDetailsModal = () => {
     setIsDetailsModalOpen(false);
-    setSelectedTree(null);  // Limpia el árbol seleccionado cuando se cierra el modal
+    setSelectedTree(null); // Limpia el árbol seleccionado cuando se cierra el modal
   };
 
   // Cambiar el estado del árbol a 1 (activo)
   const handleSetTreeActive = async (id) => {
-    const tree = trees.find(t => t.id === id);
+    const tree = trees.find((t) => t.id === id);
     const treeInfo = tree ? tree.name : "este árbol";
-    
+
     showConfirm(
       `¿Estás seguro de que deseas activar ${treeInfo}?`,
       async () => {
@@ -52,7 +82,7 @@ export default function AdminTree() {
           const response = await setTreeStateToActive(id);
           if (response.status === 200) {
             // Recarga toda la lista de árboles
-            const refreshed = await getTreesRequest();
+            const refreshed = await getAllTreesForAdminRequest();
             setTrees(refreshed.data);
             showSuccess("Árbol activado exitosamente");
             console.log("Árbol activado y lista refrescada.");
@@ -61,15 +91,15 @@ export default function AdminTree() {
           console.error("Error al activar el árbol:", error);
           showError("Error al activar el árbol. Inténtalo nuevamente.");
         }
-      }
+      },
     );
   };
 
   // Cambiar el estado del árbol a 0 (inactivo)
   const handleSetTreeInactive = async (id) => {
-    const tree = trees.find(t => t.id === id);
+    const tree = trees.find((t) => t.id === id);
     const treeInfo = tree ? tree.name : "este árbol";
-    
+
     showConfirm(
       `¿Estás seguro de que deseas desactivar ${treeInfo}?`,
       async () => {
@@ -77,7 +107,7 @@ export default function AdminTree() {
           const response = await setTreeStateToInactive(id);
           if (response.status === 200) {
             // Recarga toda la lista de árboles
-            const refreshed = await getTreesRequest();
+            const refreshed = await getAllTreesForAdminRequest();
             setTrees(refreshed.data);
             showSuccess("Árbol desactivado exitosamente");
             console.log("Árbol desactivado y lista refrescada.");
@@ -86,7 +116,7 @@ export default function AdminTree() {
           console.error("Error al desactivar el árbol:", error);
           showError("Error al desactivar el árbol. Inténtalo nuevamente.");
         }
-      }
+      },
     );
   };
 
@@ -126,7 +156,7 @@ export default function AdminTree() {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
-    
+
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -134,12 +164,12 @@ export default function AdminTree() {
     } else {
       const start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
       const end = Math.min(totalPages, start + maxVisiblePages - 1);
-      
+
       for (let i = start; i <= end; i++) {
         pages.push(i);
       }
     }
-    
+
     return pages;
   };
 
@@ -154,10 +184,10 @@ export default function AdminTree() {
       <div className="admin-header">
         <div className="search-section">
           <div className="search-input-container">
-            <input 
-              type="text" 
-              placeholder="Buscar..." 
-              className="search-input" 
+            <input
+              type="text"
+              placeholder="Buscar..."
+              className="search-input"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -195,6 +225,7 @@ export default function AdminTree() {
               <th>Apellidos</th>
               <th>Fecha de Registro</th>
               <th>Árbol</th>
+              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -202,14 +233,18 @@ export default function AdminTree() {
             {currentTrees.map((tree, index) => (
               <tr key={tree.id || index}>
                 <td>
-                  <div className="tree-cell">
-                 
-                    {tree.userName}
-                  </div>
+                  <div className="tree-cell">{tree.userName}</div>
                 </td>
                 <td>{tree.userLastName}</td>
                 <td>{new Date(tree.registerDate).toLocaleDateString()}</td>
                 <td>{tree.name}</td>
+                <td>
+                  <span
+                    className={`state-badge ${getTreeStatusClass(tree.status)}`}
+                  >
+                    {getTreeStatusLabel(tree.status)}
+                  </span>
+                </td>
                 <td className="actions-cell">
                   <button
                     className="action-btn view-btn"
@@ -239,39 +274,39 @@ export default function AdminTree() {
       {/* Paginación */}
       {totalPages > 1 && (
         <div className="pagination-section">
-          <button 
-            className="pagination-btn" 
+          <button
+            className="pagination-btn"
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
           >
             {"<"}
           </button>
-          
+
           {getPageNumbers().map((pageNum) => (
             <button
               key={pageNum}
-              className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
+              className={`pagination-btn ${currentPage === pageNum ? "active" : ""}`}
               onClick={() => handlePageChange(pageNum)}
             >
               {pageNum}
             </button>
           ))}
-          
+
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <span className="pagination-dots">...</span>
           )}
-          
+
           {totalPages > 5 && currentPage < totalPages - 1 && (
             <button
-              className={`pagination-btn ${currentPage === totalPages ? 'active' : ''}`}
+              className={`pagination-btn ${currentPage === totalPages ? "active" : ""}`}
               onClick={() => handlePageChange(totalPages)}
             >
               {totalPages}
             </button>
           )}
-          
-          <button 
-            className="pagination-btn" 
+
+          <button
+            className="pagination-btn"
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
           >
@@ -281,9 +316,9 @@ export default function AdminTree() {
       )}
 
       {/* Modal para ver detalles del árbol */}
-      <ViewDetailsModal 
-        isOpen={isDetailsModalOpen} 
-        onClose={closeDetailsModal} 
+      <ViewDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={closeDetailsModal}
         data={selectedTree}
         type="tree"
       />

@@ -23,7 +23,7 @@ export default function Ranking() {
         const response = await getUsersRequest();
         // Filter users by role "adoptante" and sort by points in descending order
         const adoptanteUsers = response.data.filter(
-          (user) => user.role === "adoptante"
+          (user) => user.role === "adoptante",
         );
         const sortedUsers = adoptanteUsers.sort((a, b) => b.point - a.point);
         setUsers(sortedUsers);
@@ -58,16 +58,7 @@ export default function Ranking() {
       <div className="ranking-container">
         <nav className="map-navbar">
           <div className="navbar-container">
-            <button className="btn-back-map" onClick={() => navigate(-1)}>
-              <i className="bi bi-arrow-left"></i>
-            </button>
-
-            <div className="navbar-center">
-              <span className="navbar-greeting">
-                BIENVENIDO{" "}
-                {loggedUser?.name || loggedUser?.username || "Usuario"}
-              </span>
-            </div>
+            <div className="navbar-center"></div>
 
             <div className="navbar-actions">
               <button
@@ -90,13 +81,23 @@ export default function Ranking() {
                   <div className="logout-card">
                     <div className="logout-card-info">
                       <div className="navbar-points">
-                        <span className="points-icon">⭐</span>
+                        <img
+                          src="/StartCoin.svg"
+                          alt="points"
+                          className="points-icon"
+                          style={{ width: "24px", height: "24px" }}
+                        />
                         <span className="points-amount">
                           {loggedUser?.point || 0}
                         </span>
                       </div>
                       <div className="navbar-credits">
-                        <i className="bi bi-currency-dollar"></i>
+                        <img
+                          src="/DollarCoin.svg"
+                          alt="credits"
+                          className="credits-icon"
+                          style={{ width: "24px", height: "24px" }}
+                        />
                         <span>{loggedUser?.credits || 0}</span>
                       </div>
                     </div>
@@ -125,7 +126,11 @@ export default function Ranking() {
                 <i className="bi bi-bell-fill"></i>
                 <span>Notificaciones</span>
                 {unreadNotificationsCount > 0 && (
-                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                  <div className="flex justify-end ml-auto">
+                    <span className="menu-badge">
+                      {unreadNotificationsCount}
+                    </span>
+                  </div>
                 )}
               </button>
               <button
@@ -171,15 +176,7 @@ export default function Ranking() {
       {/* Navbar */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <button className="btn-back-map" onClick={() => navigate(-1)}>
-            <i className="bi bi-arrow-left"></i>
-          </button>
-
-          <div className="navbar-center">
-            <span className="navbar-greeting">
-              BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
-            </span>
-          </div>
+          <div className="navbar-center"></div>
 
           <div className="navbar-actions">
             <button
@@ -234,7 +231,9 @@ export default function Ranking() {
               <i className="bi bi-bell-fill"></i>
               <span>Notificaciones</span>
               {unreadNotificationsCount > 0 && (
-                <span className="menu-badge">{unreadNotificationsCount}</span>
+                <div className="flex justify-end ml-auto">
+                  <span className="menu-badge">{unreadNotificationsCount}</span>
+                </div>
               )}
             </button>
             <button
@@ -278,6 +277,7 @@ export default function Ranking() {
       <div className="ranking-list">
         {users.map((user, index) => (
           <div key={user.id} className="ranking-item">
+            <div className="ranking-index">{index + 1}</div>
             <div className="ranking-user-avatar">
               <div className="ranking-avatar-circle">
                 <svg viewBox="0 0 24 24" fill="currentColor">
@@ -289,12 +289,14 @@ export default function Ranking() {
               <span className="ranking-user-name">
                 {user.name} {user.lastName}
               </span>
-              <span className="user-points">{user.point}</span>
+              <span className="user-points">{user.point} puntos</span>
             </div>
-            <div className="tree-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
-              </svg>
+            <div>
+              <img
+                src="/StartCoin.svg"
+                alt="coin"
+                style={{ width: "28px", height: "28px" }}
+              />
             </div>
           </div>
         ))}

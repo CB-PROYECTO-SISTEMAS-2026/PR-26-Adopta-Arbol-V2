@@ -7,44 +7,22 @@ import { useNotification } from "../context/NotificationContext.jsx";
 function CreateUser({ isOpen, onClose }) {
   // Acceder a la función createUser del contexto y al usuario logueado
   const { createUser, loggedUser } = useUsers();
-  const { showSuccess, showError } = useNotification();
-
-  // Función para generar username basado en nombre + año
-  const generateUsername = (name) => {
-    if (!name) return "";
-    const currentYear = new Date().getFullYear();
-    const cleanName = name
-      .toLowerCase()
-      .replace(/\s+/g, "")
-      .replace(/[^a-z0-9]/g, "");
-    return `${cleanName}${currentYear}`;
-  };
-
-  // Función para generar contraseña aleatoria
-  const generatePassword = () => {
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
-    let password = "";
-    for (let i = 0; i < 12; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return password;
-  };
+  const { showSuccess, showError, showWarning } = useNotification();
 
   // Función de validación para nombre y apellido
   const validateName = (value) => {
     if (!value) return "";
-    
+
     // Verificar espacios al final
     if (value !== value.trimEnd()) {
       return "No se permiten espacios al final";
     }
-    
+
     // Verificar caracteres no permitidos (números y caracteres especiales)
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
       return "Solo se permiten letras y espacios (no números ni caracteres especiales)";
     }
-    
+
     return "";
   };
 
@@ -70,7 +48,7 @@ function CreateUser({ isOpen, onClose }) {
         ...values,
         name: values.name.trim(),
         lastName: values.lastName.trim(),
-        email: values.email.trim()
+        email: values.email.trim(),
       };
 
       // Validar nuevamente antes de enviar
@@ -82,40 +60,44 @@ function CreateUser({ isOpen, onClose }) {
         actions.setErrors({
           nameError: nameError || undefined,
           lastNameError: lastNameError || undefined,
-          emailError: emailError || undefined
+          emailError: emailError || undefined,
         });
         showError("Por favor corrige los errores en el formulario");
         return;
       }
 
       // Validar campos requeridos
-      if (!trimmedValues.name || !trimmedValues.lastName || !trimmedValues.email || !trimmedValues.role) {
+      if (
+        !trimmedValues.name ||
+        !trimmedValues.lastName ||
+        !trimmedValues.email ||
+        !trimmedValues.role
+      ) {
         showError("Todos los campos son obligatorios");
         return;
       }
 
-      // Generar username y contraseña automáticamente
-      const generatedUsername = generateUsername(trimmedValues.name);
-      const generatedPassword = generatePassword();
-
       const finalData = {
         ...trimmedValues,
-        username: generatedUsername,
-        password: generatedPassword,
         status: 1,
         userId: loggedUser.id, // Usar el ID del usuario logueado
       };
 
       console.log("Datos del formulario completos:", finalData);
-      console.log("Username generado:", generatedUsername);
-      console.log("Contraseña generada:", generatedPassword);
 
       const response = await createUser(finalData);
 
       console.log("✅ Usuario creado con éxito:", response);
-      showSuccess(
-        `Usuario creado exitosamente!\n\nSe ha enviado un correo a: ${trimmedValues.email}`
-      );
+
+      if (response?.emailSent) {
+        showSuccess(
+          `Usuario creado exitosamente!\n\nSe ha enviado un correo a: ${trimmedValues.email}`,
+        );
+      } else {
+        showWarning(
+          "Usuario creado, pero no se pudo enviar el correo de credenciales.",
+        );
+      }
 
       // Limpiar formulario
       actions.resetForm();
@@ -127,10 +109,14 @@ function CreateUser({ isOpen, onClose }) {
 
       if (error.response) {
         // Error del servidor
-        showError(`Error del servidor: ${error.response.data.message || "Error desconocido"}`);
+        showError(
+          `Error del servidor: ${error.response.data.message || "Error desconocido"}`,
+        );
       } else if (error.request) {
         // Error de conexión
-        showError("Error de conexión. Verifica que el servidor esté ejecutándose.");
+        showError(
+          "Error de conexión. Verifica que el servidor esté ejecutándose.",
+        );
       } else {
         // Otro error
         showError(`Error: ${error.message}`);
@@ -180,7 +166,11 @@ function CreateUser({ isOpen, onClose }) {
         {/* Header con fondo verde */}
         <div className="form-header">
           <div className="tree-icon">
-            <i className="bi bi-tree-fill"></i>
+            <img
+              src="/StartCoin.svg"
+              alt="coin"
+              style={{ width: "28px", height: "28px" }}
+            />
           </div>
         </div>
 
@@ -197,12 +187,19 @@ function CreateUser({ isOpen, onClose }) {
             }}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting, values, errors, touched, setFieldValue, handleChange }) => {
+            {({
+              isSubmitting,
+              values,
+              errors,
+              touched,
+              setFieldValue,
+              handleChange,
+            }) => {
               // Manejar cambios con validación en tiempo real
               const handleFieldChange = (e) => {
                 const { name, value } = e.target;
                 let processedValue = value;
-                
+
                 // Aplicar trim al inicio para nombre y apellido
                 if (name === "name" || name === "lastName") {
                   processedValue = value.trimStart();
@@ -247,16 +244,19 @@ function CreateUser({ isOpen, onClose }) {
                       placeholder="Ingresa el nombre completo"
                       onChange={handleFieldChange}
                     />
-                                                              {/* Error para nombre */}
-                     {errors.nameError && (
-                       <div className="error-message" style={{
-                         color: '#e74c3c',
-                         fontSize: '12px',
-                         marginTop: '5px'
-                       }}>
-                         {errors.nameError}
-                       </div>
-                     )}
+                    {/* Error para nombre */}
+                    {errors.nameError && (
+                      <div
+                        className="error-message"
+                        style={{
+                          color: "#e74c3c",
+                          fontSize: "12px",
+                          marginTop: "5px",
+                        }}
+                      >
+                        {errors.nameError}
+                      </div>
+                    )}
                   </div>
 
                   <div className="form-group">
@@ -273,11 +273,14 @@ function CreateUser({ isOpen, onClose }) {
                     />
                     {/* Error para apellido */}
                     {errors.lastNameError && (
-                      <div className="error-message" style={{
-                        color: '#e74c3c',
-                        fontSize: '12px',
-                        marginTop: '5px'
-                      }}>
+                      <div
+                        className="error-message"
+                        style={{
+                          color: "#e74c3c",
+                          fontSize: "12px",
+                          marginTop: "5px",
+                        }}
+                      >
                         {errors.lastNameError}
                       </div>
                     )}
@@ -313,11 +316,14 @@ function CreateUser({ isOpen, onClose }) {
                     />
                     {/* Error para email */}
                     {errors.emailError && (
-                      <div className="error-message" style={{
-                        color: '#e74c3c',
-                        fontSize: '12px',
-                        marginTop: '5px'
-                      }}>
+                      <div
+                        className="error-message"
+                        style={{
+                          color: "#e74c3c",
+                          fontSize: "12px",
+                          marginTop: "5px",
+                        }}
+                      >
                         {errors.emailError}
                       </div>
                     )}
