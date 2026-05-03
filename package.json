@@ -7,9 +7,7 @@
     "dev": "nodemon server/index.js",
     "build": "cd client && npm install && npm run build",
     "start": "node server/index.js",
-    "install-all": "npm install && cd client && npm install",
-    "diag:qr-active": "node scripts/diagnostics/temp-qr-active-check.mjs",
-    "diag:qr-seed": "node scripts/diagnostics/server-test-qr.js"
+    "install-all": "npm install && cd client && npm install"
   },
   "repository": {
     "type": "git",

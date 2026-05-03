@@ -11,7 +11,7 @@ import {
   confirmIrrigation,
   getTreeIrrigationEvidence,
   upload,
-} from "../controllers/irrigation.controller.js";
+} from "../controllers/irrigation.controllers.js";
 
 const router = Router();
 

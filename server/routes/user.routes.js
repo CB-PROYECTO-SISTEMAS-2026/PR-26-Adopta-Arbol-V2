@@ -9,7 +9,7 @@ import {
   deleteUser,
   registerUser,
   acceptUser,
-} from "../controllers/user.controller.js";
+} from "../controllers/user.controllers.js";
 
 router.post("/login", loginUser);
 router.post("/register", registerUser);

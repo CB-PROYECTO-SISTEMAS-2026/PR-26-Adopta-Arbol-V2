@@ -70,9 +70,32 @@
   align-items: center;
   background: #2d5f3f;
   padding: 20px 30px;
+  padding-left: 80px;
   margin-bottom: 0;
   box-shadow: var(--shadow-md);
   position: relative;
+}
+
+.admin-header::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  background-image: url('/quirquincho.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.95;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-header:hover::before {
+  opacity: 1;
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
+  transform: translateY(-50%) scale(1.08);
 }
 
 /* SEARCH INPUT */

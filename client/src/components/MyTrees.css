@@ -7,7 +7,7 @@
 /* MyTrees Content - reutiliza treehome-container del navbar */
 .mytrees-content {
   flex: 1;
-  background: linear-gradient(135deg, #245f3f, #174732);
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9f0f5 100%);
   font-family: "Poppins", sans-serif;
   padding: 0;
 }
@@ -269,14 +269,7 @@
 .tree-icon {
   font-size: 64px;
   margin-bottom: 8px;
-  opacity: 1;
-  background: linear-gradient(135deg, #245f3f, #174732);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  padding: 8px;
-  color: #fff;
+  opacity: 0.6;
 }
 
 .my-tree-card-content {

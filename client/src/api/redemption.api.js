@@ -55,17 +55,6 @@ export const getUserQr = async (userId) => {
   }
 };
 
-// Obtener el primer QR activo (status = 1)
-export const getFirstActiveQRCode = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/qrcode-active`);
-    return response;
-  } catch (error) {
-    console.error("Error al obtener el primer QR activo:", error);
-    throw error;
-  }
-};
-
 // Obtener QR por ID específico
 export const getQRCodeById = async (qrId) => {
   try {

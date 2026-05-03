@@ -139,15 +139,16 @@
   align-items: center;
 }
 
-.results-count {
-  background: rgba(45, 95, 63, 0.12);
-  color: #2d5f3f;
+.pending-count {
+  background: linear-gradient(135deg, #d4a574 0%, #b8915a 100%);
+  color: white;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.15);
 }
 
 .table-section {
@@ -209,7 +210,7 @@
 }
 
 .avatar-placeholder {
-  color: #ffffff;
+  color: #666;
   font-size: 18px;
 }
 
@@ -220,48 +221,6 @@
 .tree-code {
   color: #666;
   font-size: 12px;
-}
-
-.state-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 108px;
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.status-cancelled {
-  color: #8b4a4a;
-  background: rgba(172, 94, 94, 0.2);
-}
-
-.status-approved {
-  color: #2d5f3f;
-  background: rgba(76, 175, 80, 0.2);
-}
-
-.status-confirmed {
-  color: #2f6f67;
-  background: rgba(93, 181, 168, 0.2);
-}
-
-.status-assigned {
-  color: #3e5f78;
-  background: rgba(123, 169, 201, 0.22);
-}
-
-.status-pending {
-  color: #856404;
-  background: rgba(255, 193, 7, 0.22);
-}
-
-.status-unknown {
-  color: #4a5c4c;
-  background: rgba(74, 92, 76, 0.15);
 }
 
 .actions-cell {
@@ -280,16 +239,6 @@
 
 .action-btn:hover {
   transform: scale(1.1);
-}
-
-.action-btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.action-btn:disabled:hover {
-  transform: none;
 }
 
 .view-btn {

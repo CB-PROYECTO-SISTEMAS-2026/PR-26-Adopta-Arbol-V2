@@ -13,9 +13,7 @@ export const useIrrigations = () => {
   const context = useContext(IrrigationContext);
 
   if (!context) {
-    throw new Error(
-      "useIrrigations must be used within an IrrigationContextProvider",
-    );
+    throw new Error("useIrrigations must be used within an IrrigationContextProvider");
   }
   return context;
 };
@@ -64,20 +62,11 @@ export const IrrigationContextProvider = ({ children }) => {
       // Remover el riego de la lista ya que ya no está pendiente
       setIrrigations(irrigations.filter((irrigation) => irrigation.id !== id));
       console.log("Riego aprobado:", response.data);
-      return {
-        success: true,
-        message: "Riego aprobado exitosamente y recompensas aplicadas",
-        data: response.data,
-      };
+      return response.data;
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message;
-      setError(errorMsg);
+      setError(error.message);
       console.error("Error approving irrigation:", error);
-      return {
-        success: false,
-        message: errorMsg,
-        error: error,
-      };
+      throw error;
     }
   };
 
@@ -89,20 +78,11 @@ export const IrrigationContextProvider = ({ children }) => {
       // Remover el riego de la lista ya que ya no está pendiente
       setIrrigations(irrigations.filter((irrigation) => irrigation.id !== id));
       console.log("Riego rechazado:", response.data);
-      return {
-        success: true,
-        message: "Riego rechazado exitosamente",
-        data: response.data,
-      };
+      return response.data;
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message;
-      setError(errorMsg);
+      setError(error.message);
       console.error("Error rejecting irrigation:", error);
-      return {
-        success: false,
-        message: errorMsg,
-        error: error,
-      };
+      throw error;
     }
   };
 
@@ -122,3 +102,5 @@ export const IrrigationContextProvider = ({ children }) => {
     </IrrigationContext.Provider>
   );
 };
+
+

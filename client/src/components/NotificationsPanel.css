@@ -53,7 +53,7 @@
   justify-content: space-between;
   padding: 20px;
   border-bottom: 1px solid #e0e0e0;
-  background: linear-gradient(135deg, #245f3f, #174732);
+  background: #3d8b40;
   color: white;
 }
 
@@ -82,14 +82,10 @@
   color: white;
   font-size: 20px;
   cursor: pointer;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-right: 10px;
-  padding-left: 10px;
-  margin: 5px;
+  padding: 5px;
+  margin: 0;
   border-radius: 4px;
   transition: all 0.2s;
-  max-width: fit-content;
 }
 
 .close-btn:hover {

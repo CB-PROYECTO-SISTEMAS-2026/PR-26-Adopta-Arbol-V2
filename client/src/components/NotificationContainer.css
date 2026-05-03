@@ -146,12 +146,12 @@
 
 /* Notificación de información */
 .notification-info {
-  border-left-color: #3d8b40;
+  border-left-color: #3D8B40;
   background: linear-gradient(135deg, rgba(232, 245, 233, 0.9) 0%, white 100%);
 }
 
 .notification-info .notification-icon {
-  color: #3d8b40;
+  color: #3D8B40;
 }
 
 /* Responsive */
@@ -191,3 +191,4 @@
     min-width: auto;
   }
 }
+

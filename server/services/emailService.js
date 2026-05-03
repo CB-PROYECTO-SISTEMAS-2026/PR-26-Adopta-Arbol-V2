@@ -47,12 +47,12 @@ export const sendUserCredentials = async (
 
     const transporter = createTransporter();
 
-  const html = `
+    const htmlTemplate = `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>Credenciales de Acceso - AdoptaArbol</title>
+        <title>Credenciales de Acceso - AdoptaÁrbol</title>
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -67,101 +67,36 @@ export const sendUserCredentials = async (
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">AdoptaArbol</div>
-            <h2>Bienvenido al sistema</h2>
+            <div class="logo">🌳 AdoptaÁrbol</div>
+            <h2>¡Bienvenido al sistema!</h2>
           </div>
           
           <div class="content">
-            <h3>Hola ${safeUserName},</h3>
-            <p>Tu cuenta ha sido creada exitosamente. Estas son tus credenciales de acceso:</p>
+            <h3>Hola ${userName},</h3>
+            <p>Tu cuenta ha sido creada exitosamente en nuestro sistema AdoptaÁrbol. A continuación encontrarás tus credenciales de acceso:</p>
             
             <div class="credentials">
-              <h4>Credenciales de Acceso</h4>
-              <p><strong>Usuario:</strong> ${safeUsername}</p>
-              <p><strong>Contrasena:</strong> ${safePassword}</p>
-              <p><strong>Correo:</strong> ${safeUserEmail}</p>
+              <h4>📧 Credenciales de Acceso</h4>
+              <p><strong>Usuario:</strong> ${username}</p>
+              <p><strong>Contraseña:</strong> ${password}</p>
+              <p><strong>Correo:</strong> ${userEmail}</p>
             </div>
             
-            <p class="important">IMPORTANTE: Guarda estas credenciales en un lugar seguro.</p>
+            <p class="important">⚠️ IMPORTANTE: Guarda estas credenciales en un lugar seguro. Te recomendamos cambiar la contraseña en tu primer inicio de sesión.</p>
+            
+            <p>Puedes acceder al sistema usando estas credenciales. Si tienes alguna duda o problema, no dudes en contactar al administrador.</p>
+            
+            <p>¡Gracias por ser parte de AdoptaÁrbol! 🌱</p>
           </div>
           
           <div class="footer">
-            <p>Este es un correo automatico, por favor no responder.</p>
+            <p>Este es un correo automático, por favor no responder.</p>
+            <p>© 2025 AdoptaÁrbol - Todos los derechos reservados</p>
           </div>
         </div>
       </body>
       </html>
     `;
-
-  const text = [
-    `Hola ${userName},`,
-    "",
-    "Tu cuenta ha sido creada exitosamente en AdoptaArbol.",
-    "",
-    "Credenciales de acceso:",
-    `Usuario: ${username}`,
-    `Contrasena: ${password}`,
-    `Correo: ${userEmail}`,
-    "",
-    "Guarda estas credenciales en un lugar seguro.",
-  ].join("\n");
-
-  return { html, text };
-};
-
-// Configuración del transportador SMTP
-const createTransporter = () => {
-  const emailUser = normalizeEnv(process.env.EMAIL_USER);
-  const emailPass = normalizeGmailAppPassword(process.env.EMAIL_PASS);
-
-  if (!emailUser || !emailPass) {
-    throw new Error(
-      "Faltan EMAIL_USER o EMAIL_PASS en variables de entorno para SMTP",
-    );
-  }
-
-  return nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: emailUser,
-      pass: emailPass,
-    },
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 30000,
-  });
-};
-
-// Función para enviar credenciales de usuario
-export const sendUserCredentials = async (
-  userEmail,
-  userName,
-  username,
-  password,
-  options = {},
-) => {
-  try {
-    const fromEmail = normalizeEnv(process.env.EMAIL_USER).toLowerCase();
-    const toEmail = normalizeEnv(userEmail).toLowerCase();
-    const plainTextOnly = options?.plainTextOnly === true;
-
-    if (!EMAIL_REGEX.test(toEmail)) {
-      return {
-        success: false,
-        error: "Correo de destinatario inválido",
-        code: "INVALID_RECIPIENT",
-      };
-    }
-
-    const { html: htmlTemplate, text: textTemplate } =
-      buildCredentialsTemplates({
-        userName,
-        username,
-        password,
-        userEmail: toEmail,
-      });
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -170,84 +105,12 @@ export const sendUserCredentials = async (
       html: htmlTemplate,
     };
 
-    const maxAttempts = 3;
-    let lastSmtpError = null;
-
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      try {
-        const transporter = createTransporter();
-        const result = await transporter.sendMail(mailOptions);
-        console.log(
-          `✅ Correo enviado exitosamente (intento ${attempt}):`,
-          result.messageId,
-        );
-        return { success: true, messageId: result.messageId, attempt };
-      } catch (error) {
-        const smtpError = formatEmailError(error);
-        lastSmtpError = smtpError;
-        const shouldRetry =
-          attempt < maxAttempts && isTransientSmtpError(error);
-
-        console.error(
-          `❌ Error al enviar correo (intento ${attempt}/${maxAttempts}):`,
-          smtpError,
-        );
-
-        if (!shouldRetry) {
-          break;
-        }
-
-        await wait(attempt * 1000);
-      }
-    }
-
-    // Fallback final: correo simple sin emoji en asunto para mejorar compatibilidad.
-    try {
-      const fallbackTransporter = createTransporter();
-      const fallbackResult = await fallbackTransporter.sendMail({
-        from: fromEmail,
-        to: toEmail,
-        subject: "Credenciales de Acceso - AdoptaArbol",
-        text: textTemplate,
-        ...(plainTextOnly ? {} : { html: htmlTemplate }),
-      });
-
-      console.log(
-        "✅ Correo enviado exitosamente (fallback):",
-        fallbackResult.messageId,
-      );
-      return {
-        success: true,
-        messageId: fallbackResult.messageId,
-        attempt: "fallback",
-      };
-    } catch (fallbackError) {
-      const fallbackSmtpError = formatEmailError(fallbackError);
-      console.error("❌ Error en envío fallback:", fallbackSmtpError);
-
-      return {
-        success: false,
-        error:
-          fallbackSmtpError.message ||
-          lastSmtpError?.message ||
-          "No fue posible enviar el correo después de varios intentos",
-        code:
-          fallbackSmtpError.code ||
-          lastSmtpError?.code ||
-          "SMTP_RETRY_EXHAUSTED",
-        responseCode:
-          fallbackSmtpError.responseCode || lastSmtpError?.responseCode,
-      };
-    }
+    const result = await transporter.sendMail(mailOptions);
+    console.log("✅ Correo enviado exitosamente:", result.messageId);
+    return { success: true, messageId: result.messageId };
   } catch (error) {
-    const smtpError = formatEmailError(error);
-    console.error("❌ Error al enviar correo:", smtpError);
-    return {
-      success: false,
-      error: smtpError.message,
-      code: smtpError.code,
-      responseCode: smtpError.responseCode,
-    };
+    console.error("❌ Error al enviar correo:", error);
+    return { success: false, error: error.message };
   }
 };
 
