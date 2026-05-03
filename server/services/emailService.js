@@ -7,8 +7,8 @@ const createTransporter = () => {
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL_USER || "edu.pantoja1210@gmail.com",
-      pass: process.env.EMAIL_PASS || "ahkq qyjx swxy qcka",
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 };
@@ -21,6 +21,22 @@ export const sendUserCredentials = async (
   password
 ) => {
   try {
+    // Verificar si las credenciales de email están configuradas
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.warn(
+        "⚠️ EMAIL_USER o EMAIL_PASS no están configurados en .env. Email no será enviado."
+      );
+      console.log("📋 Credenciales de usuario para registrar manualmente:");
+      console.log(`   Usuario: ${username}`);
+      console.log(`   Contraseña: ${password}`);
+      console.log(`   Email: ${userEmail}`);
+      return {
+        success: true,
+        messageId: "SKIPPED_NO_CONFIG",
+        message: "Email deshabilitado: configurar EMAIL_USER y EMAIL_PASS en .env"
+      };
+    }
+
     const transporter = createTransporter();
 
     const htmlTemplate = `
@@ -75,7 +91,7 @@ export const sendUserCredentials = async (
     `;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER || "edu.pantoja1210@gmail.com",
+      from: process.env.EMAIL_USER,
       to: userEmail,
       subject: "🌳 Credenciales de Acceso - AdoptaÁrbol",
       html: htmlTemplate,
