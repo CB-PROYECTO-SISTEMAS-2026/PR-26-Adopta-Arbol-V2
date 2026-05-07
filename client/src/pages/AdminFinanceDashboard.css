@@ -175,7 +175,30 @@
 .finance-chart-body {
   background: linear-gradient(135deg, #f5f7fa 0%, #eef4f0 100%);
   border-radius: 14px;
-  padding: 16px;
+  padding: 16px 16px 60px 56px;
+  position: relative;
+}
+
+.axis-label {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.axis-label.y-axis {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: left center;
+}
+
+.axis-label.x-axis {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .finance-chart {
@@ -189,12 +212,32 @@
   stroke-linejoin: round;
 }
 
-.chart-line.income {
-  stroke: #3d8b40;
+.chart-line.flow {
+  stroke: url(#flowGradient);
 }
 
-.chart-line.outflow {
-  stroke: #8b4a4a;
+.chart-axis {
+  stroke: var(--text-secondary);
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+
+.chart-zero-line {
+  stroke: rgba(109, 125, 109, 0.3);
+  stroke-width: 1.5px;
+  stroke-dasharray: 5, 5;
+}
+
+.axis-tick {
+  stroke: var(--text-secondary);
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+}
+
+.axis-text {
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--text-secondary);
 }
 
 .chart-point {
@@ -202,12 +245,8 @@
   stroke-width: 2px;
 }
 
-.chart-point.income {
+.chart-point.flow {
   fill: #3d8b40;
-}
-
-.chart-point.outflow {
-  fill: #8b4a4a;
 }
 
 .finance-chart-empty {
