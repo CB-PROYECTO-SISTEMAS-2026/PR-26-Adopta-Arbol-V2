@@ -44,6 +44,12 @@ function SideNavbar() {
         <nav className={`sidebar-nav ${isMenuOpen ? "open" : ""}`}>
           <ul>
             <li>
+              <Link to="/admin/dashboard" onClick={handleNavigate}>
+                <i className="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/users" onClick={handleNavigate}>
                 <i className="bi bi-people-fill"></i>
                 <span>Usuarios</span>

@@ -256,7 +256,7 @@ export const uploadQrForUser = async (req, res) => {
 export const getPendingRedemptions = async (req, res) => {
   try {
     const [rows] = await pool.query(`
-      SELECT r.id, r.amount, r.registerDate, r.status, u.id as userId, u.name, u.lastName, u.email, q.id as qrCodeId, q.url as qrUrl, q.expirationDate
+      SELECT r.id, r.amount, r.registerDate, r.lastUpdate, r.status, u.id as userId, u.name, u.lastName, u.email, q.id as qrCodeId, q.url as qrUrl, q.expirationDate
       FROM redemption r
       JOIN user u ON r.userId = u.id
       LEFT JOIN qrcode q ON r.qrCodeId = q.id

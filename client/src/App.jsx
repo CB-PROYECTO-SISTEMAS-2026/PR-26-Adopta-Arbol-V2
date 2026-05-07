@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import AdminDashboard from "./pages/AdminDashboard"; // Página de administración de usuarios
+import AdminFinanceDashboard from "./pages/AdminFinanceDashboard";
 import BuyCredits from "./components/BuyCredits";
 import UserBuyCredits from "./components/UserBuyCredits";
 import QRCodeDisplay from "./components/QRCodeDisplay";
@@ -188,6 +189,19 @@ function App() {
             />
 
             {/* Rutas de administración protegidas (con navbar de admin) */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <div className="app-layout">
+                    <SideNavbar />
+                    <div className="app-content">
+                      <AdminFinanceDashboard />
+                    </div>
+                  </div>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/users"
               element={
