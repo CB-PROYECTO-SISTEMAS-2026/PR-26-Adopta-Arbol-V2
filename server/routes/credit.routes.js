@@ -7,6 +7,7 @@ import {
   getPurchaseDetails,
   getAllCreditOptionsAdmin,
   getAllCreditOptions,
+  getTopCreditOptions,
   getCreditOptionById,
   createCreditOption,
   updateCreditOption,
@@ -21,6 +22,9 @@ const router = Router();
 
 // Obtener todas las opciones de crédito (admin)
 router.get("/credit-options/admin", getAllCreditOptionsAdmin);
+
+// Obtener las 5 opciones de crédito más compradas
+router.get("/credit-options/stats/top", getTopCreditOptions);
 
 // Obtener todas las opciones de crédito activas
 router.get("/credit-options", getAllCreditOptions);

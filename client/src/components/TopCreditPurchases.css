@@ -1,0 +1,115 @@
+.credit-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.credit-header h3 {
+  margin: 0 0 6px;
+  font-size: 19px;
+  color: var(--text-primary, #333);
+}
+
+.credit-header p {
+  margin: 0;
+  color: var(--text-secondary, #666);
+  font-size: 13px;
+}
+
+.credit-body {
+  padding: 12px 0;
+}
+
+.credit-purchases-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.credit-purchase-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f5f7fa;
+  border: 1px solid rgba(45, 95, 63, 0.12);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.credit-purchase-item:hover {
+  background-color: rgba(45, 95, 63, 0.05);
+  border-color: rgba(45, 95, 63, 0.24);
+}
+
+.credit-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.credit-item-price {
+  font-size: 14px;
+  color: var(--text-primary, #333);
+}
+
+.credit-item-price strong {
+  font-weight: 700;
+  color: #2d5f3f;
+}
+
+.credit-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.credit-purchased {
+  color: #999;
+  font-weight: 500;
+}
+
+.credit-bonus {
+  color: #3d8b40;
+  font-weight: 600;
+}
+
+.credit-item-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.purchase-count {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d5f3f;
+}
+
+.purchase-label {
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+.credit-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  font-size: 14px;
+  color: var(--text-secondary, #666);
+  font-weight: 500;
+}
+
+.credit-state.error {
+  color: #8b4a4a;
+}

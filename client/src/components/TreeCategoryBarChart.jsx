@@ -61,14 +61,14 @@ export default function TreeCategoryBarChart() {
   } else {
     bodyContent = (
       <div className="category-chart-wrapper" role="img" aria-label="Gráfica de árboles por categoría">
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={stats}
             layout="vertical"
             margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(45, 95, 63, 0.1)" />
-            <XAxis type="number" stroke="#6d7d6d" style={{ fontSize: "12px" }} />
+            <XAxis type="number" stroke="#6d7d6d" style={{ fontSize: "12px" }} allowDecimals={false} />
             <YAxis
               dataKey="name"
               type="category"

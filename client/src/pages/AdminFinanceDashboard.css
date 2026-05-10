@@ -184,10 +184,12 @@
 }
 
 .finance-chart-body {
-  background: linear-gradient(135deg, #f5f7fa 0%, #eef4f0 100%);
   border-radius: 14px;
   padding: 16px;
   position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .finance-chart-wrapper {

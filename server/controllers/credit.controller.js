@@ -295,6 +295,31 @@ export const getAllCreditOptionsAdmin = async (req, res) => {
   }
 };
 
+// Obtener las 5 opciones de crédito más compradas
+export const getTopCreditOptions = async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT 
+        c.id,
+        c.price,
+        c.purchased,
+        c.bonus,
+        COUNT(p.id) as purchaseCount
+      FROM credit c
+      LEFT JOIN purchase p ON c.id = p.creditId AND p.status = 1
+      WHERE c.status = 1
+      GROUP BY c.id, c.price, c.purchased, c.bonus
+      ORDER BY purchaseCount DESC
+      LIMIT 5
+    `);
+
+    res.json(rows || []);
+  } catch (error) {
+    console.error("Error in getTopCreditOptions:", error);
+    res.status(500).json({ message: "Error al obtener opciones de crédito más compradas" });
+  }
+};
+
 // Obtener todas las opciones de crédito activas
 export const getAllCreditOptions = async (req, res) => {
   try {

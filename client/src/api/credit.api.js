@@ -10,6 +10,11 @@ export const getAllCreditOptions = async () => {
   return await axios.get(`${API_URL}/credit-options`);
 };
 
+// Obtener las 5 opciones de crédito más compradas
+export const getTopCreditOptions = async () => {
+  return await axios.get(`${API_URL}/credit-options/stats/top`);
+};
+
 // Obtener todas las opciones de crédito para administración (incluye status 0 y 1)
 export const getAllCreditOptionsAdmin = async () => {
   return await axios.get(`${API_URL}/credit-options/admin`);
