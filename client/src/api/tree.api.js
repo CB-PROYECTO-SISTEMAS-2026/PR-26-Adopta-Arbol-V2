@@ -117,3 +117,14 @@ export const abandonTree = async (treeId, userId) => {
     throw error;
   }
 };
+
+// Función para obtener estadísticas de adopción (árboles adoptados vs no adoptados)
+export const getAdoptionStats = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/trees/stats/adoption`);
+    return response;
+  } catch (error) {
+    console.error("Error al obtener estadísticas de adopción:", error);
+    throw error;
+  }
+};

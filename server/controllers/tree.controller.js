@@ -198,6 +198,30 @@ export const getAllTreesWithAdoptionStatus = async (req, res) => {
   }
 };
 
+// Obtener estadísticas de adopción: árboles adoptados vs no adoptados
+export const getAdoptionStats = async (req, res) => {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        COUNT(DISTINCT t.id) as totalTrees,
+        COUNT(DISTINCT CASE 
+          WHEN a.id IS NOT NULL AND a.status = 1 THEN t.id 
+        END) as adoptedTrees,
+        COUNT(DISTINCT CASE 
+          WHEN a.id IS NULL OR (a.id IS NOT NULL AND a.status != 1) THEN t.id 
+        END) as notAdoptedTrees
+      FROM tree t
+      LEFT JOIN adoption a ON t.id = a.treeId AND a.status = 1
+      WHERE t.status = 1
+    `);
+    
+    res.json(result[0] || { totalTrees: 0, adoptedTrees: 0, notAdoptedTrees: 0 });
+  } catch (error) {
+    console.error("Error al obtener estadísticas de adopción:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Obtener historial de un árbol específico
 export const getTreeHistory = async (req, res) => {
   try {

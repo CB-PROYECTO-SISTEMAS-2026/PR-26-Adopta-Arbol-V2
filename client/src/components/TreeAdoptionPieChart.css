@@ -1,0 +1,115 @@
+.adoption-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.adoption-header h3 {
+  margin: 0 0 6px;
+  font-size: 19px;
+  color: var(--text-primary, #333);
+}
+
+.adoption-header p {
+  margin: 0;
+  color: var(--text-secondary, #666);
+  font-size: 13px;
+}
+
+.adoption-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.adoption-chart-area {
+  width: 100%;
+  height: 220px;
+}
+
+.adoption-center-value {
+  font-size: 26px;
+  font-weight: 700;
+  fill: #2d5f3f;
+}
+
+.adoption-center-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  fill: #6d7d6d;
+}
+
+.adoption-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.adoption-metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adoption-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.adoption-dot.adopted {
+  background: #2d5f3f;
+}
+
+.adoption-dot.not-adopted {
+  background: #9fc7a8;
+}
+
+.adoption-dot.total {
+  background: #1f5a3c;
+}
+
+.adoption-metric-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.adoption-metric-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary, #666);
+  font-weight: 600;
+}
+
+.adoption-metric-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary, #333);
+}
+
+.adoption-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary, #666);
+}
+.adoption-state.error {
+  color: #8b4a4a;
+}
+
+@media (max-width: 640px) {
+  .adoption-chart-area {
+    height: 200px;
+  }
+}

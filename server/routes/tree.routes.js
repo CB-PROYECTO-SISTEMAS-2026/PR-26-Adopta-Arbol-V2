@@ -9,6 +9,7 @@ import {
   getMyTrees,
   renameTree,
   abandonTree,
+  getAdoptionStats,
 } from "../controllers/tree.controller.js";
 
 const router = express.Router();
@@ -21,6 +22,9 @@ router.get("/trees", getTrees);
 
 // Ruta para obtener todos los árboles con estado de adopción
 router.get("/trees/all-with-adoption", getAllTreesWithAdoptionStatus);
+
+// Ruta para obtener estadísticas de adopción
+router.get("/trees/stats/adoption", getAdoptionStats);
 
 // Ruta para obtener historial de un árbol
 router.get("/trees/:treeId/history", getTreeHistory);

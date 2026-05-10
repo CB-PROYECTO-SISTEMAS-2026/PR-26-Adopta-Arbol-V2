@@ -1,5 +1,9 @@
 /* index.css - Estilos globales modernos y dinámicos */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Reset y configuración global */
 * {
   margin: 0;
