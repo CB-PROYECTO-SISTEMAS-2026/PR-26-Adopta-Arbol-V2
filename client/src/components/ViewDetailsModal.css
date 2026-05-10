@@ -421,13 +421,10 @@
 }
 
 .category-header {
-  background: #096c6c;
   color: white;
-  padding: 30px;
   border-radius: 15px 15px 0 0;
   text-align: center;
   position: relative;
-  min-height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;

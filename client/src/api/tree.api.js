@@ -128,3 +128,14 @@ export const getAdoptionStats = async () => {
     throw error;
   }
 };
+
+// Función para obtener conteo de árboles por categoría
+export const getTreesByCategory = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/trees/stats/by-category`);
+    return response;
+  } catch (error) {
+    console.error("Error al obtener árboles por categoría:", error);
+    throw error;
+  }
+};

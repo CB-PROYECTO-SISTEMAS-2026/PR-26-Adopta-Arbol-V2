@@ -3,6 +3,7 @@ import "./AdminFinanceDashboard.css";
 import { getAllPurchases } from "../api/credit.api.js";
 import { getPendingRedemptions } from "../api/redemption.api.js";
 import TreeAdoptionPieChart from "../components/TreeAdoptionPieChart.jsx";
+import TreeCategoryBarChart from "../components/TreeCategoryBarChart.jsx";
 import {
   Area,
   AreaChart,
@@ -283,6 +284,12 @@ export default function AdminFinanceDashboard() {
 
             <section className="finance-chart-card finance-adoption-card">
               <TreeAdoptionPieChart />
+            </section>
+          </section>
+
+          <section className="finance-chart-grid">
+            <section className="finance-chart-card">
+              <TreeCategoryBarChart />
             </section>
           </section>
         </>

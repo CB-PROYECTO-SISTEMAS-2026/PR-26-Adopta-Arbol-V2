@@ -222,6 +222,28 @@ export const getAdoptionStats = async (req, res) => {
   }
 };
 
+// Obtener conteo de árboles por categoría
+export const getTreesByCategory = async (req, res) => {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        c.id,
+        c.name,
+        COUNT(t.id) as count
+      FROM category c
+      LEFT JOIN tree t ON c.id = t.categoryId AND t.status = 1
+      WHERE c.status = 1
+      GROUP BY c.id, c.name
+      ORDER BY count DESC
+    `);
+    
+    res.json(result || []);
+  } catch (error) {
+    console.error("Error al obtener árboles por categoría:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Obtener historial de un árbol específico
 export const getTreeHistory = async (req, res) => {
   try {
