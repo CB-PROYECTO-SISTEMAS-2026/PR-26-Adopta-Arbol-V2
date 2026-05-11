@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useUsers } from "../context/UserContext";
 import { useNotification } from "../context/NotificationContext.jsx";
 import {
-  getFirstActiveQRCode,
+  getQRCodeById,
   createPurchaseRequest,
   uploadPurchaseProof,
 } from "../api/redemption.api";
@@ -27,7 +27,6 @@ export default function QRCodeDisplay() {
   const [isUploading, setIsUploading] = useState(false);
   const [showLogoutCard, setShowLogoutCard] = useState(false);
   const [showNavMenu, setShowNavMenu] = useState(false);
-  const [showProofPreview, setShowProofPreview] = useState(false);
   const fileInputRef = useRef(null);
 
   // Obtener la información de la opción seleccionada del estado
@@ -44,8 +43,8 @@ export default function QRCodeDisplay() {
   const loadQRCode = async () => {
     try {
       setLoading(true);
-      // Obtener el primer QR activo (status = 1)
-      const response = await getFirstActiveQRCode();
+      // Obtener QR code con ID 1 de la base de datos
+      const response = await getQRCodeById(1);
 
       setQrCode({
         id: response.data.id,
@@ -54,11 +53,11 @@ export default function QRCodeDisplay() {
       });
     } catch (error) {
       console.error("Error al cargar QR code:", error);
-      setError("No hay QR activo disponible en este momento");
-      // Mantener estado sin imagen para evitar pedir rutas fijas como /qrcodes/1.png.
+      setError("Error al cargar el código QR");
+      // Fallback a imagen local si hay error
       setQrCode({
-        id: null,
-        imagePath: "",
+        id: 1,
+        imagePath: "/qrcodes/1.png",
         credits: initialCredits,
       });
     } finally {
@@ -174,18 +173,12 @@ export default function QRCodeDisplay() {
         return;
       }
 
-      if (!qrCode?.id) {
-        showError("No hay un QR activo disponible para procesar esta compra.");
-        setIsUploading(false);
-        return;
-      }
-
       // 1. Crear la solicitud de compra
       console.log("Creando solicitud de compra...");
       const currentOption = locationOption;
       const tempPurchaseData = {
         userId: loggedUser.id,
-        qrcodeId: qrCode.id,
+        qrcodeId: qrCode?.id || 1,
         creditId: currentOption?.id || creditOptionId,
       };
 
@@ -270,7 +263,15 @@ export default function QRCodeDisplay() {
       {/* Navbar igual a TreeHome */}
       <nav className="map-navbar">
         <div className="navbar-container">
-          <div className="navbar-center"></div>
+          <button className="btn-back-map" onClick={() => navigate(-1)}>
+            <i className="bi bi-arrow-left"></i>
+          </button>
+
+          <div className="navbar-center">
+            <span className="navbar-greeting">
+              BIENVENIDO {loggedUser?.name || loggedUser?.username || "Usuario"}
+            </span>
+          </div>
 
           <div className="navbar-actions">
             <button
@@ -293,23 +294,13 @@ export default function QRCodeDisplay() {
                 <div className="logout-card">
                   <div className="logout-card-info">
                     <div className="navbar-points">
-                      <img
-                        src="/StartCoin.svg"
-                        alt="points"
-                        className="points-icon"
-                        style={{ width: "24px", height: "24px" }}
-                      />
+                      <span className="points-icon">⭐</span>
                       <span className="points-amount">
                         {loggedUser?.point || 0}
                       </span>
                     </div>
                     <div className="navbar-credits">
-                      <img
-                        src="/DollarCoin.svg"
-                        alt="credits"
-                        className="credits-icon"
-                        style={{ width: "24px", height: "24px" }}
-                      />
+                      <i className="bi bi-currency-dollar"></i>
                       <span>{loggedUser?.credits || 0}</span>
                     </div>
                   </div>
@@ -362,7 +353,7 @@ export default function QRCodeDisplay() {
 
       {/* Main Content */}
       <main className="qr-display-main">
-        <div className="qr-display-content">
+        <div className="qr-display-content bg-white rounded">
           {/* Input de archivo oculto */}
           <input
             type="file"
@@ -373,54 +364,35 @@ export default function QRCodeDisplay() {
           />
 
           {/* Title */}
-          <h2 className="qr-display-title">Escanea el código QR</h2>
-          <p className="qr-display-description">
-            Escanea el código QR o descárguelo y adjunta el comprobante
-          </p>
+          <h2 className="qr-display-title">
+            Escaneé el Código Qr o Descárguelo y adjunte el comprobante
+          </h2>
 
           {/* Step Indicator */}
-          <div className="steps-indicator" aria-label="Progreso de compra">
-            <div className="step-item">
-              <div className="step">
-                <span>1</span>
-              </div>
-              <span className="step-text">Seleccionar</span>
+          <div className="steps-indicator">
+            <div className="step">
+              <span>1</span>
             </div>
-            <div className="step-item">
-              <div className="step active">
-                <span>2</span>
-              </div>
-              <span className="step-text">Pagar</span>
+            <div className="step active">
+              <span>2</span>
             </div>
-            <div className="step-item">
-              <div className="step">
-                <span>3</span>
-              </div>
-              <span className="step-text">Confirmar</span>
+            <div className="step">
+              <span>3</span>
             </div>
           </div>
 
           {/* QR Code Section */}
           <div>
             <div className="p-1 bg-white rounded">
-              {qrCode?.imagePath ? (
-                <img
-                  src={qrCode.imagePath}
-                  alt="Código QR"
-                  className="qr-code-image"
-                  onError={(e) => {
-                    console.error(
-                      "Error al cargar imagen QR dinámica:",
-                      e.target.src,
-                    );
-                    setError("No se pudo cargar la imagen del QR activo");
-                  }}
-                />
-              ) : (
-                <div className="error-message">
-                  No hay imagen de QR disponible en este momento.
-                </div>
-              )}
+              <img
+                src={qrCode?.imagePath || "/qrcodes/1.png"}
+                alt="Código QR"
+                className="qr-code-image"
+                onError={(e) => {
+                  console.error("Error al cargar imagen QR:", e.target.src);
+                  e.target.src = "/qrcodes/1.png";
+                }}
+              />
             </div>
 
             {/* Credits Display */}
@@ -448,33 +420,13 @@ export default function QRCodeDisplay() {
           </div>
 
           {/* Attached File Display */}
-          {selectedFile && (
-            <div className="proof-preview-card">
-              <div className="proof-preview-header">
-                <span className="proof-preview-label">Comprobante</span>
-                <button
-                  className="proof-preview-toggle"
-                  onClick={() => setShowProofPreview(!showProofPreview)}
-                  aria-label={
-                    showProofPreview
-                      ? "Ocultar comprobante"
-                      : "Mostrar comprobante"
-                  }
-                >
-                  <i
-                    className={`bi ${showProofPreview ? "bi-eye-slash" : "bi-eye"}`}
-                  ></i>
-                </button>
-              </div>
-              {showProofPreview && (
-                <div className="proof-preview-image-container">
-                  <img
-                    src={filePreview}
-                    alt="Vista previa del comprobante"
-                    className="proof-preview-image"
-                  />
-                </div>
-              )}
+          {filePreview && (
+            <div className="proof-preview-container">
+              <img
+                src={filePreview}
+                alt="Vista previa del comprobante"
+                className="proof-preview-image"
+              />
             </div>
           )}
 

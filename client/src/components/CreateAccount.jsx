@@ -231,208 +231,100 @@ export default function CreateAccount() {
     }
   };
 
-  return (
-    <div className="register-container">
-      <div className="register-box">
-        <div className="logo">
-          <img src="/logo.png" alt="Logo" />
+return (
+  <div className="register-container">
+    <div className="register-box">
+      <div className="logo">
+        <img src="/logo.png" alt="Logo" />
+      </div>
+
+      <h2>Crear Cuenta</h2>
+
+      <form onSubmit={handleRegister}>
+        {/* Campo: Nombre */}
+        <div className="input-group">
+          <label>Nombre</label>
+          <div className="input-with-icon">
+            <i className="bi bi-person-fill input-icon"></i>
+            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Ingresa tu nombre" required />
+          </div>
+          {fieldErrors.name && (
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
+              {fieldErrors.name}
+            </span>
+          )}
         </div>
 
-        <h2 className="text-center text-light">Crear Cuenta</h2>
-
-        <form onSubmit={handleRegister}>
-          <div className="input-group">
-            <label>Nombre</label>
-            <div className="input-with-icon">
-              <i
-                className="bi bi-person-fill input-icon"
-                aria-hidden="true"
-              ></i>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Ingresa tu nombre"
-                required
-              />
-            </div>
-            {fieldErrors.name && (
-              <div
-                className="error-message"
-                style={{
-                  color: "#e74c3c",
-                  fontSize: "12px",
-                  marginTop: "5px",
-                }}
-              >
-                {fieldErrors.name}
-              </div>
-            )}
+        {/* Campo: Apellido */}
+        <div className="input-group">
+          <label>Apellido</label>
+          <div className="input-with-icon">
+            <i className="bi bi-person-vcard-fill input-icon"></i>
+            <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Ingresa tu apellido" required />
           </div>
-
-          <div className="input-group">
-            <label>Apellido</label>
-            <div className="input-with-icon">
-              <i
-                className="bi bi-person-vcard-fill input-icon"
-                aria-hidden="true"
-              ></i>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Ingresa tu apellido"
-                required
-              />
-            </div>
-            {fieldErrors.lastName && (
-              <div
-                className="error-message"
-                style={{
-                  color: "#e74c3c",
-                  fontSize: "12px",
-                  marginTop: "15px",
-                }}
-              >
-                {fieldErrors.lastName}
-              </div>
-            )}
-          </div>
-
-          <div className="input-group">
-            <label>Correo Electrónico</label>
-            <div className="input-with-icon">
-              <i
-                className="bi bi-envelope-fill input-icon"
-                aria-hidden="true"
-              ></i>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="ejemplo@correo.com"
-                required
-              />
-            </div>
-            {fieldErrors.email && (
-              <div
-                className="error-message"
-                style={{
-                  color: "#e74c3c",
-                  fontSize: "12px",
-                  marginTop: "15px",
-                }}
-              >
-                {fieldErrors.email}
-              </div>
-            )}
-          </div>
-
-          <div className="input-group">
-            <label>Contraseña</label>
-            <div className="input-with-icon">
-              <i className="bi bi-lock-fill input-icon" aria-hidden="true"></i>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Crea una contraseña"
-                required
-              />
-            </div>
-            {fieldErrors.password && (
-              <div
-                className="error-message"
-                style={{
-                  color: "#e74c3c",
-                  fontSize: "12px",
-                  marginTop: "15px",
-                }}
-              >
-                {fieldErrors.password}
-              </div>
-            )}
-          </div>
-
-          <div className="input-group">
-            <label>Confirmar Contraseña</label>
-            <div className="input-with-icon">
-              <i
-                className="bi bi-shield-lock-fill input-icon"
-                aria-hidden="true"
-              ></i>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Repite tu contraseña"
-                required
-              />
-            </div>
-            {fieldErrors.confirmPassword && (
-              <div
-                className="error-message"
-                style={{
-                  color: "#e74c3c",
-                  fontSize: "12px",
-                  marginTop: "15px",
-                }}
-              >
-                {fieldErrors.confirmPassword}
-              </div>
-            )}
-          </div>
-
-          {error && (
-            <div
-              className="error-message"
-              style={{
-                color: "#e74c3c",
-                textAlign: "center",
-                marginBottom: "15px",
-                fontSize: "14px",
-                backgroundColor: "#fee",
-                border: "1px solid #fcc",
-                borderRadius: "8px",
-                padding: "10px",
-              }}
-            >
-              {error}
-            </div>
+          {fieldErrors.lastName && (
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
+              {fieldErrors.lastName}
+            </span>
           )}
+        </div>
 
-          {success && (
-            <div
-              className="success-message"
-              style={{
-                color: "#27ae60",
-                textAlign: "center",
-                marginBottom: "15px",
-                fontSize: "14px",
-                backgroundColor: "#efe",
-                border: "1px solid #cfc",
-                borderRadius: "8px",
-                padding: "10px",
-              }}
-            >
-              {success}
-            </div>
+        {/* Campo: Correo */}
+        <div className="input-group">
+          <label>Correo Electrónico</label>
+          <div className="input-with-icon">
+            <i className="bi bi-envelope-fill input-icon"></i>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="ejemplo@correo.com" required />
+          </div>
+          {fieldErrors.email && (
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
+              {fieldErrors.email}
+            </span>
           )}
+        </div>
 
-          <button type="submit" className="btn-register" disabled={loading}>
-            {loading ? "Creando cuenta..." : "Crear Cuenta"}
-          </button>
-        </form>
+        {/* Campo: Contraseña */}
+        <div className="input-group">
+          <label>Contraseña</label>
+          <div className="input-with-icon">
+            <i className="bi bi-lock-fill input-icon"></i>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Crea una contraseña" required />
+          </div>
+          {fieldErrors.password && (
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px' }}>
+              {fieldErrors.password}
+            </span>
+          )}
+        </div>
 
-        <p className="login-text">
-          ¿Ya tienes cuenta? <Link to="/login">Iniciar sesión</Link>
-        </p>
-      </div>
+        {/* Campo: Confirmar Contraseña */}
+        <div className="input-group">
+          <label>Confirmar Contraseña</label>
+          <div className="input-with-icon">
+            <i className="bi bi-shield-lock-fill input-icon"></i>
+            <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="Repite tu contraseña" required />
+          </div>
+          {fieldErrors.confirmPassword && (
+            <span className="error-message" style={{ color: '#ff5252', fontSize: '12px', marginTop: '-105px', marginBottom: '-105px'}}>
+              {fieldErrors.confirmPassword}
+            </span>
+          )}
+        </div>
+
+        {/* Alertas generales */}
+        {error && <div className="alert-message error-alert" style={{ color: '#ff5252', fontSize: '13px', marginTop: '12px', marginBottom: '12px' }}>{error}</div>}
+        {success && <div className="alert-message success-alert">{success}</div>}
+
+        <button type="submit" className="btn-register" disabled={loading}>
+          {loading ? "Creando cuenta..." : "Crear Cuenta"}
+        </button>
+      </form>
+
+      <p className="login-text">
+        ¿Ya tienes cuenta? <Link to="/login">Iniciar sesión</Link>
+      </p>
+      
     </div>
-  );
+  </div>
+);
 }

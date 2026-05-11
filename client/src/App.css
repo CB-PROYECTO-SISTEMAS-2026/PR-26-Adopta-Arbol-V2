@@ -2,8 +2,8 @@
 :root {
   --sidebar-width: 220px;
   --sidebar-gap: 16px;
-  --gradient-primary: linear-gradient(135deg, #2d5f3f, #4a5c4c);
-  --gradient-secondary: linear-gradient(135deg, #3d8b40, #2d7a4c);
+  --gradient-primary: linear-gradient(135deg, #2D5F3F, #4A5C4C);
+  --gradient-secondary: linear-gradient(135deg, #3D8B40, #2D7A4C);
   --shadow-elevation-1: 0 2px 8px rgba(45, 95, 63, 0.06);
   --shadow-elevation-2: 0 8px 24px rgba(45, 95, 63, 0.12);
   --shadow-elevation-3: 0 16px 40px rgba(45, 95, 63, 0.16);
@@ -14,7 +14,7 @@
 .app-layout {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #e8f3e8 0%, #f5eeeb 100%);
+  background: linear-gradient(135deg, #E8F3E8 0%, #F5EEEB 100%);
   box-sizing: border-box;
 }
 
@@ -29,14 +29,8 @@
 
 /* Para pantallas pequeñas */
 @media (max-width: 992px) {
-  .app-layout {
-    flex-direction: column;
-  }
-
   .app-content {
     margin-left: 0;
-    width: 100%;
-    max-width: 100%;
     padding: 16px;
   }
 }

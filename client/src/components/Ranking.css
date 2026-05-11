@@ -7,7 +7,7 @@
 }
 
 .ranking-container {
-  background: linear-gradient(135deg, #245f3f, #174732);
+  background: linear-gradient(135deg, #4a9b8e 0%, #6bb8a8 100%);
   min-height: 100vh;
   padding: 0;
   font-family: "Poppins", sans-serif;
@@ -232,6 +232,7 @@
 
 .ranking-list {
   width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -240,7 +241,7 @@
 
 .ranking-item {
   background-color: white;
-  border-radius: 10px;
+  border-radius: 25px;
   padding: 20px 25px;
   display: flex;
   align-items: center;
@@ -248,19 +249,6 @@
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-}
-
-.ranking-item .ranking-index {
-  min-width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 5px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #2d6a5d;
-  border-radius: 8px;
 }
 
 .ranking-item:hover {
@@ -291,7 +279,7 @@
 .ranking-container .user-info {
   flex: 1;
   display: flex;
-  justify-content: space-between; /* mantener nombre y puntos juntos */
+  justify-content: flex-start; /* mantener nombre y puntos juntos */
   align-items: center;
   gap: 12px; /* espacio entre nombre y puntos */
 }
@@ -306,25 +294,20 @@
 
 .ranking-container .ranking-user-name {
   font-size: 1.2rem;
-  font-weight: 400;
+  font-weight: 600;
   color: #2d6a5d;
 }
 
 .ranking-container .user-points {
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #2d6a5d;
-  margin-right: 15px;
+  margin-left: 6px;
 }
 
 .ranking-container .tree-icon {
+  color: #4a9b8e;
   margin: 0px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  padding: 6px;
-  background: white !important;
 }
 
 .ranking-container .tree-icon svg {

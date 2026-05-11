@@ -293,38 +293,19 @@
 .redemption-content {
   flex: 1;
   background: linear-gradient(135deg, #245f3f, #174732);
-  margin: 0;
+  /* quitar apariencia de card: sin margin, sin sombra; conservar fondo y contenido */
+  margin: 0; /* ocupa espacio del layout sin estilo de tarjeta */
   padding: 35px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-shadow: none;
-}
-
-/* Card blanca dentro de redemption-content */
-.redemption-card {
-  background: white;
-  border-radius: 15px;
-  padding: 35px 30px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  width: 90%;
+  box-shadow: none; /* eliminar sombra de la 'card' */
 }
 
 .redemption-title {
   font-size: 30px;
   font-weight: 700;
-  color: #2d5f3f;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.redemption-subtitle {
-  font-size: 18px;
-  font-weight: 500;
-  color: #2d5f3f;
+  color: #e9fff1;
   margin-bottom: 25px;
   text-align: center;
 }
@@ -352,11 +333,12 @@
 /* QR Upload Area - área cuadrada centrada */
 .qr-upload-area {
   width: 100%;
-  height: 50vw;
-  max-height: 500px;
+  max-width: 360px;
+  height: 90vw;
+  max-height: 360px;
+  border-radius: 20px;
   transition: all 0.18s ease;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -368,16 +350,15 @@
 }
 
 .qr-placeholder {
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #f4fff8;
-  border-radius: 15px;
+  border-radius: 8px;
   border: 2px dashed #9cd4ae;
   box-shadow: inset 0 0 0 1px rgba(70, 130, 90, 0.08);
-  margin: 5px;
 }
 
 .placeholder-icon {
@@ -388,7 +369,7 @@
 .qr-preview-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 8px;
 }
 
@@ -414,25 +395,25 @@
 
 /* Input de cantidad */
 .amount-section {
-  width: 100%;
+  width: 90%;
+  max-width: 360px;
   margin-bottom: 24px;
 }
 
 .amount-label {
-  color: #2d5f3f;
-  font-size: 14px;
+  color: #ffffff;
   font-weight: 600;
   margin-bottom: 8px;
-  display: flex;
+  display: block;
 }
 
 .amount-input {
   width: 100%;
   padding: 10px 12px;
-  border: 2px solid #2d5f3f;
-  background: #f9f9f9;
-  color: #2d5f3f;
-  border-radius: 15px;
+  border: 2px solid rgba(154, 220, 177, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-radius: 8px;
   outline: none;
   appearance: textfield;
   -moz-appearance: textfield;
@@ -446,23 +427,24 @@
 }
 
 .amount-input::placeholder {
-  color: #a0a0a0;
+  color: #d9f5e4;
 }
 
 /* Mantener el mismo aspecto al hacer focus/click */
 .amount-input:focus,
 .amount-input:active {
-  border-color: #2d5f3f;
-  box-shadow: 0 0 8px rgba(45, 95, 63, 0.2);
+  border-color: #9ee0b8;
+  box-shadow: none;
   outline: none;
-  background: #ffffff;
-  color: #2d5f3f;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
 /* Confirm Button */
 .btn-confirm-redemption {
-  width: 100%;
-  border-radius: 15px;
+  width: 90%;
+  max-width: 360px;
+  border-radius: 12px;
   padding: 14px 20px;
   font-size: 16px;
   letter-spacing: 1px;
@@ -471,7 +453,7 @@
     transform 0.16s ease,
     box-shadow 0.16s ease,
     opacity 0.12s ease;
-  background: linear-gradient(135deg, #245f3f, #174732);
+  background: linear-gradient(135deg, #2fbf6d, #1e8a4c);
   color: #ffffff;
   border: none;
   font-weight: 700;
