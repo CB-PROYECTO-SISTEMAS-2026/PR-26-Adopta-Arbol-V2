@@ -46,6 +46,8 @@ export default function AdminFinanceDashboard() {
   const [redemptions, setRedemptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -64,6 +66,16 @@ export default function AdminFinanceDashboard() {
 
         setPurchases(purchaseResponse.data || []);
         setRedemptions(redemptionResponse.data || []);
+
+        // Establecer fechas por defecto: últimos 30 días
+        const today = new Date();
+        const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+        const endDateStr = today.toISOString().slice(0, 10);
+        const startDateStr = thirtyDaysAgo.toISOString().slice(0, 10);
+
+        setEndDate(endDateStr);
+        setStartDate(startDateStr);
       } catch (err) {
         if (!isMounted) return;
         console.error("Error cargando dashboard financiero:", err);
@@ -90,15 +102,6 @@ export default function AdminFinanceDashboard() {
       (redemption) => Number(redemption.status) === 1,
     );
 
-    const totalIncome = confirmedPurchases.reduce(
-      (accumulator, purchase) => accumulator + toNumber(purchase.price),
-      0,
-    );
-    const totalOutflow = confirmedRedemptions.reduce(
-      (accumulator, redemption) => accumulator + toNumber(redemption.amount),
-      0,
-    );
-
     // Crear array de eventos ordenados por fecha/hora
     const events = [
       ...confirmedPurchases.map((purchase) => ({
@@ -111,18 +114,28 @@ export default function AdminFinanceDashboard() {
       })),
     ].sort((a, b) => a.date.getTime() - b.date.getTime());
 
+    // Filtrar eventos según el rango de fechas seleccionado
+    const startDateObj = startDate ? new Date(`${startDate}T00:00:00`) : null;
+    const endDateObj = endDate ? new Date(`${endDate}T23:59:59`) : null;
+
+    const filteredEvents = events.filter((event) => {
+      if (startDateObj && event.date < startDateObj) return false;
+      if (endDateObj && event.date > endDateObj) return false;
+      return true;
+    });
+
     // Calcular flujo acumulado para cada evento individual
     let cumulativeFlow = 0;
-    const netFlowSeries = events.map((event) => {
+    const netFlowSeries = filteredEvents.map((event) => {
       cumulativeFlow += event.amount;
       return cumulativeFlow;
     });
 
-    const chartDates = events.map((event) =>
+    const chartDates = filteredEvents.map((event) =>
       event.date.toISOString().slice(0, 10),
     );
 
-    const chartData = events.map((event, index) => ({
+    const chartData = filteredEvents.map((event, index) => ({
       date: event.date.toISOString().slice(0, 10),
       netFlow: netFlowSeries[index],
     }));
@@ -134,6 +147,15 @@ export default function AdminFinanceDashboard() {
 
     const yDomain = maxAbsFlow === 0 ? [-1, 1] : [-maxAbsFlow, maxAbsFlow];
 
+    // Calcular totales para el rango de fechas (ingresos/egresos totales en el rango)
+    const totalIncome = filteredEvents
+      .filter((e) => e.amount > 0)
+      .reduce((sum, e) => sum + e.amount, 0);
+
+    const totalOutflow = filteredEvents
+      .filter((e) => e.amount < 0)
+      .reduce((sum, e) => sum + Math.abs(e.amount), 0);
+
     return {
       totalIncome,
       totalOutflow,
@@ -143,7 +165,7 @@ export default function AdminFinanceDashboard() {
       chartData,
       yDomain,
     };
-  }, [purchases, redemptions]);
+  }, [purchases, redemptions, startDate, endDate]);
 
   return (
     <div className="dashboard-container finance-dashboard">
@@ -212,12 +234,28 @@ export default function AdminFinanceDashboard() {
                     Registra compras aprobadas y retiros confirmados a lo largo del
                     tiempo.
                   </p>
-                </div>
-                <div className="finance-legend">
-                  <span className="legend-item">
-                    <span className="legend-dot income"></span>
-                    Flujo neto acumulado
-                  </span>
+                  <div className="date-input-group-dashboard d-flex justify-content-between">
+                    <div className="date-input-wrapper">
+                      <label htmlFor="start-date">Desde:</label>
+                      <input
+                        id="start-date"
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="finance-date-input"
+                      />
+                    </div>
+                    <div className="date-input-wrapper">
+                      <label htmlFor="end-date">Hasta:</label>
+                      <input
+                        id="end-date"
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="finance-date-input"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 

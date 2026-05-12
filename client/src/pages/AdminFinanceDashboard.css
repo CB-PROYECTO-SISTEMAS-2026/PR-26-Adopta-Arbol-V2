@@ -137,9 +137,15 @@
 .finance-chart-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 16px;
+}
+
+.finance-chart-header > div:first-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .finance-chart-header h3 {
@@ -154,12 +160,56 @@
   font-size: 14px;
 }
 
+.date-input-group-dashboard {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.date-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-input-wrapper label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.finance-date-input {
+  padding: 8px 12px;
+  border: 1px solid rgba(45, 95, 63, 0.2);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: #ffffff;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.finance-date-input:hover {
+  border-color: rgba(45, 95, 63, 0.4);
+}
+
+.finance-date-input:focus {
+  outline: none;
+  border-color: #2d5f3f;
+  box-shadow: 0 0 0 2px rgba(45, 95, 63, 0.1);
+}
+
 .finance-legend {
   display: flex;
   align-items: center;
   gap: 16px;
   font-size: 13px;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .legend-item {
