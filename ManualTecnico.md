@@ -1,25 +1,15 @@
-# PR-26-Adopta-Arbol-V2
+# Manual Técnico del Proyecto
 
-## Manual Técnico
-
-El manual técnico completo está disponible en:
-
-- [Manual Técnico](./ManualTecnico.md)
-
-A continuación, se incluye el contenido principal del manual técnico.
-
-## Manual Técnico del Proyecto
-
-### 1. Integrantes – Roles
+## 1. Integrantes – Roles
 
 - Luis Eduardo Pantoja Fernandez – Team Leader
 - Nayara Kate Hurtado Barja – Git Master
 
-### 2. Introducción
+## 2. Introducción
 
 Este proyecto es una plataforma para gestionar adopciones de árboles, seguimiento de riegos, pagos y notificaciones. Permite a usuarios registrarse como adoptantes, regadores o técnicos, y administrar tareas relacionadas con el ciclo de vida del árbol adoptado.
 
-### 3. Descripción / objetivo del proyecto
+## 3. Descripción / objetivo del proyecto
 
 El objetivo es implementar un sistema web completo que soporte:
 - registro y autenticación de usuarios
@@ -30,12 +20,12 @@ El objetivo es implementar un sistema web completo que soporte:
 
 La aplicación consta de un frontend en Vite/React y un backend en Node.js con una base de datos MySQL.
 
-### 4. Link al Video ilustrativo
+## 4. Link al Video ilustrativo
 
 Video ilustrativo:
 https://drive.google.com/file/d/1_i3QyPJw1Ag_Xmheze9TUllXdnJ7fl_G/view
 
-### 5. Listado de los Requisitos Funcionales del Sistema
+## 5. Listado de los Requisitos Funcionales del Sistema
 
 - Registro e inicio de sesión para usuarios
 - Roles diferenciados: administrador, adoptante, regador, técnico
@@ -47,7 +37,7 @@ https://drive.google.com/file/d/1_i3QyPJw1Ag_Xmheze9TUllXdnJ7fl_G/view
 - Envío de notificaciones
 - Seguridad de rutas y control de acceso por rol
 
-### 6. Arquitectura del software
+## 6. Arquitectura del software
 
 - Frontend
   - `client/`
@@ -72,7 +62,7 @@ Patrones usados:
 - Separación de responsabilidades por capas: rutas, controladores, servicios
 - Uso de archivos de configuración y modularidad
 
-### 7. Base de datos
+## 7. Base de datos
 
 - Motor: MySQL
 - Host: `mysql-jokaly.alwaysdata.net`
@@ -94,7 +84,7 @@ FRONTEND_URL=http://localhost:5173
 BACKEND_URL=http://localhost:4000
 ```
 
-### 8. Diagrama completo y actual
+## 8. Diagrama completo y actual
 
 El diagrama completo debe incluir:
 - entidades principales: usuarios, árboles, adopciones, riegos, pagos, redenciones, categorías, notificaciones
@@ -103,13 +93,13 @@ El diagrama completo debe incluir:
 
 Incluir el diagrama actualizado como imagen o archivo dentro del repositorio.
 
-### 9. En el GIT una carpeta con la base de datos
+## 9. En el GIT una carpeta con la base de datos
 
 Carpeta recomendada: `server/migrations/`
 - Incluir scripts SQL de creación de tablas y datos de ejemplo
 - Incluir también un README breve dentro de la carpeta de base de datos explicando el orden de ejecución
 
-### 10. Script simple
+## 10. Script simple
 
 Ejemplo de script SQL para creación e inserción básica:
 
@@ -149,40 +139,40 @@ VALUES
 ('maria_rf', 'Maria!2025', 'tecnico', 'maria@example.com');
 ```
 
-### 11. Listado de Roles más sus credenciales
+## 11. Listado de Roles más sus credenciales
 
 - `Alvaro_Fern` / `Alvaro@2025` → Admin
 - `juan_gl` / `Juangl#2025` → Adoptante
 - `carlos_mr` / `Carloa$2025` → Regador
 - `maria_rf` / `Maria!2025` → Técnico
 
-### 12. Requisitos del sistema
+## 12. Requisitos del sistema
 
-#### Requerimientos de Hardware (cliente)
+### Requerimientos de Hardware (cliente)
 - Procesador moderno de 2 núcleos
 - 4 GB RAM
 - 2 GB de espacio libre en disco
 - Conexión a Internet
 
-#### Requerimientos de Software (cliente)
+### Requerimientos de Software (cliente)
 - Navegador moderno: Chrome, Edge, Firefox
 - Node.js para desarrollo local (versión recomendada 18+)
 - npm / yarn
 
-#### Requerimientos de Hardware (server / hosting / BD)
+### Requerimientos de Hardware (server / hosting / BD)
 - 1 CPU virtual / 2 CPU
 - 4 GB RAM mínimo
 - 10 GB de disco
 - Conexión estable a Internet
 
-#### Requerimientos de Software (server / hosting / BD)
+### Requerimientos de Software (server / hosting / BD)
 - Node.js 18+
 - MySQL 8 o compatible
 - Git
 - Servidor web / hosting que permita Node.js
 - Opcional: Docker
 
-### 13. Instalación y configuración
+## 13. Instalación y configuración
 
 1. Clonar repositorio:
    - `git clone <URL del repositorio>`
@@ -210,27 +200,27 @@ BACKEND_URL=http://localhost:4000
    - `cd ../client`
    - `npm run dev`
 
-### 14. Procedimiento de hosteado / hosting (configuración)
+## 14. Procedimiento de hosteado / hosting (configuración)
 
-#### Sitio Web
+### Sitio Web
 - Deploy del frontend estático en Vercel, Netlify o similar
 - Configurar `FRONTEND_URL` apuntando al dominio de producción
 
-#### Base de datos
+### Base de datos
 - Usar MySQL alojado en servidor o servicio cloud
 - Configurar acceso con `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
 - Asegurar acceso remoto si el servidor backend lo necesita
 
-#### API / servicios Web
+### API / servicios Web
 - Deploy del backend Node.js en servidor o en plataforma con soporte Node
 - Configurar variables de entorno en el entorno de hosting
 - Verificar rutas `server/routes/*`
 
-#### Otros
+### Otros
 - Si se usa Firebase u otros servicios, detallar configuración y credenciales
 - En este proyecto no se utiliza Firebase actualmente
 
-### 15. Detallado paso a paso de puesta en marcha en hosting
+## 15. Detallado paso a paso de puesta en marcha en hosting
 
 1. Crear servidor virtual o servicio Node/hosting.
 2. Configurar MySQL y crear base de datos `jokaly_adopttreev2`.
@@ -242,7 +232,7 @@ BACKEND_URL=http://localhost:4000
 8. Probar acceso con los usuarios listados.
 9. Documentar credenciales de hosting si se requiere acceso a servidor/root BD.
 
-### 16. GIT
+## 16. GIT
 
 - Rama principal: `main`
 - Entrega final: código integrado en `main`
@@ -254,7 +244,7 @@ BACKEND_URL=http://localhost:4000
   - documentación técnica
   - manual técnico
 
-### 17. Dockerizado del Backend y FrontEnd, Base de Datos
+## 17. Dockerizado del Backend y FrontEnd, Base de Datos
 
 - Se recomienda crear:
   - `Dockerfile` para backend
@@ -265,7 +255,7 @@ BACKEND_URL=http://localhost:4000
   - frontend React
   - base de datos MySQL
 
-### 18. Proceso de dockerizado, Configuración
+## 18. Proceso de dockerizado, Configuración
 
 1. Crear `Dockerfile` en backend con Node.js
 2. Crear `Dockerfile` en frontend con build de Vite
@@ -277,38 +267,38 @@ BACKEND_URL=http://localhost:4000
 5. Ejecutar:
    - `docker-compose up --build`
 
-### 19. Cómo hacer correr, Acceso credenciales
+## 19. Cómo hacer correr, Acceso credenciales
 
-#### Backend
+### Backend
 - `cd server`
 - `npm install`
 - `npm run dev`
 
-#### Frontend
+### Frontend
 - `cd client`
 - `npm install`
 - `npm run dev`
 
-#### Base de datos
+### Base de datos
 - Host: `mysql-jokaly.alwaysdata.net`
 - Usuario: `jokaly_user`
 - Contraseña: `#Edu1210`
 - Base de datos: `jokaly_adopttreev2`
 
-#### Credenciales de roles
+### Credenciales de roles
 - Admin: `Alvaro_Fern` / `Alvaro@2025`
 - Adoptante: `juan_gl` / `Juangl#2025`
 - Regador: `carlos_mr` / `Carloa$2025`
 - Técnico: `maria_rf` / `Maria!2025`
 
-### 20. Personalización y configuración
+## 20. Personalización y configuración
 
 - Cambiar variables de entorno según el entorno de despliegue
 - Ajustar `FRONTEND_URL` y `BACKEND_URL` para producción
 - Configurar credenciales de acceso y roles
 - Adaptar categorías y árboles en la base de datos según necesidades
 
-### 21. Seguridad
+## 21. Seguridad
 
 - No exponer credenciales en repositorio público
 - Usar variables de entorno para datos sensibles
@@ -316,7 +306,7 @@ BACKEND_URL=http://localhost:4000
 - Asegurar el acceso a la base de datos mediante contraseñas seguras
 - Validar entradas del usuario en frontend y backend
 
-### 22. Glosario de términos
+## 22. Glosario de términos
 
 - Admin: usuario con permisos de gestión completa
 - Adoptante: usuario que adopta árboles
@@ -327,7 +317,7 @@ BACKEND_URL=http://localhost:4000
 - MySQL: motor de base de datos relacional
 - Docker: contenedores para empaquetar aplicaciones
 
-### 23. Referencias y recursos adicionales
+## 23. Referencias y recursos adicionales
 
 - Documentación de React
 - Documentación de Vite
@@ -336,7 +326,7 @@ BACKEND_URL=http://localhost:4000
 - Documentación de MySQL
 - GitHub del proyecto
 
-### 24. Herramientas de Implementación
+## 24. Herramientas de Implementación
 
 - Lenguajes de programación:
   - JavaScript
@@ -347,7 +337,7 @@ BACKEND_URL=http://localhost:4000
 - APIs de terceros:
   - Email/Notificaciones (según configuración en `server/services/emailService.js`)
 
-### 25. Bibliografía
+## 25. Bibliografía
 
 - Documentación oficial de React
 - Documentación oficial de Vite
